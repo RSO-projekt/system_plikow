@@ -57,7 +57,7 @@ service ClientMasterService
     // Make an empty file with specified size or change size of current file
     // if it exists
     void makeFile(1: string path, 2: i64 size) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
-    void makeFilerr2(1: FileEntry parent, 2: string name, 3: i64 size) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
+    void makeFile2(1: FileEntry parent, 2: string name, 3: i64 size) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
 
     // Remove entry 
     void removeEntry(1: string path) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
@@ -71,11 +71,11 @@ service ClientMasterService
     // only called to create a transaction. It will be completed on connection
     // between Data Server and a client.
     void writeToFile(1: string path, 2: i64 offset, 3: i64 num) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
-    void writeToFilerr2(1: FileEntry file, 2: i64 offset, 3: i64 num) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
+    void writeToFile2(1: FileEntry file, 2: i64 offset, 3: i64 num) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
 
     // Read from a file. We are not transmitting bytes yet. This function is
     // only called to create a transaction. It will be completed on connection
     // between Data Server and a client.
     void readFromFile(1: string path, 2: i64 offset, 3: i64 num) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
-    void readFromFilerr2(1: FileEntry entry, 2: i64 offset, 3: i64 num) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
+    void readFromFile2(1: FileEntry entry, 2: i64 offset, 3: i64 num) throws(1: EntryNotFound err1, 2: InvalidOperation err2),
 }
