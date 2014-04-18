@@ -69,21 +69,21 @@ public interface FileSystem {
 	                                                    EntryNotFoundException,
 	                                                    InvalidOperationException;
 	
-	public void makeFile(FileEntry parentDir, String name) throws ConnectionLostException,
-	                                                              EntryNotFoundException,
-	                                                              InvalidOperationException;
+	public void makeFile(FileEntry parentDir, String name, long size) throws ConnectionLostException,
+	                                                                         EntryNotFoundException,
+	                                                                         InvalidOperationException;
 	
 	/**
 	 * Remove file from specified path. If it's directory, it must be empty.
 	 * @param path Path to a file for removal.
 	 */
-	public void remove(String path) throws ConnectionLostException,
-	                                       EntryNotFoundException,
-	                                       InvalidOperationException;
+	public void removeEntry(String path) throws ConnectionLostException,
+	                                            EntryNotFoundException,
+	                                            InvalidOperationException;
 	
-	public void remove(FileEntry entry) throws ConnectionLostException,
-	                                           EntryNotFoundException,
-	                                           InvalidOperationException;
+	public void removeEntry(FileEntry entry) throws ConnectionLostException,
+	                                                EntryNotFoundException,
+	                                                InvalidOperationException;
 	
 	/**
 	 * Move file inside of file system. This function also can be used for
@@ -92,13 +92,13 @@ public interface FileSystem {
 	 * @param fromPath Old location of a file.
 	 * @param toPath New location of a file.
 	 */
-	public void move(String fromPath, String toPath) throws ConnectionLostException,
-	                                                        EntryNotFoundException,
-	                                                        InvalidOperationException;
+	public void moveEntry(String fromPath, String toPath) throws ConnectionLostException,
+	                                                             EntryNotFoundException,
+	                                                             InvalidOperationException;
 	
-	public void move(FileEntry entry, FileEntry parentDir, String name) throws ConnectionLostException,
-	                                                                           EntryNotFoundException,
-	                                                                           InvalidOperationException;
+	public void moveEntry(FileEntry entry, FileEntry parentDir, String name) throws ConnectionLostException,
+	                                                                                EntryNotFoundException,
+	                                                                                InvalidOperationException;
 	
 	/**
 	 * Write bytes to a file at given offset. If offset + bytes.lenght is
@@ -108,13 +108,13 @@ public interface FileSystem {
 	 * @param offset File offset where writing should start.
 	 * @param bytes Bytes to write.
 	 */
-	public void write(String filePath, long offset, byte[] bytes) throws ConnectionLostException,
-	                                                                     EntryNotFoundException,
-	                                                                     InvalidOperationException;
+	public void writeToFile(String filePath, long offset, byte[] bytes) throws ConnectionLostException,
+	                                                                           EntryNotFoundException,
+	                                                                           InvalidOperationException;
 	
-	public void write(FileEntry file, long offset, byte[] bytes) throws ConnectionLostException,
-	                                                                    EntryNotFoundException,
-	                                                                    InvalidOperationException;
+	public void writeToFile(FileEntry file, long offset, byte[] bytes) throws ConnectionLostException,
+	                                                                          EntryNotFoundException,
+	                                                                          InvalidOperationException;
 	
 	/**
 	 * Read num bytes from a file at given offset. If num + offset is bigger
@@ -124,11 +124,11 @@ public interface FileSystem {
 	 * @param offset File offset where reading should start,
 	 * @return Bytes read.
 	 */
-	public byte[] read(String filePath, long offset, long num) throws ConnectionLostException,
-	                                                                  EntryNotFoundException,
-	                                                                  InvalidOperationException;
+	public byte[] readFromFile(String filePath, long offset, long num) throws ConnectionLostException,
+	                                                                          EntryNotFoundException,
+	                                                                          InvalidOperationException;
 	
-	public byte[] read(FileEntry file, long offset, long num) throws ConnectionLostException,
-	                                                                 EntryNotFoundException,
-	                                                                 InvalidOperationException;
+	public byte[] readFromFile(FileEntry file, long offset, long num) throws ConnectionLostException,
+	                                                                         EntryNotFoundException,
+	                                                                         InvalidOperationException;
 }
