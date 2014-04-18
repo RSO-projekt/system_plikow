@@ -19,16 +19,16 @@ service ClientMasterService
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
 
     // Make a directory.
-    void makeDirectory(1: string path) 
+    DataTypes.FileEntry makeDirectory(1: string path) 
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
-    void makeDirectory2(1: DataTypes.FileEntry parent, 2: string name) 
+    DataTypes.FileEntry makeDirectory2(1: DataTypes.FileEntry parent, 2: string name) 
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
 
     // Make an empty file with specified size or change size of current file
     // if it exists
-    void makeFile(1: string path, 2: i64 size) 
+    DataTypes.FileEntry makeFile(1: string path, 2: i64 size) 
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
-    void makeFile2(1: DataTypes.FileEntry parent, 2: string name, 3: i64 size) 
+    DataTypes.FileEntry makeFile2(1: DataTypes.FileEntry parent, 2: string name, 3: i64 size) 
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
 
     // Remove entry 
@@ -38,9 +38,9 @@ service ClientMasterService
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
 
     // Move entry to another node
-    void moveEntry(1: string fromPath, 2: string toPath) 
+    DataTypes.FileEntry moveEntry(1: string fromPath, 2: string toPath) 
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
-    void moveEntry2(1: DataTypes.FileEntry entry, 2: DataTypes.FileEntry parent, 3: string name) 
+    DataTypes.FileEntry moveEntry2(1: DataTypes.FileEntry entry, 2: DataTypes.FileEntry parent, 3: string name) 
         throws(1: DataTypes.EntryNotFound err1, 2: DataTypes.InvalidOperation err2),
 
     // Write to a file. We are not transmitting bytes yet. This function is

@@ -19,7 +19,7 @@ public interface FileSystem {
     /**
      * Cleanly disconnect from the server.
      */
-    public void disconnect() throws ConnectionLostException;
+    public void disconnect();
     
     /**
      * Get information structure about a file or directory.
@@ -50,28 +50,31 @@ public interface FileSystem {
      * one call.
      * 
      * @param path Path to new directory.
+     * @return New directory's entry.
      */
-    public void makeDirectory(String path) throws ConnectionLostException,
-                                                  EntryNotFoundException,
-                                                  InvalidOperationException;
+    public FileEntry makeDirectory(String path) throws ConnectionLostException,
+                                                       EntryNotFoundException,
+                                                       InvalidOperationException;
     
-    public void makeDirectory(FileEntry parentDir, String name) throws ConnectionLostException,
-                                                                       EntryNotFoundException,
-                                                                       InvalidOperationException;
+    public FileEntry makeDirectory(FileEntry parentDir, String name) throws ConnectionLostException,
+                                                                            EntryNotFoundException,
+                                                                            InvalidOperationException;
     
     /**
      * Make file under specified path. You can also specify size in bytes of a 
      * file to be preallocated to be sure that after write there will be 
      * sufficient space for it's content. If file already exists it behaves the
      * same as UNIX function fallocate: extending or truncating a file.
+     *
+     * @return New file's entry.
      */
-    public void makeFile(String path, long size) throws ConnectionLostException,
-                                                        EntryNotFoundException,
-                                                        InvalidOperationException;
+    public FileEntry makeFile(String path, long size) throws ConnectionLostException,
+                                                             EntryNotFoundException,
+                                                             InvalidOperationException;
     
-    public void makeFile(FileEntry parentDir, String name, long size) throws ConnectionLostException,
-                                                                             EntryNotFoundException,
-                                                                             InvalidOperationException;
+    public FileEntry makeFile(FileEntry parentDir, String name, long size) throws ConnectionLostException,
+                                                                                  EntryNotFoundException,
+                                                                                  InvalidOperationException;
     
     /**
      * Remove file from specified path. If it's directory, it must be empty.
@@ -91,14 +94,16 @@ public interface FileSystem {
      * 
      * @param fromPath Old location of a file.
      * @param toPath New location of a file.
+     *
+     * @return Modified entry.
      */
-    public void moveEntry(String fromPath, String toPath) throws ConnectionLostException,
-                                                                 EntryNotFoundException,
-                                                                 InvalidOperationException;
+    public FileEntry moveEntry(String fromPath, String toPath) throws ConnectionLostException,
+                                                                      EntryNotFoundException,
+                                                                      InvalidOperationException;
     
-    public void moveEntry(FileEntry entry, FileEntry parentDir, String name) throws ConnectionLostException,
-                                                                                    EntryNotFoundException,
-                                                                                    InvalidOperationException;
+    public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name) throws ConnectionLostException,
+                                                                                         EntryNotFoundException,
+                                                                                         InvalidOperationException;
     
     /**
      * Write bytes to a file at given offset. If offset + bytes.lenght is
