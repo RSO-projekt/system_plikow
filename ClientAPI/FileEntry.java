@@ -69,6 +69,22 @@ public class FileEntry {
 	}
 
 	/**
+	 * Gets entry's parent's unique identifier.
+	 * @return Entry's unique identifier.
+	 */
+	public long getParentID() {
+		return parentID;
+	}
+
+	/**
+	 * Sets entry's parent's unique identifier.
+	 * @param id Unique entry's identifier.
+	 */
+	public void setParentID(long id) {
+		this.parentID = id;
+	}
+
+	/**
 	 * Gets entry's version, describing number of total changes done to a file.
 	 * @return Entry's version.
 	 */
@@ -119,6 +135,7 @@ public class FileEntry {
 	private Type type;
 	private SimpleDateFormat modificationDate;
 	private long id;
+    private long parentID;
 	private long version;
 	private long size;
 	private String name;
