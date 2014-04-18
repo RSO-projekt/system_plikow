@@ -6,9 +6,9 @@ package rso;
  * @author Przemysław Lenart
  */
 public class EntryNotFoundException extends Exception {
-	private static final long serialVersionUID = -2362095803184946075L;
+    private static final long serialVersionUID = -2362095803184946075L;
 
-	public EntryNotFoundException(String exception) {
-		super(exception);
-	}
+    public EntryNotFoundException(String exception) {
+        super(exception);
+    }
 }
