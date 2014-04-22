@@ -18,8 +18,18 @@ service MasterMasterService
     // not possible to resync with master on delta basis. It's a function
     // to transmit all metadata in [compressed], binary fromat. [Called by
     // mirror Master Server].
-    void updateMetadata(1: binary metadata),
+    binary updateMetadata(),
 
     //------ ELECTION FUNCTIONS ------------------------------------------------
-    // To be specified...
+
+    // Message is sent on server initialization and when connection to a
+    // coordinator is lost. Election message is only send to server with higher
+    // priority.
+    void election(1: i32 serverID),
+
+    // Message is sent by a server when no one is responding after an election.
+    void elected(1: i32 serverID),
+
+    // Message is sent to stop election for lower priority server.
+    void ok(1: i32 serverID)
 }

@@ -35,9 +35,22 @@ struct FileEntry
 // Extended File Entry structure available for a servers
 struct FileEntryExtended 
 {
-    1: FileEntry entry;      // Information visible for normal user
-    2: list<i32> mirrors;    // List of server's ID who have a file mirrors.
-    3: FileState state;      // State of a file
+    1: FileEntry entry,      // Information visible for normal user
+    2: list<i32> mirrors,    // List of server's ID who have a file mirrors.
+    3: FileState state       // State of a file
+}
+
+// File transaction
+enum TransactionType
+{
+    READ,
+    WRITE
+}
+struct Transaction
+{
+    1: TransactionType type,
+    2: string token,
+    3: i32 dataServer
 }
 
 // Exception for non existing entries
