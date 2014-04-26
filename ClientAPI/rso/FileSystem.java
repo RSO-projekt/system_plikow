@@ -2,6 +2,8 @@ package rso;
 
 import java.util.ArrayList;
 
+import org.apache.thrift.transport.TTransportException;
+
 /**
  * Class interface for a communication to Distributed File System service. All
  * functions declared below should be implemented by using Apache Thrift
@@ -13,8 +15,9 @@ public interface FileSystem {
     /**
      * Initial function which establish connection between client and a main
      * server.
+     * @throws TTransportException 
      */
-    public void connect() throws ConnectionLostException;
+    public void connect() throws TTransportException;
     
     /**
      * Cleanly disconnect from the server.

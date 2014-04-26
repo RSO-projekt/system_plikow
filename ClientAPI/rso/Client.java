@@ -1,5 +1,7 @@
 package rso;
 
+import org.apache.thrift.transport.TTransportException;
+
 /**
  * 
  * @author Daniel Pogrebniak
@@ -9,9 +11,35 @@ public class Client {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-		    System.out.println("Błąd: Brak parametrów wywołania!");
+		    System.err.println("Błąd: Brak parametrów wywołania!");
 		    System.out.println(help());
 		    System.exit(0);
+		}
+		FileSystem fs = new FileSystemImpl();
+		try {
+			fs.connect();
+		} catch (TTransportException e) {
+			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
+			e.printStackTrace();
+		}
+		selectAction(args, fs);
+		fs.disconnect();
+	}
+
+	private static void selectAction(String[] args, FileSystem fs) {
+		try {
+			switch (args[0]) {
+			case "ls": case "-ls":
+					fs.lookup(args[1]);
+				break;
+	
+			default:
+				System.err.println("Błąd: Niewłaściwe parametry wywołania!");
+				break;
+			}
+		} catch (ConnectionLostException | EntryNotFoundException
+				| InvalidOperationException e) {
+			e.printStackTrace();
 		}
 	}
 
