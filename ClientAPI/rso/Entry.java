@@ -9,7 +9,7 @@ package rso;
 public abstract class Entry {
     
 	private long id;
-    private Entry parent;
+    private DirectoryEntry parent;
     private String name;
     
     /**
@@ -29,18 +29,18 @@ public abstract class Entry {
     }
 
     /**
-     * Gets entry's parent's unique identifier.
-     * @return Entry's unique identifier.
+     * Gets entry's parent.
+     * @return Entry's parent.
      */
-    public Entry getParent() {
+    public DirectoryEntry getParent() {
         return parent;
     }
 
     /**
-     * Sets entry's parent's unique identifier.
-     * @param id Unique entry's identifier.
+     * Sets entry's parent.
+     * @param parent Entry's parent.
      */
-    public void setParent(Entry parent) {
+    public void setParent(DirectoryEntry parent) {
         this.parent = parent;
     }
 
