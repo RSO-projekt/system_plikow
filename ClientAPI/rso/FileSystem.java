@@ -29,9 +29,8 @@ public interface FileSystem {
      * 
      * @param path Path to a file or directory.
      */
-    public Entry getFileEntry(String path) throws ConnectionLostException,
-                                                      EntryNotFoundException,
-                                                      InvalidOperationException;
+    public Entry getEntry(String path) throws ConnectionLostException,
+                                                      EntryNotFoundException;
     
     /**
      * Get list of file entries in specified folder.
@@ -44,9 +43,7 @@ public interface FileSystem {
                                                            EntryNotFoundException,
                                                            InvalidOperationException;
     
-    public ArrayList<Entry> lookup(Entry dirEntry) throws ConnectionLostException,
-                                                                  EntryNotFoundException,
-                                                                  InvalidOperationException;
+    public ArrayList<Entry> lookup(DirectoryEntry dirEntry) throws ConnectionLostException;
     
     /**
      * Make directory under specified path. You can create several folders in
@@ -55,12 +52,11 @@ public interface FileSystem {
      * @param path Path to new directory.
      * @return New directory's entry.
      */
-    public Entry makeDirectory(String path) throws ConnectionLostException,
+    public DirectoryEntry makeDirectory(String path) throws ConnectionLostException,
                                                        EntryNotFoundException,
                                                        InvalidOperationException;
     
-    public Entry makeDirectory(Entry parentDir, String name) throws ConnectionLostException,
-                                                                            EntryNotFoundException,
+    public DirectoryEntry makeDirectory(DirectoryEntry parentDir, String name) throws ConnectionLostException,
                                                                             InvalidOperationException;
     
     /**
@@ -71,12 +67,11 @@ public interface FileSystem {
      *
      * @return New file's entry.
      */
-    public Entry makeFile(String path, long size) throws ConnectionLostException,
+    public FileEntry makeFile(String path, long size) throws ConnectionLostException,
                                                              EntryNotFoundException,
                                                              InvalidOperationException;
     
-    public Entry makeFile(Entry parentDir, String name, long size) throws ConnectionLostException,
-                                                                                  EntryNotFoundException,
+    public FileEntry makeFile(DirectoryEntry parentDir, String name, long size) throws ConnectionLostException,
                                                                                   InvalidOperationException;
     
     /**
@@ -88,7 +83,6 @@ public interface FileSystem {
                                                 InvalidOperationException;
     
     public void removeEntry(Entry entry) throws ConnectionLostException,
-                                                    EntryNotFoundException,
                                                     InvalidOperationException;
     
     /**
@@ -104,8 +98,7 @@ public interface FileSystem {
                                                                       EntryNotFoundException,
                                                                       InvalidOperationException;
     
-    public Entry moveEntry(Entry entry, Entry parentDir, String name) throws ConnectionLostException,
-                                                                                         EntryNotFoundException,
+    public Entry moveEntry(Entry entry, DirectoryEntry parentDir, String name) throws ConnectionLostException,
                                                                                          InvalidOperationException;
     
     /**
@@ -120,8 +113,7 @@ public interface FileSystem {
                                                                                EntryNotFoundException,
                                                                                InvalidOperationException;
     
-    public void writeToFile(Entry file, long offset, byte[] bytes) throws ConnectionLostException,
-                                                                              EntryNotFoundException,
+    public void writeToFile(FileEntry file, long offset, byte[] bytes) throws ConnectionLostException,
                                                                               InvalidOperationException;
     
     /**
@@ -136,7 +128,6 @@ public interface FileSystem {
                                                                               EntryNotFoundException,
                                                                               InvalidOperationException;
     
-    public byte[] readFromFile(Entry file, long offset, long num) throws ConnectionLostException,
-                                                                             EntryNotFoundException,
+    public byte[] readFromFile(FileEntry file, long offset, long num) throws ConnectionLostException,
                                                                              InvalidOperationException;
 }
