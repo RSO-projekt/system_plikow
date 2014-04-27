@@ -1,6 +1,6 @@
 package rso;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Informational class describing properties of a file or directory. Each
@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
  * 
  * @author Przemysław Lenart
  */
-public class FileEntry {
+public abstract class Entry {
     
     /**
      * Type of an entry. Can be file or directory.
@@ -40,7 +40,7 @@ public class FileEntry {
      * Gets date of last modification.
      * @return Date of last modification.
      */
-    public SimpleDateFormat getModificationDate() {
+    public Date getModificationDate() {
         return modificationDate;
     }
 
@@ -48,7 +48,7 @@ public class FileEntry {
      * Sets date of last modification.
      * @param modificationDate Date of last modification.
      */
-    public void setModificationDate(SimpleDateFormat modificationDate) {
+    public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
     }
 
@@ -133,7 +133,7 @@ public class FileEntry {
     }
 
     private Type type;
-    private SimpleDateFormat modificationDate;
+    private Date modificationDate;
     private long id;
     private long parentID;
     private long version;

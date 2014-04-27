@@ -23,14 +23,14 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public FileEntry getFileEntry(String path) throws ConnectionLostException,
+	public Entry getFileEntry(String path) throws ConnectionLostException,
 			EntryNotFoundException, InvalidOperationException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<FileEntry> lookup(String path)
+	public ArrayList<Entry> lookup(String path)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -38,7 +38,7 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public ArrayList<FileEntry> lookup(FileEntry dirEntry)
+	public ArrayList<Entry> lookup(Entry dirEntry)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -46,14 +46,14 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public FileEntry makeDirectory(String path) throws ConnectionLostException,
+	public Entry makeDirectory(String path) throws ConnectionLostException,
 			EntryNotFoundException, InvalidOperationException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public FileEntry makeDirectory(FileEntry parentDir, String name)
+	public Entry makeDirectory(Entry parentDir, String name)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -61,7 +61,7 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public FileEntry makeFile(String path, long size)
+	public Entry makeFile(String path, long size)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -69,7 +69,7 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public FileEntry makeFile(FileEntry parentDir, String name, long size)
+	public Entry makeFile(Entry parentDir, String name, long size)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -84,14 +84,14 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public void removeEntry(FileEntry entry) throws ConnectionLostException,
+	public void removeEntry(Entry entry) throws ConnectionLostException,
 			EntryNotFoundException, InvalidOperationException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public FileEntry moveEntry(String fromPath, String toPath)
+	public Entry moveEntry(String fromPath, String toPath)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -99,7 +99,7 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name)
+	public Entry moveEntry(Entry entry, Entry parentDir, String name)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -115,7 +115,7 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public void writeToFile(FileEntry file, long offset, byte[] bytes)
+	public void writeToFile(Entry file, long offset, byte[] bytes)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
@@ -131,7 +131,7 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public byte[] readFromFile(FileEntry file, long offset, long num)
+	public byte[] readFromFile(Entry file, long offset, long num)
 			throws ConnectionLostException, EntryNotFoundException,
 			InvalidOperationException {
 		// TODO Auto-generated method stub
