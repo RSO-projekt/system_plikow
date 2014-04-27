@@ -1,5 +1,7 @@
 package rso;
 
+import java.util.ArrayList;
+
 import org.apache.thrift.transport.TTransportException;
 
 /**
@@ -15,24 +17,33 @@ public class Client {
 		    System.out.println(help());
 		    System.exit(0);
 		}
+		Client client = new Client();
 		FileSystem fs = new FileSystemImpl();
 		try {
 			fs.connect();
+			client.selectAction(args, fs);
 		} catch (TTransportException e) {
 			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
-			e.printStackTrace();
+			e.printStackTrace(); //TODO tylko do testów 
+		} finally {
+			fs.disconnect();
 		}
-		selectAction(args, fs);
-		fs.disconnect();
 	}
 
-	private static void selectAction(String[] args, FileSystem fs) {
+	private void selectAction(String[] args, FileSystem fs) {
+		String action = null;
+		if (args[0].startsWith("-"))
+			action = args[0].substring(1);
+		else
+			action = args[0];
 		try {
-			switch (args[0]) {
-			case "ls": case "-ls":
-					fs.lookup(args[1]);
+			switch (action) {
+			case "ls":
+				showListOfEntries(fs.lookup(args[1]));
 				break;
-	
+			case "help":
+				System.out.println(help());
+				break;
 			default:
 				System.err.println("Błąd: Niewłaściwe parametry wywołania!");
 				break;
@@ -43,6 +54,15 @@ public class Client {
 		}
 	}
 
+	private void showListOfEntries(ArrayList<Entry> entries){
+		StringBuilder sb = new StringBuilder();
+		for (Entry entry : entries){
+			sb.append(entry.getName());
+			sb.append("\n");
+		}
+		System.out.println(sb.toString());
+	}
+	
 	static String help(){
 		return "Dostępne parametry wywołania:\n"
 				+ "-ls katalog \t\t Zwraca zawartość katalogu\n"
@@ -51,6 +71,7 @@ public class Client {
 				+ "-rm ścieżka \t\t Usuwa podany plik lub katalog\n"
 				+ "-mv obecna nowa \t Przenosi / Zmienia nazwę pliku/folderu\n"
 				+ "-read ścieżka \t\t Odczyt ???\n" //TODO do ustalenia
-				+ "-write ścieżka \t\t Zapis ???\n"; //TODO do ustalenia
+				+ "-write ścieżka \t\t Zapis ???\n" //TODO do ustalenia
+				+ "-help \t\t\t Dostępne parametry wywołania"; 
 	}
 }
