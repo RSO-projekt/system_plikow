@@ -1,57 +1,17 @@
 package rso;
 
-import java.util.Date;
-
 /**
  * Informational class describing properties of a file or directory. Each
- * FileEntry uniquely identifies file or directory based on theirs ID and
- * version number.
+ * Entry uniquely identifies file or directory based on theirs ID.
  * 
  * @author Przemysław Lenart
  */
 public abstract class Entry {
     
-    /**
-     * Type of an entry. Can be file or directory.
-     * @author Przemysław Lenart
-     */
-    public enum Type {
-        FILE,
-        DIRECTORY
-    }
-
-    /**
-     * Gets type of an entry.
-     * @return Type of an entry. Can be file or directory.
-     */
-    public Type getType() {
-        return type;
-    }
-
-    /**
-     * Sets type of an entry.
-     * @param Type of an entry. Can be file or directory.
-     */
-    public void setType(Type type) {
-        this.type = type;
-    }
+	private long id;
+    private Entry parent;
+    private String name;
     
-    /**
-     * Gets date of last modification.
-     * @return Date of last modification.
-     */
-    public Date getModificationDate() {
-        return modificationDate;
-    }
-
-    /**
-     * Sets date of last modification.
-     * @param modificationDate Date of last modification.
-     */
-    public void setModificationDate(Date modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
     /**
      * Gets entry's unique identifier.
      * @return Entry's unique identifier.
@@ -72,48 +32,16 @@ public abstract class Entry {
      * Gets entry's parent's unique identifier.
      * @return Entry's unique identifier.
      */
-    public long getParentID() {
-        return parentID;
+    public Entry getParent() {
+        return parent;
     }
 
     /**
      * Sets entry's parent's unique identifier.
      * @param id Unique entry's identifier.
      */
-    public void setParentID(long id) {
-        this.parentID = id;
-    }
-
-    /**
-     * Gets entry's version, describing number of total changes done to a file.
-     * @return Entry's version.
-     */
-    public long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets entry's version, describing number of total changes done to a file.
-     * @param version Entry's version.
-     */
-    public void setVersion(long version) {
-        this.version = version;
-    }
-
-    /**
-     * Gets total length of a file.
-     * @return File size.
-     */
-    public long getSize() {
-        return size;
-    }
-
-    /**
-     * Sets size of a file.
-     * @param size File size.
-     */
-    public void setSize(long size) {
-        this.size = size;
+    public void setParent(Entry parent) {
+        this.parent = parent;
     }
 
     /**
@@ -132,11 +60,4 @@ public abstract class Entry {
         this.name = name;
     }
 
-    private Type type;
-    private Date modificationDate;
-    private long id;
-    private long parentID;
-    private long version;
-    private long size;
-    private String name;
 }
