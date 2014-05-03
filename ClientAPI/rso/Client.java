@@ -1,6 +1,13 @@
 package rso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import rso.at.FileType;
 
 /**
  * 
@@ -39,6 +46,42 @@ public class Client {
 			case "ls":
 				showListOfEntries(fs.lookup(args[1]));
 				break;
+			case "mkdir":
+				fs.makeDirectory(args[1]);
+				System.out.println("OK");
+				break;
+			case "mkfile":
+				Integer size = new Integer(args[2]);
+				fs.makeFile(args[1], size);
+				System.out.println("OK");
+				break;
+			case "rm":
+				fs.removeEntry(args[1]);
+				System.out.println("OK");
+				break;
+			case "mv":
+				fs.moveEntry(args[1], args[2]);
+				System.out.println("OK");
+				break;
+			case "readPart":
+				long offset = new Long(args[2]);
+				long num = new Long(args[3]);
+				byte[] bytes = fs.readFromFile(args[1], offset, num);
+				System.out.println(bytes);
+				break;
+			case "readAll":
+				readFile(fs, args[1], args[2]);
+				System.out.println("OK");
+				break;
+			case "writePart":
+				long offset2 = new Long(args[2]);
+				fs.writeToFile(args[1], offset2, args[3].getBytes());
+				System.out.println("OK");
+				break;
+			case "writeAll":
+				writeFile(fs, args[1], args[2]);
+				System.out.println("OK");
+				break;
 			case "help":
 				System.out.println(help());
 				break;
@@ -49,27 +92,61 @@ public class Client {
 		} catch (ConnectionLostException | EntryNotFoundException
 				| InvalidOperationException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private void showListOfEntries(ArrayList<FileEntry> entries){
 		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		for (FileEntry entry : entries){
+			sb.append(format.format(entry.getModificationDate()));
+			if (entry.getType().equals(FileType.DIRECTORY))
+				sb.append(" DIR  ");
+			else
+				sb.append(" FILE ");
+			sb.append(entry.getSize());
+			sb.append("\t");
 			sb.append(entry.getName());
 			sb.append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 	
-	static String help(){
+	private void readFile(FileSystem fs, String from, String to)
+			throws ConnectionLostException, EntryNotFoundException,
+			InvalidOperationException, IOException {
+		FileEntry entry = fs.getFileEntry(from);
+		long size = entry.getSize();
+		byte[] bytes = fs.readFromFile(entry, 0, size);
+		File file = new File(to);
+		if (!file.exists())
+			file.createNewFile();
+		FileOutputStream fos = new FileOutputStream(file);
+		fos.write(bytes);
+		fos.close();
+	}
+	
+	private void writeFile(FileSystem fs, String to, String from)
+			throws ConnectionLostException, EntryNotFoundException,
+			InvalidOperationException, IOException {
+		File file = new File(from);
+		byte[] bytes = Files.readAllBytes(file.toPath());
+		fs.writeToFile(to, 0, bytes);
+	}
+	
+	private static String help(){
 		return "Dostępne parametry wywołania:\n"
-				+ "-ls katalog \t\t Zwraca zawartość katalogu\n"
-				+ "-mkdir katalog \t\t Tworzy nowy katalog\n"
-				+ "-mkfile ścieżka rozmiar\t Tworzy nowy plik o podanym rozmiarze\n"
-				+ "-rm ścieżka \t\t Usuwa podany plik lub katalog\n"
-				+ "-mv obecna nowa \t Przenosi / Zmienia nazwę pliku/folderu\n"
-				+ "-read ścieżka \t\t Odczyt ???\n" //TODO do ustalenia
-				+ "-write ścieżka \t\t Zapis ???\n" //TODO do ustalenia
-				+ "-help \t\t\t Dostępne parametry wywołania"; 
+				+ "-ls katalog \t\t\t Zwraca zawartość katalogu\n"
+				+ "-mkdir katalog \t\t\t Tworzy nowy katalog\n"
+				+ "-mkfile ścieżka rozmiar\t\t Tworzy nowy plik o podanym rozmiarze\n"
+				+ "-rm ścieżka \t\t\t Usuwa podany plik lub katalog\n"
+				+ "-mv obecna nowa \t\t Przenosi / Zmienia nazwę pliku/folderu\n"
+				+ "-readPart ścieżka offset rozmiar Odczyt fragmentu pliku z serwera\n"
+				+ "-readAll zdalny lokalny \t Odczyt pliku z serwera\n"
+				+ "-writePart ścieżka offset dane \t Modyfikacja pliku na serwerze\n" 
+				+ "-writeAll zdalny lokalny \t Zapis pliku na serwerze\n"
+				+ "-help \t\t\t\t Dostępne parametry wywołania"; 
 	}
 }
