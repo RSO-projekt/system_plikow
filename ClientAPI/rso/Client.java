@@ -2,8 +2,6 @@ package rso;
 
 import java.util.ArrayList;
 
-import org.apache.thrift.transport.TTransportException;
-
 /**
  * 
  * @author Daniel Pogrebniak
@@ -22,7 +20,7 @@ public class Client {
 		try {
 			fs.connect();
 			client.selectAction(args, fs);
-		} catch (TTransportException e) {
+		} catch (ConnectionLostException e) {
 			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
 			e.printStackTrace(); //TODO tylko do testów 
 		} finally {
@@ -54,9 +52,9 @@ public class Client {
 		}
 	}
 
-	private void showListOfEntries(ArrayList<Entry> entries){
+	private void showListOfEntries(ArrayList<FileEntry> entries){
 		StringBuilder sb = new StringBuilder();
-		for (Entry entry : entries){
+		for (FileEntry entry : entries){
 			sb.append(entry.getName());
 			sb.append("\n");
 		}

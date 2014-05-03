@@ -2,8 +2,6 @@ package rso;
 
 import java.util.ArrayList;
 
-import org.apache.thrift.transport.TTransportException;
-
 /**
  * Class interface for a communication to Distributed File System service. All
  * functions declared below should be implemented by using Apache Thrift
@@ -15,9 +13,8 @@ public interface FileSystem {
     /**
      * Initial function which establish connection between client and a main
      * server.
-     * @throws TTransportException 
      */
-    public void connect() throws TTransportException;
+    public void connect() throws ConnectionLostException;
     
     /**
      * Cleanly disconnect from the server.
@@ -29,8 +26,9 @@ public interface FileSystem {
      * 
      * @param path Path to a file or directory.
      */
-    public Entry getEntry(String path) throws ConnectionLostException,
-                                                      EntryNotFoundException;
+    public FileEntry getFileEntry(String path) throws ConnectionLostException,
+                                                      EntryNotFoundException,
+                                                      InvalidOperationException;
     
     /**
      * Get list of file entries in specified folder.
@@ -39,11 +37,13 @@ public interface FileSystem {
      *             directory.
      * @return List of FileEntries in specified folder by URL.
      */
-    public ArrayList<Entry> lookup(String path) throws ConnectionLostException,
+    public ArrayList<FileEntry> lookup(String path) throws ConnectionLostException,
                                                            EntryNotFoundException,
                                                            InvalidOperationException;
     
-    public ArrayList<Entry> lookup(DirectoryEntry dirEntry) throws ConnectionLostException;
+    public ArrayList<FileEntry> lookup(FileEntry dirEntry) throws ConnectionLostException,
+                                                                  EntryNotFoundException,
+                                                                  InvalidOperationException;
     
     /**
      * Make directory under specified path. You can create several folders in
@@ -52,11 +52,12 @@ public interface FileSystem {
      * @param path Path to new directory.
      * @return New directory's entry.
      */
-    public DirectoryEntry makeDirectory(String path) throws ConnectionLostException,
+    public FileEntry makeDirectory(String path) throws ConnectionLostException,
                                                        EntryNotFoundException,
                                                        InvalidOperationException;
     
-    public DirectoryEntry makeDirectory(DirectoryEntry parentDir, String name) throws ConnectionLostException,
+    public FileEntry makeDirectory(FileEntry parentDir, String name) throws ConnectionLostException,
+                                                                            EntryNotFoundException,
                                                                             InvalidOperationException;
     
     /**
@@ -71,7 +72,8 @@ public interface FileSystem {
                                                              EntryNotFoundException,
                                                              InvalidOperationException;
     
-    public FileEntry makeFile(DirectoryEntry parentDir, String name, long size) throws ConnectionLostException,
+    public FileEntry makeFile(FileEntry parentDir, String name, long size) throws ConnectionLostException,
+                                                                                  EntryNotFoundException,
                                                                                   InvalidOperationException;
     
     /**
@@ -82,7 +84,8 @@ public interface FileSystem {
                                                 EntryNotFoundException,
                                                 InvalidOperationException;
     
-    public void removeEntry(Entry entry) throws ConnectionLostException,
+    public void removeEntry(FileEntry entry) throws ConnectionLostException,
+                                                    EntryNotFoundException,
                                                     InvalidOperationException;
     
     /**
@@ -94,11 +97,12 @@ public interface FileSystem {
      *
      * @return Modified entry.
      */
-    public Entry moveEntry(String fromPath, String toPath) throws ConnectionLostException,
+    public FileEntry moveEntry(String fromPath, String toPath) throws ConnectionLostException,
                                                                       EntryNotFoundException,
                                                                       InvalidOperationException;
     
-    public Entry moveEntry(Entry entry, DirectoryEntry parentDir, String name) throws ConnectionLostException,
+    public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name) throws ConnectionLostException,
+                                                                                         EntryNotFoundException,
                                                                                          InvalidOperationException;
     
     /**
@@ -114,6 +118,7 @@ public interface FileSystem {
                                                                                InvalidOperationException;
     
     public void writeToFile(FileEntry file, long offset, byte[] bytes) throws ConnectionLostException,
+                                                                              EntryNotFoundException,
                                                                               InvalidOperationException;
     
     /**
@@ -129,5 +134,6 @@ public interface FileSystem {
                                                                               InvalidOperationException;
     
     public byte[] readFromFile(FileEntry file, long offset, long num) throws ConnectionLostException,
+                                                                             EntryNotFoundException,
                                                                              InvalidOperationException;
 }
