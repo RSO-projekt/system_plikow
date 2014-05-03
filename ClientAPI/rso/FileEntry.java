@@ -1,6 +1,8 @@
 package rso;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import rso.at.FileType;
 
 /**
  * Informational class describing properties of a file or directory. Each
@@ -11,20 +13,30 @@ import java.text.SimpleDateFormat;
  */
 public class FileEntry {
     
-    /**
-     * Type of an entry. Can be file or directory.
-     * @author Przemysław Lenart
-     */
-    public enum Type {
-        FILE,
-        DIRECTORY
-    }
+	public FileEntry(rso.at.FileEntry entry) {
+		type = entry.getType();
+		modificationDate = new Date((long)entry.getModificationTime()*1000);
+		id = entry.getId();
+		parentID = entry.getParentID();
+		version = entry.getVersion();
+		size = entry.getSize();
+		name = entry.getName();
+	}
+	
+//    /**
+//     * Type of an entry. Can be file or directory.
+//     * @author Przemysław Lenart
+//     */
+//    public enum Type {
+//        FILE,
+//        DIRECTORY
+//    }
 
     /**
      * Gets type of an entry.
      * @return Type of an entry. Can be file or directory.
      */
-    public Type getType() {
+    public FileType getType() {
         return type;
     }
 
@@ -32,7 +44,7 @@ public class FileEntry {
      * Sets type of an entry.
      * @param Type of an entry. Can be file or directory.
      */
-    public void setType(Type type) {
+    public void setType(FileType type) {
         this.type = type;
     }
     
@@ -40,7 +52,7 @@ public class FileEntry {
      * Gets date of last modification.
      * @return Date of last modification.
      */
-    public SimpleDateFormat getModificationDate() {
+    public Date getModificationDate() {
         return modificationDate;
     }
 
@@ -48,7 +60,7 @@ public class FileEntry {
      * Sets date of last modification.
      * @param modificationDate Date of last modification.
      */
-    public void setModificationDate(SimpleDateFormat modificationDate) {
+    public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
     }
 
@@ -132,8 +144,8 @@ public class FileEntry {
         this.name = name;
     }
 
-    private Type type;
-    private SimpleDateFormat modificationDate;
+    private FileType type;
+    private Date modificationDate;
     private long id;
     private long parentID;
     private long version;

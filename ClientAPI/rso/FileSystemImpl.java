@@ -2,12 +2,18 @@ package rso;
 
 import java.util.ArrayList;
 
+import org.apache.thrift.TException;
+
+import rso.at.ClientMasterService;
+
 public class FileSystemImpl implements FileSystem {
 
+	ClientMasterService.Iface service;
+	
 	@Override
 	public void connect() throws ConnectionLostException {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -19,8 +25,15 @@ public class FileSystemImpl implements FileSystem {
 	@Override
 	public FileEntry getFileEntry(String path) throws ConnectionLostException,
 			EntryNotFoundException, InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+		rso.at.FileEntry entry = null;
+		try {
+			entry = service.getFileEntry(path);
+		} catch (TException e) { //TODO do ustalenia czy korzystamy z rso.EntryNotFoundException
+//										czy z rso.at.EntryNotFound czy z obu
+//										moim zdaniem lepiej będzie wykorzystać te z rso.at.*
+			e.printStackTrace();
+		}
+		return new FileEntry(entry);
 	}
 
 	@Override
@@ -42,8 +55,13 @@ public class FileSystemImpl implements FileSystem {
 	@Override
 	public FileEntry makeDirectory(String path) throws ConnectionLostException,
 			EntryNotFoundException, InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+		rso.at.FileEntry entry = null;
+		try {
+			entry = service.makeDirectory(path);
+		} catch (TException e) { //TODO jw.
+			e.printStackTrace();
+		}
+		return new FileEntry(entry);
 	}
 
 	@Override
