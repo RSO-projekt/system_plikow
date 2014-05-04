@@ -38,7 +38,7 @@ public class MasterMasterService {
 
     public void updateEntry(rso.at.FileEntry entry, long modNumber) throws org.apache.thrift.TException;
 
-    public ByteBuffer updateMetadata() throws org.apache.thrift.TException;
+    public List<rso.at.FileEntryExtended> updateMetadata() throws org.apache.thrift.TException;
 
     public void election(int serverID) throws org.apache.thrift.TException;
 
@@ -95,7 +95,7 @@ public class MasterMasterService {
       sendBase("updateEntry", args);
     }
 
-    public ByteBuffer updateMetadata() throws org.apache.thrift.TException
+    public List<rso.at.FileEntryExtended> updateMetadata() throws org.apache.thrift.TException
     {
       send_updateMetadata();
       return recv_updateMetadata();
@@ -107,7 +107,7 @@ public class MasterMasterService {
       sendBase("updateMetadata", args);
     }
 
-    public ByteBuffer recv_updateMetadata() throws org.apache.thrift.TException
+    public List<rso.at.FileEntryExtended> recv_updateMetadata() throws org.apache.thrift.TException
     {
       updateMetadata_result result = new updateMetadata_result();
       receiveBase(result, "updateMetadata");
@@ -248,7 +248,7 @@ public class MasterMasterService {
         prot.writeMessageEnd();
       }
 
-      public ByteBuffer getResult() throws org.apache.thrift.TException {
+      public List<rso.at.FileEntryExtended> getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -523,7 +523,7 @@ public class MasterMasterService {
       }
     }
 
-    public static class updateMetadata<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateMetadata_args, ByteBuffer> {
+    public static class updateMetadata<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateMetadata_args, List<rso.at.FileEntryExtended>> {
       public updateMetadata() {
         super("updateMetadata");
       }
@@ -532,10 +532,10 @@ public class MasterMasterService {
         return new updateMetadata_args();
       }
 
-      public AsyncMethodCallback<ByteBuffer> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<List<rso.at.FileEntryExtended>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<ByteBuffer>() { 
-          public void onComplete(ByteBuffer o) {
+        return new AsyncMethodCallback<List<rso.at.FileEntryExtended>>() { 
+          public void onComplete(List<rso.at.FileEntryExtended> o) {
             updateMetadata_result result = new updateMetadata_result();
             result.success = o;
             try {
@@ -569,7 +569,7 @@ public class MasterMasterService {
         return false;
       }
 
-      public void start(I iface, updateMetadata_args args, org.apache.thrift.async.AsyncMethodCallback<ByteBuffer> resultHandler) throws TException {
+      public void start(I iface, updateMetadata_args args, org.apache.thrift.async.AsyncMethodCallback<List<rso.at.FileEntryExtended>> resultHandler) throws TException {
         iface.updateMetadata(resultHandler);
       }
     }
@@ -1432,7 +1432,7 @@ public class MasterMasterService {
   public static class updateMetadata_result implements org.apache.thrift.TBase<updateMetadata_result, updateMetadata_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateMetadata_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateMetadata_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1440,7 +1440,7 @@ public class MasterMasterService {
       schemes.put(TupleScheme.class, new updateMetadata_resultTupleSchemeFactory());
     }
 
-    public ByteBuffer success; // required
+    public List<rso.at.FileEntryExtended> success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -1505,7 +1505,8 @@ public class MasterMasterService {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING          , true)));
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.FileEntryExtended.class))));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateMetadata_result.class, metaDataMap);
     }
@@ -1514,7 +1515,7 @@ public class MasterMasterService {
     }
 
     public updateMetadata_result(
-      ByteBuffer success)
+      List<rso.at.FileEntryExtended> success)
     {
       this();
       this.success = success;
@@ -1525,8 +1526,11 @@ public class MasterMasterService {
      */
     public updateMetadata_result(updateMetadata_result other) {
       if (other.isSetSuccess()) {
-        this.success = org.apache.thrift.TBaseHelper.copyBinary(other.success);
-;
+        List<rso.at.FileEntryExtended> __this__success = new ArrayList<rso.at.FileEntryExtended>(other.success.size());
+        for (rso.at.FileEntryExtended other_element : other.success) {
+          __this__success.add(new rso.at.FileEntryExtended(other_element));
+        }
+        this.success = __this__success;
       }
     }
 
@@ -1539,21 +1543,26 @@ public class MasterMasterService {
       this.success = null;
     }
 
-    public byte[] getSuccess() {
-      setSuccess(org.apache.thrift.TBaseHelper.rightSize(success));
-      return success == null ? null : success.array();
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
     }
 
-    public ByteBuffer bufferForSuccess() {
-      return success;
+    public java.util.Iterator<rso.at.FileEntryExtended> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
     }
 
-    public updateMetadata_result setSuccess(byte[] success) {
-      setSuccess(success == null ? (ByteBuffer)null : ByteBuffer.wrap(success));
-      return this;
+    public void addToSuccess(rso.at.FileEntryExtended elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<rso.at.FileEntryExtended>();
+      }
+      this.success.add(elem);
     }
 
-    public updateMetadata_result setSuccess(ByteBuffer success) {
+    public List<rso.at.FileEntryExtended> getSuccess() {
+      return this.success;
+    }
+
+    public updateMetadata_result setSuccess(List<rso.at.FileEntryExtended> success) {
       this.success = success;
       return this;
     }
@@ -1579,7 +1588,7 @@ public class MasterMasterService {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((ByteBuffer)value);
+          setSuccess((List<rso.at.FileEntryExtended>)value);
         }
         break;
 
@@ -1680,7 +1689,7 @@ public class MasterMasterService {
       if (this.success == null) {
         sb.append("null");
       } else {
-        org.apache.thrift.TBaseHelper.toString(this.success, sb);
+        sb.append(this.success);
       }
       first = false;
       sb.append(")");
@@ -1727,8 +1736,19 @@ public class MasterMasterService {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.success = iprot.readBinary();
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
+                  struct.success = new ArrayList<rso.at.FileEntryExtended>(_list0.size);
+                  for (int _i1 = 0; _i1 < _list0.size; ++_i1)
+                  {
+                    rso.at.FileEntryExtended _elem2;
+                    _elem2 = new rso.at.FileEntryExtended();
+                    _elem2.read(iprot);
+                    struct.success.add(_elem2);
+                  }
+                  iprot.readListEnd();
+                }
                 struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -1751,7 +1771,14 @@ public class MasterMasterService {
         oprot.writeStructBegin(STRUCT_DESC);
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
+            for (rso.at.FileEntryExtended _iter3 : struct.success)
+            {
+              _iter3.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -1777,7 +1804,13 @@ public class MasterMasterService {
         }
         oprot.writeBitSet(optionals, 1);
         if (struct.isSetSuccess()) {
-          oprot.writeBinary(struct.success);
+          {
+            oprot.writeI32(struct.success.size());
+            for (rso.at.FileEntryExtended _iter4 : struct.success)
+            {
+              _iter4.write(oprot);
+            }
+          }
         }
       }
 
@@ -1786,7 +1819,17 @@ public class MasterMasterService {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.success = iprot.readBinary();
+          {
+            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+            struct.success = new ArrayList<rso.at.FileEntryExtended>(_list5.size);
+            for (int _i6 = 0; _i6 < _list5.size; ++_i6)
+            {
+              rso.at.FileEntryExtended _elem7;
+              _elem7 = new rso.at.FileEntryExtended();
+              _elem7.read(iprot);
+              struct.success.add(_elem7);
+            }
+          }
           struct.setSuccessIsSet(true);
         }
       }

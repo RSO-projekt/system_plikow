@@ -1,3 +1,4 @@
+package impl.server;
 import java.util.List;
 
 import org.apache.thrift.TException;

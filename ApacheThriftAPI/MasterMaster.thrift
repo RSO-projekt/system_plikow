@@ -18,7 +18,7 @@ service MasterMasterService
     // not possible to resync with master on delta basis. It's a function
     // to transmit all metadata in [compressed], binary fromat. [Called by
     // mirror Master Server].
-    binary updateMetadata(),
+    list<DataTypes.FileEntryExtended> updateMetadata(),
 
     //------ ELECTION FUNCTIONS ------------------------------------------------
 
