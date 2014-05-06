@@ -34,10 +34,29 @@ public class FileSystemImpl implements FileSystem {
 	
 	@Override
 	public void connect() throws TTransportException {
-		transport = new TSocket("localhost", 9090);
-        transport.open();
-        TProtocol protocol = new TBinaryProtocol(transport);
-        service = new ClientMasterService.Client(protocol);
+		int masterServerNum = new Integer(prop.getProperty("master-server-num"));
+		int i = 0;
+		while (service == null && i < masterServerNum){
+			String host = prop.getProperty("master-server-host-"+i);
+			String port = prop.getProperty("master-server-port-"+i);
+			String timeout = prop.getProperty("master-server-timeout");
+			try {
+				createTransport(host, new Integer(port), new Integer(timeout));
+				TProtocol protocol = new TBinaryProtocol(transport);
+				service = new ClientMasterService.Client(protocol);
+			} catch (TTransportException e) {
+				//TODO tu powinno być logowanie błędów
+				++i;
+			}
+		}
+		if (service == null)
+			throw new TTransportException();
+	}
+	
+	private void createTransport(String host, int port, int timeout)
+			throws TTransportException {
+		transport = new TSocket(host, port, timeout);
+		transport.open();
 	}
 
 	@Override
