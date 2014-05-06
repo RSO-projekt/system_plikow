@@ -3,6 +3,9 @@ package rso;
 import java.util.List;
 
 import org.apache.thrift.TException;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 
 import rso.at.ClientMasterService;
 import rso.at.EntryNotFound;
@@ -12,18 +15,21 @@ import rso.at.Transaction;
 
 public class FileSystemImpl implements FileSystem {
 
-	ClientMasterService.Iface service;
+	private ClientMasterService.Iface service;
+	private TTransport transport;
 
 	@Override
-	public void connect() {
-		// TODO Auto-generated method stub
-
+	public void connect() throws TTransportException {
+		transport = new TSocket("localhost", 9090);
+        transport.open();
+//        TProtocol protocol = new  TBinaryProtocol(transport);
+//        service = new ClientMasterService(protocol) //TODO
+        
 	}
 
 	@Override
 	public void disconnect() {
-		// TODO Auto-generated method stub
-
+		transport.close();
 	}
 
 	@Override

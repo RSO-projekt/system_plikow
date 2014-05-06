@@ -3,6 +3,7 @@ package rso;
 import java.util.List;
 
 import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
 
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
@@ -19,8 +20,9 @@ public interface FileSystem {
     /**
      * Initial function which establish connection between client and a main
      * server.
+     * @throws TTransportException 
      */
-    public void connect() throws EntryNotFound;
+    public void connect() throws TTransportException;
     
     /**
      * Cleanly disconnect from the server.

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
 
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
@@ -33,7 +34,7 @@ public class Client {
 		try {
 			fs.connect();
 			client.selectAction(args, fs);
-		} catch (EntryNotFound e) {
+		} catch (TTransportException e) {
 			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
 			e.printStackTrace(); //TODO tylko do testów 
 		} finally {
