@@ -1,6 +1,7 @@
 package rso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,15 +31,21 @@ public class Client {
 		    System.exit(0);
 		}
 		Client client = new Client();
-		FileSystem fs = new FileSystemImpl();
+		FileSystem fs = null;
 		try {
+			fs = new FileSystemImpl();
 			fs.connect();
 			client.selectAction(args, fs);
 		} catch (TTransportException e) {
 			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
 			e.printStackTrace(); //TODO tylko do testów 
+		} catch (FileNotFoundException e) {
+			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
+		} catch (IOException e) {
+			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
 		} finally {
-			fs.disconnect();
+			if (fs != null)
+				fs.disconnect();
 		}
 	}
 

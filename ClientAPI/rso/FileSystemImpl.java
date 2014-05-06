@@ -1,8 +1,15 @@
 package rso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -17,14 +24,20 @@ public class FileSystemImpl implements FileSystem {
 
 	private ClientMasterService.Iface service;
 	private TTransport transport;
+	private Properties prop;
 
+	public FileSystemImpl() throws FileNotFoundException, IOException {
+		prop = new Properties();
+		File configFile = new File("properties.conf");
+		prop.load(new FileReader(configFile));
+	}
+	
 	@Override
 	public void connect() throws TTransportException {
 		transport = new TSocket("localhost", 9090);
         transport.open();
-//        TProtocol protocol = new  TBinaryProtocol(transport);
-//        service = new ClientMasterService(protocol) //TODO
-        
+        TProtocol protocol = new TBinaryProtocol(transport);
+        service = new ClientMasterService.Client(protocol);
 	}
 
 	@Override
