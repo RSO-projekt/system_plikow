@@ -1,6 +1,12 @@
 package rso;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.thrift.TException;
+
+import rso.at.EntryNotFound;
+import rso.at.FileEntry;
+import rso.at.InvalidOperation;
 
 /**
  * Class interface for a communication to Distributed File System service. All
@@ -14,7 +20,7 @@ public interface FileSystem {
      * Initial function which establish connection between client and a main
      * server.
      */
-    public void connect() throws ConnectionLostException;
+    public void connect() throws EntryNotFound;
     
     /**
      * Cleanly disconnect from the server.
@@ -25,10 +31,13 @@ public interface FileSystem {
      * Get information structure about a file or directory.
      * 
      * @param path Path to a file or directory.
+     * @throws TException 
+     * @throws InvalidOperation 
+     * @throws EntryNotFound 
      */
-    public FileEntry getFileEntry(String path) throws ConnectionLostException,
-                                                      EntryNotFoundException,
-                                                      InvalidOperationException;
+    public FileEntry getFileEntry(String path) throws EntryNotFound,
+                                                      InvalidOperation,
+                                                      TException;
     
     /**
      * Get list of file entries in specified folder.
@@ -37,13 +46,13 @@ public interface FileSystem {
      *             directory.
      * @return List of FileEntries in specified folder by URL.
      */
-    public ArrayList<FileEntry> lookup(String path) throws ConnectionLostException,
-                                                           EntryNotFoundException,
-                                                           InvalidOperationException;
+    public List<FileEntry> lookup(String path) throws EntryNotFound,
+                                                           InvalidOperation,
+                                                           TException;
     
-    public ArrayList<FileEntry> lookup(FileEntry dirEntry) throws ConnectionLostException,
-                                                                  EntryNotFoundException,
-                                                                  InvalidOperationException;
+    public List<FileEntry> lookup(FileEntry dirEntry) throws EntryNotFound,
+                                                                  InvalidOperation,
+                                                                  TException;
     
     /**
      * Make directory under specified path. You can create several folders in
@@ -52,13 +61,13 @@ public interface FileSystem {
      * @param path Path to new directory.
      * @return New directory's entry.
      */
-    public FileEntry makeDirectory(String path) throws ConnectionLostException,
-                                                       EntryNotFoundException,
-                                                       InvalidOperationException;
+    public FileEntry makeDirectory(String path) throws EntryNotFound,
+                                                       InvalidOperation,
+                                                       TException;
     
-    public FileEntry makeDirectory(FileEntry parentDir, String name) throws ConnectionLostException,
-                                                                            EntryNotFoundException,
-                                                                            InvalidOperationException;
+    public FileEntry makeDirectory(FileEntry parentDir, String name) throws EntryNotFound,
+                                                                            InvalidOperation,
+                                                                            TException;
     
     /**
      * Make file under specified path. You can also specify size in bytes of a 
@@ -68,25 +77,25 @@ public interface FileSystem {
      *
      * @return New file's entry.
      */
-    public FileEntry makeFile(String path, long size) throws ConnectionLostException,
-                                                             EntryNotFoundException,
-                                                             InvalidOperationException;
+    public FileEntry makeFile(String path, long size) throws EntryNotFound,
+                                                             InvalidOperation,
+                                                             TException;
     
-    public FileEntry makeFile(FileEntry parentDir, String name, long size) throws ConnectionLostException,
-                                                                                  EntryNotFoundException,
-                                                                                  InvalidOperationException;
+    public FileEntry makeFile(FileEntry parentDir, String name, long size) throws EntryNotFound,
+                                                                                  InvalidOperation,
+                                                                                  TException;
     
     /**
      * Remove file from specified path. If it's directory, it must be empty.
      * @param path Path to a file for removal.
      */
-    public void removeEntry(String path) throws ConnectionLostException,
-                                                EntryNotFoundException,
-                                                InvalidOperationException;
+    public void removeEntry(String path) throws EntryNotFound,
+                                                InvalidOperation,
+                                                TException;
     
-    public void removeEntry(FileEntry entry) throws ConnectionLostException,
-                                                    EntryNotFoundException,
-                                                    InvalidOperationException;
+    public void removeEntry(FileEntry entry) throws EntryNotFound,
+                                                    InvalidOperation,
+                                                    TException;
     
     /**
      * Move file inside of file system. This function also can be used for
@@ -97,13 +106,13 @@ public interface FileSystem {
      *
      * @return Modified entry.
      */
-    public FileEntry moveEntry(String fromPath, String toPath) throws ConnectionLostException,
-                                                                      EntryNotFoundException,
-                                                                      InvalidOperationException;
+    public FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound,
+                                                                      InvalidOperation,
+                                                                      TException;
     
-    public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name) throws ConnectionLostException,
-                                                                                         EntryNotFoundException,
-                                                                                         InvalidOperationException;
+    public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name) throws EntryNotFound,
+                                                                                         InvalidOperation,
+                                                                                         TException;
     
     /**
      * Write bytes to a file at given offset. If offset + bytes.lenght is
@@ -113,13 +122,13 @@ public interface FileSystem {
      * @param offset File offset where writing should start.
      * @param bytes Bytes to write.
      */
-    public void writeToFile(String filePath, long offset, byte[] bytes) throws ConnectionLostException,
-                                                                               EntryNotFoundException,
-                                                                               InvalidOperationException;
+    public void writeToFile(String filePath, long offset, byte[] bytes) throws EntryNotFound,
+                                                                               InvalidOperation,
+                                                                               TException;
     
-    public void writeToFile(FileEntry file, long offset, byte[] bytes) throws ConnectionLostException,
-                                                                              EntryNotFoundException,
-                                                                              InvalidOperationException;
+    public void writeToFile(FileEntry file, long offset, byte[] bytes) throws EntryNotFound,
+                                                                              InvalidOperation,
+                                                                              TException;
     
     /**
      * Read num bytes from a file at given offset. If num + offset is bigger
@@ -129,11 +138,11 @@ public interface FileSystem {
      * @param offset File offset where reading should start,
      * @return Bytes read.
      */
-    public byte[] readFromFile(String filePath, long offset, long num) throws ConnectionLostException,
-                                                                              EntryNotFoundException,
-                                                                              InvalidOperationException;
+    public byte[] readFromFile(String filePath, long offset, long num) throws EntryNotFound,
+                                                                              InvalidOperation,
+                                                                              TException;
     
-    public byte[] readFromFile(FileEntry file, long offset, long num) throws ConnectionLostException,
-                                                                             EntryNotFoundException,
-                                                                             InvalidOperationException;
+    public byte[] readFromFile(FileEntry file, long offset, long num) throws EntryNotFound,
+                                                                             InvalidOperation,
+                                                                             TException;
 }

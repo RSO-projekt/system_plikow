@@ -1,19 +1,22 @@
 package rso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.thrift.TException;
 
 import rso.at.ClientMasterService;
+import rso.at.EntryNotFound;
+import rso.at.FileEntry;
+import rso.at.InvalidOperation;
 
 public class FileSystemImpl implements FileSystem {
 
 	ClientMasterService.Iface service;
-	
+
 	@Override
-	public void connect() throws ConnectionLostException {
+	public void connect() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -23,131 +26,83 @@ public class FileSystemImpl implements FileSystem {
 	}
 
 	@Override
-	public FileEntry getFileEntry(String path) throws ConnectionLostException,
-			EntryNotFoundException, InvalidOperationException {
-		rso.at.FileEntry entry = null;
-		try {
-			entry = service.getFileEntry(path);
-		} catch (TException e) { //TODO do ustalenia czy korzystamy z rso.EntryNotFoundException
-//										czy z rso.at.EntryNotFound czy z obu
-//										moim zdaniem lepiej będzie wykorzystać te z rso.at.*
-			e.printStackTrace();
-		}
-		return new FileEntry(entry);
+	public FileEntry getFileEntry(String path) throws EntryNotFound,
+			InvalidOperation, TException {
+		return service.getFileEntry(path);
 	}
 
 	@Override
-	public ArrayList<FileEntry> lookup(String path)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FileEntry> lookup(String path) throws EntryNotFound,
+			InvalidOperation, TException {
+		return service.lookup(path);
 	}
 
 	@Override
-	public ArrayList<FileEntry> lookup(FileEntry dirEntry)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FileEntry> lookup(FileEntry dirEntry) throws EntryNotFound,
+			InvalidOperation, TException {
+		return service.lookup2(dirEntry);
 	}
 
 	@Override
-	public FileEntry makeDirectory(String path) throws ConnectionLostException,
-			EntryNotFoundException, InvalidOperationException {
-		rso.at.FileEntry entry = null;
-		try {
-			entry = service.makeDirectory(path);
-		} catch (TException e) { //TODO jw.
-			e.printStackTrace();
-		}
-		return new FileEntry(entry);
+	public FileEntry makeDirectory(String path) throws EntryNotFound, InvalidOperation, TException {
+		return service.makeDirectory(path);
 	}
 
 	@Override
-	public FileEntry makeDirectory(FileEntry parentDir, String name)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public FileEntry makeDirectory(FileEntry parentDir, String name) throws EntryNotFound, InvalidOperation, TException {
+		return service.makeDirectory2(parentDir, name);
 	}
 
 	@Override
-	public FileEntry makeFile(String path, long size)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public FileEntry makeFile(String path, long size) throws EntryNotFound, InvalidOperation, TException {
+		return service.makeFile(path, size);
 	}
 
 	@Override
-	public FileEntry makeFile(FileEntry parentDir, String name, long size)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public FileEntry makeFile(FileEntry parentDir, String name, long size) throws EntryNotFound, InvalidOperation, TException {
+		return service.makeFile2(parentDir, name, size);
 	}
 
 	@Override
-	public void removeEntry(String path) throws ConnectionLostException,
-			EntryNotFoundException, InvalidOperationException {
-		// TODO Auto-generated method stub
-
+	public void removeEntry(String path) throws EntryNotFound, InvalidOperation, TException {
+		service.removeEntry(path);
 	}
 
 	@Override
-	public void removeEntry(FileEntry entry) throws ConnectionLostException,
-			EntryNotFoundException, InvalidOperationException {
-		// TODO Auto-generated method stub
-
+	public void removeEntry(FileEntry entry) throws EntryNotFound, InvalidOperation, TException {
+		service.removeEntry2(entry);
 	}
 
 	@Override
-	public FileEntry moveEntry(String fromPath, String toPath)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound, InvalidOperation, TException {
+		return service.moveEntry(fromPath, toPath);
 	}
 
 	@Override
-	public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name) throws EntryNotFound, InvalidOperation, TException {
+		return service.moveEntry2(entry, parentDir, name);
 	}
 
 	@Override
-	public void writeToFile(String filePath, long offset, byte[] bytes)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-
+	public void writeToFile(String filePath, long offset, byte[] bytes) {
+//		service.writeToFile(filePath, offset, bytes); //TODO
 	}
 
 	@Override
-	public void writeToFile(FileEntry file, long offset, byte[] bytes)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-
+	public void writeToFile(FileEntry file, long offset, byte[] bytes) {
+//		service.writeToFile(file, offset, bytes); //TODO
 	}
 
 	@Override
-	public byte[] readFromFile(String filePath, long offset, long num)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] readFromFile(String filePath, long offset, long num) {
+//		return service.readFromFile(filePath, offset, num);
+		return null; //TODO
 	}
 
 	@Override
-	public byte[] readFromFile(FileEntry file, long offset, long num)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] readFromFile(FileEntry file, long offset, long num) {
+//		return service.readFromFile(file, offset, num);
+		return null; //TODO
 	}
 
 }

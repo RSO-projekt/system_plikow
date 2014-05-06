@@ -5,9 +5,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import org.apache.thrift.TException;
+
+import rso.at.EntryNotFound;
+import rso.at.FileEntry;
 import rso.at.FileType;
+import rso.at.InvalidOperation;
 
 /**
  * 
@@ -27,7 +33,7 @@ public class Client {
 		try {
 			fs.connect();
 			client.selectAction(args, fs);
-		} catch (ConnectionLostException e) {
+		} catch (EntryNotFound e) {
 			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
 			e.printStackTrace(); //TODO tylko do testów 
 		} finally {
@@ -89,19 +95,27 @@ public class Client {
 				System.err.println("Błąd: Niewłaściwe parametry wywołania!");
 				break;
 			}
-		} catch (ConnectionLostException | EntryNotFoundException
-				| InvalidOperationException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EntryNotFound e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidOperation e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void showListOfEntries(ArrayList<FileEntry> entries){
+	private void showListOfEntries(List<FileEntry> entries){
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		for (FileEntry entry : entries){
-			sb.append(format.format(entry.getModificationDate()));
+			Date modificationTime = new Date((long)entry.getModificationTime());
+			sb.append(format.format(modificationTime));
 			if (entry.getType().equals(FileType.DIRECTORY))
 				sb.append(" DIR  ");
 			else
@@ -115,8 +129,7 @@ public class Client {
 	}
 	
 	private void readFile(FileSystem fs, String from, String to)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException, IOException {
+			throws  IOException, EntryNotFound, InvalidOperation, TException {
 		FileEntry entry = fs.getFileEntry(from);
 		long size = entry.getSize();
 		byte[] bytes = fs.readFromFile(entry, 0, size);
@@ -129,8 +142,7 @@ public class Client {
 	}
 	
 	private void writeFile(FileSystem fs, String to, String from)
-			throws ConnectionLostException, EntryNotFoundException,
-			InvalidOperationException, IOException {
+			throws IOException, EntryNotFound, InvalidOperation, TException {
 		File file = new File(from);
 		byte[] bytes = Files.readAllBytes(file.toPath());
 		fs.writeToFile(to, 0, bytes);
