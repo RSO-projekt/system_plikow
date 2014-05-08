@@ -65,29 +65,26 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 	@Override
 	public void removeEntry(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
+		monitor.removeEntry(path);
 		
 	}
 
 	@Override
 	public void removeEntry2(FileEntry entry) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		
+		monitor.removeEntry2(entry);
 	}
 
 	@Override
 	public FileEntry moveEntry(String fromPath, String toPath)
 			throws EntryNotFound, InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.moveEntry(fromPath, toPath);
 	}
 
 	@Override
 	public FileEntry moveEntry2(FileEntry entry, FileEntry parent, String name)
 			throws EntryNotFound, InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.moveEntry2(entry, parent, name);
 	}
 
 	@Override

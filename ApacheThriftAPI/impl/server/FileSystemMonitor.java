@@ -132,7 +132,7 @@ public class FileSystemMonitor {
 	
 	public synchronized FileEntry makeFile(String path, long size) throws EntryNotFound, InvalidOperation {
 		if (path.isEmpty()) {
-			throw new EntryNotFound(0, "Empty string not expected");
+			throw new EntryNotFound(0, "Empty string is not expected");
 		}
 		if (path.charAt(path.length()-1)=='/') 
 			path =path.substring(0, path.length()-1);
@@ -178,6 +178,49 @@ public class FileSystemMonitor {
 		return file.entry.deepCopy();
 	}
 	
+	public synchronized void removeEntry(String path) throws EntryNotFound, InvalidOperation {
+		if (path.isEmpty()) {
+			throw new EntryNotFound(0, "Empty string is not expected");
+		}
+		FileEntryExtended removingEntry = getEntry(path);
+		removeEntry2(removingEntry.entry);
+	}
+	
+	public synchronized void removeEntry2(FileEntry entry) throws EntryNotFound, InvalidOperation {
+		FileEntryExtended removingEntry = idMap.get(entry.id);
+		TreeSet<FileEntryExtended> parentTreeSet = parentIdMap.get(removingEntry.entry.id);
+		if (removingEntry.entry.type == FileType.DIRECTORY){
+			if(!parentTreeSet.isEmpty()){
+				throw new InvalidOperation(5, "Directory is not empty, you cannot remove unempty directory");
+			}
+		}
+		parentTreeSet.remove(removingEntry);
+		idMap.remove(removingEntry.entry.id);
+	}
+	
+	public synchronized FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound, InvalidOperation {
+		FileEntryExtended from = getEntry(fromPath);
+		FileEntryExtended to = getEntry(toPath);
+		return moveEntry2(from.entry, to.entry, null);
+	}
+	
+	public synchronized FileEntry moveEntry2(FileEntry entry, FileEntry parent, String name) throws EntryNotFound, InvalidOperation {
+		if (name.contains("/"))
+			throw new InvalidOperation(4, "You cannot put / in file name");
+		if (parent.type == FileType.FILE){
+			throw new InvalidOperation(6, "Place to move cannot be file");
+		}
+		TreeSet<FileEntryExtended> fromTree = parentIdMap.get(entry.parentID);
+		TreeSet<FileEntryExtended> toTree = parentIdMap.get(parent.id);
+		FileEntryExtended movingEntry = idMap.get(entry.id);
+		fromTree.remove(movingEntry);
+		toTree.add(movingEntry);
+		movingEntry.entry.parentID = parent.id;
+		if (!name.isEmpty()){
+			movingEntry.entry.name = name;
+		}
+		return movingEntry.entry.deepCopy();
+	}
 }
 
 
