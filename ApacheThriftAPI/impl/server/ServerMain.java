@@ -1,8 +1,9 @@
 package impl.server;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.server.TServer;
@@ -13,36 +14,29 @@ import org.apache.thrift.transport.TTransportException;
 import rso.at.ClientMasterService;
 import rso.at.MasterMasterService;
 
-import org.ini4j.Ini;
-import org.ini4j.InvalidFileFormatException;
-import org.ini4j.Profile.Section;
-
 public class ServerMain {
 
-	private final static String PATH_TO_CONFIG_FILE = "config.ini";
+	private final static String PATH_TO_CONFIG_FILE = "properties.conf";
 	
 	private static void readConfig(){
-		Ini ini;
+		Properties prop = new Properties();
 		try {
-			ini = new Ini(new File(PATH_TO_CONFIG_FILE));
-			Section section = ini.get("");
-			Configuration.sRedundancy = Integer.valueOf(section.get("redundancy"));
-			Configuration.sMinRedundancy = Integer.valueOf(section.get("min-redundancy"));
-			Configuration.sInternalPort = Integer.valueOf(section.get("internal-port"));
-			Configuration.sExternalPort = Integer.valueOf(section.get("external-port"));
-			int num = Integer.valueOf(section.get("master-server-num"));
+			FileReader reader = new FileReader(PATH_TO_CONFIG_FILE);
+			prop.load(reader);
+			Configuration.sRedundancy = Integer.parseInt(prop.getProperty("redundancy"));
+			Configuration.sMinRedundancy = Integer.parseInt(prop.getProperty("min-redundancy"));
+			Configuration.sInternalPort = Integer.parseInt(prop.getProperty("internal-port"));
+			Configuration.sExternalPort = Integer.parseInt(prop.getProperty("external-port"));
+			int num = Integer.parseInt(prop.getProperty("master-server-num"));
 			Configuration.sMainServerIPs.clear();
 			Configuration.sDataServerIPs.clear();
 			for(int i =0; i < num; i++){
-				Configuration.sMainServerIPs.add(section.get((new String("master-server")) + String.valueOf(i)));
+				Configuration.sMainServerIPs.add(prop.getProperty(new String("master-server") + String.valueOf(i)));
 			}
-			num = Integer.valueOf(section.get("data-server-num"));
+			num = Integer.parseInt(prop.getProperty("data-server-num"));
 			for(int i =0; i < num; i++){
-				Configuration.sDataServerIPs.add(section.get((new String("data-server")) + String.valueOf(i)));
+				Configuration.sDataServerIPs.add(prop.getProperty(new String("data-server") + String.valueOf(i)));
 			}
-			
-		} catch (InvalidFileFormatException e) {
-			e.printStackTrace();
 		} catch(FileNotFoundException e){
 			System.out.println("Configuration file not found. Using default settings.");
 		} catch (IOException e) {
