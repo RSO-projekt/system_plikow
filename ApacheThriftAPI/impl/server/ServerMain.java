@@ -51,8 +51,10 @@ public class ServerMain {
 
 			TMultiplexedProcessor processor = new TMultiplexedProcessor();
 			
-			processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl()));
-			processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl()));
+			FileSystemMonitor monitor = new FileSystemMonitor();
+			
+			processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl(monitor)));
+			processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
 			
 
 			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).

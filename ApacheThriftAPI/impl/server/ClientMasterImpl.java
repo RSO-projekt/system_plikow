@@ -6,59 +6,60 @@ import org.apache.thrift.TException;
 import rso.at.ClientMasterService;
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
+import rso.at.FileEntryExtended;
+import rso.at.FileType;
 import rso.at.InvalidOperation;
 import rso.at.Transaction;
 
 
 public class ClientMasterImpl implements ClientMasterService.Iface {
+	private FileSystemMonitor monitor;
+	public ClientMasterImpl(FileSystemMonitor monitor) {
+		this.monitor=monitor;
+	}
 
 	@Override
 	public FileEntry getFileEntry(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+	
+		return monitor.getEntry(path).entry;
 	}
 
 	@Override
 	public List<FileEntry> lookup(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return monitor.lookup(path, null);
 	}
 
 	@Override
 	public List<FileEntry> lookup2(FileEntry parent) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.lookup("", parent);
 	}
 
 	@Override
 	public FileEntry makeDirectory(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.makeDirectory(path);
 	}
 
 	@Override
 	public FileEntry makeDirectory2(FileEntry parent, String name)
 			throws EntryNotFound, InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.makeDirectory2(parent, name);
 	}
 
 	@Override
 	public FileEntry makeFile(String path, long size) throws EntryNotFound,
 			InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.makeFile(path, size);
 	}
 
 	@Override
 	public FileEntry makeFile2(FileEntry parent, String name, long size)
 			throws EntryNotFound, InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
+		return monitor.makeFile2(parent, name, size);
 	}
 
 	@Override

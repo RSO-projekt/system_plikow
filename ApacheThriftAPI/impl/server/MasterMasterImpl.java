@@ -8,6 +8,11 @@ import org.apache.thrift.TException;
 import rso.at.*;
 
 public class MasterMasterImpl implements MasterMasterService.Iface{
+	private FileSystemMonitor monitor;
+	public MasterMasterImpl(FileSystemMonitor monitor) {
+		this.monitor=monitor;
+	}
+
 
 	@Override
 	public void updateEntry(FileEntry entry, long modNumber) throws TException {

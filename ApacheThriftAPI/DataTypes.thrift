@@ -24,7 +24,7 @@ enum FileState
 struct FileEntry
 {
     1: FileType type,        // Entry type: either a DIRECTORY or a FILE
-    2: i32 modificationTime, // time in seconds since epoch (modification time)
+    2: i64 modificationTime, // time in seconds since epoch (modification time)
     3: i64 id,               // unique ID for an entry
     4: i64 parentID,         // unique parent ID
     5: i32 version,          // incremental version number

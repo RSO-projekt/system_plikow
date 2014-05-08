@@ -36,7 +36,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("FileEntry");
 
   private static final org.apache.thrift.protocol.TField TYPE_FIELD_DESC = new org.apache.thrift.protocol.TField("type", org.apache.thrift.protocol.TType.I32, (short)1);
-  private static final org.apache.thrift.protocol.TField MODIFICATION_TIME_FIELD_DESC = new org.apache.thrift.protocol.TField("modificationTime", org.apache.thrift.protocol.TType.I32, (short)2);
+  private static final org.apache.thrift.protocol.TField MODIFICATION_TIME_FIELD_DESC = new org.apache.thrift.protocol.TField("modificationTime", org.apache.thrift.protocol.TType.I64, (short)2);
   private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)3);
   private static final org.apache.thrift.protocol.TField PARENT_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("parentID", org.apache.thrift.protocol.TType.I64, (short)4);
   private static final org.apache.thrift.protocol.TField VERSION_FIELD_DESC = new org.apache.thrift.protocol.TField("version", org.apache.thrift.protocol.TType.I32, (short)5);
@@ -54,7 +54,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
    * @see FileType
    */
   public FileType type; // required
-  public int modificationTime; // required
+  public long modificationTime; // required
   public long id; // required
   public long parentID; // required
   public int version; // required
@@ -154,7 +154,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
     tmpMap.put(_Fields.TYPE, new org.apache.thrift.meta_data.FieldMetaData("type", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.EnumMetaData(org.apache.thrift.protocol.TType.ENUM, FileType.class)));
     tmpMap.put(_Fields.MODIFICATION_TIME, new org.apache.thrift.meta_data.FieldMetaData("modificationTime", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.PARENT_ID, new org.apache.thrift.meta_data.FieldMetaData("parentID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -174,7 +174,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
 
   public FileEntry(
     FileType type,
-    int modificationTime,
+    long modificationTime,
     long id,
     long parentID,
     int version,
@@ -266,11 +266,11 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
     }
   }
 
-  public int getModificationTime() {
+  public long getModificationTime() {
     return this.modificationTime;
   }
 
-  public FileEntry setModificationTime(int modificationTime) {
+  public FileEntry setModificationTime(long modificationTime) {
     this.modificationTime = modificationTime;
     setModificationTimeIsSet(true);
     return this;
@@ -419,7 +419,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
       if (value == null) {
         unsetModificationTime();
       } else {
-        setModificationTime((Integer)value);
+        setModificationTime((Long)value);
       }
       break;
 
@@ -472,7 +472,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
       return getType();
 
     case MODIFICATION_TIME:
-      return Integer.valueOf(getModificationTime());
+      return Long.valueOf(getModificationTime());
 
     case ID:
       return Long.valueOf(getId());
@@ -789,8 +789,8 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
             }
             break;
           case 2: // MODIFICATION_TIME
-            if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-              struct.modificationTime = iprot.readI32();
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.modificationTime = iprot.readI64();
               struct.setModificationTimeIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -857,7 +857,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
         oprot.writeFieldEnd();
       }
       oprot.writeFieldBegin(MODIFICATION_TIME_FIELD_DESC);
-      oprot.writeI32(struct.modificationTime);
+      oprot.writeI64(struct.modificationTime);
       oprot.writeFieldEnd();
       oprot.writeFieldBegin(ID_FIELD_DESC);
       oprot.writeI64(struct.id);
@@ -920,7 +920,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
         oprot.writeI32(struct.type.getValue());
       }
       if (struct.isSetModificationTime()) {
-        oprot.writeI32(struct.modificationTime);
+        oprot.writeI64(struct.modificationTime);
       }
       if (struct.isSetId()) {
         oprot.writeI64(struct.id);
@@ -948,7 +948,7 @@ public class FileEntry implements org.apache.thrift.TBase<FileEntry, FileEntry._
         struct.setTypeIsSet(true);
       }
       if (incoming.get(1)) {
-        struct.modificationTime = iprot.readI32();
+        struct.modificationTime = iprot.readI64();
         struct.setModificationTimeIsSet(true);
       }
       if (incoming.get(2)) {
