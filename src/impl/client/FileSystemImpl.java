@@ -1,4 +1,4 @@
-package rso;
+package impl.client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -62,7 +63,8 @@ public class FileSystemImpl implements FileSystem {
 					System.out.println("Trwa łączenie z serwerem: "+host);
 					createTransport(host, port, timeout);
 					TProtocol protocol = new TBinaryProtocol(transport);
-					service = new ClientMasterService.Client(protocol);
+					TMultiplexedProtocol multiplexed = new TMultiplexedProtocol(protocol, "ClientMaster");
+					service = new ClientMasterService.Client(multiplexed);
 					System.out.println("Połączono.");
 				} catch (TTransportException e) {
 					System.out.println("Niepowodzenie.");

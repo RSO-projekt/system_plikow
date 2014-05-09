@@ -12,5 +12,5 @@ Class-Path: bin/
  lib/servlet-api-2.5.jar 
  lib/slf4j-api-1.5.8.jar 
  lib/slf4j-log4j12-1.5.8.jar 
-Main-Class: rso.Client
+Main-Class: impl.server.master.ServerMain
 

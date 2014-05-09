@@ -1,4 +1,4 @@
-package impl.server;
+package impl.server.master;
 
 import java.nio.ByteBuffer;
 import java.util.List;

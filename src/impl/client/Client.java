@@ -1,4 +1,4 @@
-package rso;
+package impl.client;
 
 import java.io.File;
 import java.io.FileNotFoundException;

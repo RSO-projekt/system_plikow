@@ -1,4 +1,4 @@
-package impl.server;
+package impl.server.master;
 
 import java.util.ArrayList;
 

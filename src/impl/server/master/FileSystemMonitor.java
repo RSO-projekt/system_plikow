@@ -1,4 +1,4 @@
-package impl.server;
+package impl.server.master;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import org.apache.http.entity.FileEntity;
 import rso.at.FileEntry;
 import rso.at.FileEntryExtended;
 import rso.at.EntryNotFound;
+import rso.at.FileState;
 import rso.at.FileType;
 import rso.at.InvalidOperation;
 
@@ -21,14 +22,11 @@ public class FileSystemMonitor {
 	public FileSystemMonitor() {
 		idMap = new TreeMap<Long, FileEntryExtended>();
 		parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
-		FileEntryExtended root = new FileEntryExtended();
-		root.entry.id=0;
-		root.entry.type=FileType.DIRECTORY;
-		root.entry.modificationTime = System.currentTimeMillis()/1000;
-		root.entry.name="";
-		root.entry.parentID=0;
-		root.entry.size=0;
-		root.entry.version=0;
+		FileEntry rootEntry = new FileEntry(FileType.DIRECTORY, 
+											System.currentTimeMillis()/1000,
+											0, 0, 0, 0, "root");
+		FileEntryExtended root = new FileEntryExtended(rootEntry, new ArrayList<Integer>(),
+				                                       FileState.IDLE);
 		idMap.put(0l, root);
 		TreeSet<FileEntryExtended> rootSet = new TreeSet<>();
 		parentIdMap.put(0l, rootSet);
@@ -99,14 +97,11 @@ public class FileSystemMonitor {
 		Long parentDirId = parentDir.entry.id;
 		if (parentDir.entry.type==FileType.FILE)
 			throw new InvalidOperation(1, "Invalid path. You cannot create folder in a file");
-		FileEntryExtended dir = new FileEntryExtended();
-		dir.entry.id=nextId;
-		dir.entry.type=FileType.DIRECTORY;
-		dir.entry.modificationTime = System.currentTimeMillis()/1000;
-		dir.entry.name=dirName;
-		dir.entry.parentID=parentDirId;
-		dir.entry.size=0;
-		dir.entry.version=0;
+		FileEntry dirEntry = new FileEntry(FileType.DIRECTORY, 
+										   System.currentTimeMillis()/1000,
+										   nextId, parentDirId, 0, 0, dirName);
+FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>(),
+                           					  FileState.IDLE);
 		++nextId;
 		idMap.put(dir.entry.id, dir);
 		parentIdMap.put(dir.entry.id, new TreeSet<FileEntryExtended>());
@@ -119,14 +114,11 @@ public class FileSystemMonitor {
 			throw new InvalidOperation(2, "You cannot put / in directory name");
 		if (parent.type==FileType.FILE)
 			throw new InvalidOperation(1, "Invalid path. You cannot create folder in a file");
-		FileEntryExtended dir = new FileEntryExtended();
-		dir.entry.id=nextId;
-		dir.entry.type=FileType.DIRECTORY;
-		dir.entry.modificationTime = System.currentTimeMillis()/1000;
-		dir.entry.name=name;
-		dir.entry.parentID=parent.id;
-		dir.entry.size=0;
-		dir.entry.version=0;
+		FileEntry dirEntry = new FileEntry(FileType.DIRECTORY, 
+				   System.currentTimeMillis()/1000,
+				   nextId, parent.id, 0, 0, name);
+		FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>(),
+					                                  FileState.IDLE);
 		++nextId;
 		
 		idMap.put(dir.entry.id, dir);
@@ -142,20 +134,17 @@ public class FileSystemMonitor {
 		if (path.charAt(path.length()-1)=='/') 
 			path =path.substring(0, path.length()-1);
 		String parentPath = path.substring(0, path.lastIndexOf('/'));
-		String fileName = path.substring(path.lastIndexOf('/'), path.length()-1);
+		String fileName = path.substring(path.lastIndexOf('/')+1, path.length());
 		FileEntryExtended parentDir = getEntry(parentPath);
 		Long parentDirId = parentDir.entry.id;
 		if (parentDir.entry.type==FileType.FILE)
 			throw new InvalidOperation(3, "Invalid path. You cannot create file in a file");
 		
-		FileEntryExtended file = new FileEntryExtended();
-		file.entry.id=nextId;
-		file.entry.type=FileType.FILE;
-		file.entry.modificationTime = System.currentTimeMillis()/1000;
-		file.entry.name=fileName;
-		file.entry.parentID=parentDirId;
-		file.entry.size=size;
-		file.entry.version=0;
+		FileEntry fileEntry = new FileEntry(FileType.FILE, 
+				                           System.currentTimeMillis()/1000,
+				                           nextId, parentDirId, 0, 0, fileName);
+		FileEntryExtended file = new FileEntryExtended(fileEntry, new ArrayList<Integer>(),
+					  								   FileState.IDLE);
 		++nextId;
 		
 		idMap.put(file.entry.id, file);
@@ -168,14 +157,11 @@ public class FileSystemMonitor {
 			throw new InvalidOperation(4, "You cannot put / in file name");
 		if (parent.type==FileType.FILE)
 			throw new InvalidOperation(3, "Invalid path. You cannot create file in a file");
-		FileEntryExtended file = new FileEntryExtended();
-		file.entry.id=nextId;
-		file.entry.type=FileType.FILE;
-		file.entry.modificationTime = System.currentTimeMillis()/1000;
-		file.entry.name=name;
-		file.entry.parentID=parent.id;
-		file.entry.size=0;
-		file.entry.version=0;
+		FileEntry fileEntry = new FileEntry(FileType.FILE, 
+											System.currentTimeMillis()/1000,
+											nextId, parent.id, 0, 0, name);
+		FileEntryExtended file = new FileEntryExtended(fileEntry, new ArrayList<Integer>(),
+							   						   FileState.IDLE);
 		++nextId;
 		
 		idMap.put(file.entry.id, file);
