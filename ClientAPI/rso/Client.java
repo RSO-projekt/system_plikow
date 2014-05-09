@@ -28,24 +28,29 @@ public class Client {
 		if (args.length == 0) {
 		    System.err.println("Błąd: Brak parametrów wywołania!");
 		    System.out.println(help());
-		    System.exit(0);
+		    return;
 		}
 		Client client = new Client();
 		FileSystem fs = null;
 		try {
 			fs = new FileSystemImpl();
+		} catch (NumberFormatException e1) {
+			System.err.println(e1.getMessage());
+			return;
+		} catch (FileNotFoundException e1) {
+			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
+			return;
+		} catch (IOException e1) {
+			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
+			return;
+		}
+		try {
 			fs.connect();
 			client.selectAction(args, fs);
 		} catch (TTransportException e) {
-			System.err.println("Błąd: Nie udało się nawiązać połączenia z serwerem!");
-			e.printStackTrace(); //TODO tylko do testów 
-		} catch (FileNotFoundException e) {
-			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
-		} catch (IOException e) {
-			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
+			System.out.println("Błąd: Nie udało się nawiązać połączenia z żadnym serwerem!");
 		} finally {
-			if (fs != null)
-				fs.disconnect();
+			fs.disconnect();
 		}
 	}
 

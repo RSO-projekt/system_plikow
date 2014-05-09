@@ -22,31 +22,56 @@ import rso.at.Transaction;
 
 public class FileSystemImpl implements FileSystem {
 
+	private static final String MASTER_SERVER_HOST = "master-server";
+	private static final String MASTER_SERVER_NUM = "master-server-num";
+	private static final String EXTERNAL_TIMEOUT = "external-timeout";
+	private static final String EXTERNAL_PORT = "external-port";
+	private final static String PATH_TO_CONFIG_FILE = "properties.conf";
 	private ClientMasterService.Iface service;
 	private TTransport transport;
 	private Properties prop;
+	private Integer port;
+	private Integer timeout;
 
-	public FileSystemImpl() throws FileNotFoundException, IOException {
+	public FileSystemImpl() throws FileNotFoundException, IOException, NumberFormatException {
 		prop = new Properties();
-		File configFile = new File("properties.conf");
+		File configFile = new File(PATH_TO_CONFIG_FILE);
 		prop.load(new FileReader(configFile));
+		String portString = prop.getProperty(EXTERNAL_PORT);
+		String timeoutString = prop.getProperty(EXTERNAL_TIMEOUT);
+		try {
+			port = new Integer(portString);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException("Błąd: Niepoprawny port: "+portString);
+		}
+		try {
+			timeout = new Integer(timeoutString);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException("Błąd: Niepoprawny timeout: "+timeoutString);
+		}
 	}
 	
 	@Override
 	public void connect() throws TTransportException {
-		int masterServerNum = new Integer(prop.getProperty("master-server-num"));
+		int masterServerNum = new Integer(prop.getProperty(MASTER_SERVER_NUM));
 		int i = 0;
 		while (service == null && i < masterServerNum){
-			String host = prop.getProperty("master-server-host-"+i);
-			String port = prop.getProperty("master-server-port-"+i);
-			String timeout = prop.getProperty("master-server-timeout");
-			try {
-				createTransport(host, new Integer(port), new Integer(timeout));
-				TProtocol protocol = new TBinaryProtocol(transport);
-				service = new ClientMasterService.Client(protocol);
-			} catch (TTransportException e) {
-				//TODO tu powinno być logowanie błędów
+			String host = prop.getProperty(MASTER_SERVER_HOST+i);
+			if (host != null){
+				try {
+					System.out.println("Trwa łączenie z serwerem: "+host);
+					createTransport(host, port, timeout);
+					TProtocol protocol = new TBinaryProtocol(transport);
+					service = new ClientMasterService.Client(protocol);
+					System.out.println("Połączono.");
+				} catch (TTransportException e) {
+					System.out.println("Niepowodzenie.");
+					++i;
+				}
+			}
+			else{
 				++i;
+				System.err.println("Błąd: Master-server-host-"+i+" jest null!");
 			}
 		}
 		if (service == null)
@@ -61,7 +86,8 @@ public class FileSystemImpl implements FileSystem {
 
 	@Override
 	public void disconnect() {
-		transport.close();
+		if (transport != null && transport.isOpen())
+			transport.close();
 	}
 
 	@Override
