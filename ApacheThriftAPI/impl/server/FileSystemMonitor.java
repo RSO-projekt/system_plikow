@@ -19,6 +19,8 @@ public class FileSystemMonitor {
 	private Long nextId;
 	
 	public FileSystemMonitor() {
+		idMap = new TreeMap<Long, FileEntryExtended>();
+		parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
 		FileEntryExtended root = new FileEntryExtended();
 		root.entry.id=0;
 		root.entry.type=FileType.DIRECTORY;
@@ -38,10 +40,10 @@ public class FileSystemMonitor {
 			throw new EntryNotFound(0, "Empty string not expected");
 		}
 		String[] pathArray = path.split("/"); 
-		if (!pathArray[0].isEmpty()) {
+		if (pathArray.length!=0 && !pathArray[0].isEmpty()) {
 			throw new EntryNotFound(0, "Path should start from root");
 		}
-		FileEntryExtended fe=idMap.get(0);
+		FileEntryExtended fe=idMap.get(0l);
 		FileEntryExtended fe2=fe;
 		for (int i=1; i<pathArray.length;++i) {
 			TreeSet<FileEntryExtended> dir = parentIdMap.get(fe.entry.id);
@@ -49,7 +51,7 @@ public class FileSystemMonitor {
 				throw new EntryNotFound(1, "Cannot find drectory children");
 			}
 			for (FileEntryExtended fileEntryExtended : dir) {
-				if (fileEntryExtended.entry.name == pathArray[i]) 
+				if (fileEntryExtended.entry.name.equals(pathArray[i])) 
 					fe2=fileEntryExtended;
 			}
 			if (fe==fe2)
@@ -86,13 +88,17 @@ public class FileSystemMonitor {
 		}
 		if (path.charAt(path.length()-1)=='/') 
 			path =path.substring(0, path.length()-1);
-		String parentPath = path.substring(0, path.lastIndexOf('/'));
-		String dirName = path.substring(path.lastIndexOf('/'), path.length()-1);
+		String parentPath = path;
+		if (path.lastIndexOf('/')!=0) {
+			parentPath = path.substring(0, path.lastIndexOf('/'));
+		}
+		else
+			parentPath="/";
+		String dirName = path.substring(path.lastIndexOf('/')+1, path.length());
 		FileEntryExtended parentDir = getEntry(parentPath);
 		Long parentDirId = parentDir.entry.id;
 		if (parentDir.entry.type==FileType.FILE)
 			throw new InvalidOperation(1, "Invalid path. You cannot create folder in a file");
-		
 		FileEntryExtended dir = new FileEntryExtended();
 		dir.entry.id=nextId;
 		dir.entry.type=FileType.DIRECTORY;
@@ -102,7 +108,6 @@ public class FileSystemMonitor {
 		dir.entry.size=0;
 		dir.entry.version=0;
 		++nextId;
-		
 		idMap.put(dir.entry.id, dir);
 		parentIdMap.put(dir.entry.id, new TreeSet<FileEntryExtended>());
 		parentIdMap.get(parentDirId).add(dir);

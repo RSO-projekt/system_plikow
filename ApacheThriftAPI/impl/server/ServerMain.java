@@ -12,6 +12,8 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
 import rso.at.ClientMasterService;
+import rso.at.EntryNotFound;
+import rso.at.InvalidOperation;
 import rso.at.MasterMasterService;
 
 public class ServerMain {
@@ -44,7 +46,7 @@ public class ServerMain {
 		}
 	}
 	
-	private void start() {
+	private void start() throws EntryNotFound, InvalidOperation {
 		try {
 			TServerSocket serverTransport = new TServerSocket(Configuration.sInternalPort);
 			//TODO skasowac niepotrzeby port, lub podzielic na dwa Sever Sockety dla DataMaster i MasterMaster
@@ -60,14 +62,16 @@ public class ServerMain {
 			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).
 					processor(processor));
 			System.out.println("Starting server on port " + Configuration.sInternalPort +" ...");
-			
+			monitor.makeDirectory("/temp/");
+			monitor.makeDirectory("/temp/temp2");
 			server.serve();
+			
 		} catch (TTransportException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws EntryNotFound, InvalidOperation{
 		readConfig();
 		ServerMain srv = new ServerMain();
 		srv.start();

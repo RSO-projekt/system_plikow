@@ -137,6 +137,7 @@ public class FileEntryExtended implements org.apache.thrift.TBase<FileEntryExten
   }
 
   public FileEntryExtended() {
+	  entry = new FileEntry();
   }
 
   public FileEntryExtended(
