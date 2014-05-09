@@ -142,7 +142,7 @@ FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>()
 		
 		FileEntry fileEntry = new FileEntry(FileType.FILE, 
 				                           System.currentTimeMillis()/1000,
-				                           nextId, parentDirId, 0, 0, fileName);
+				                           nextId, parentDirId, 0, size, fileName);
 		FileEntryExtended file = new FileEntryExtended(fileEntry, new ArrayList<Integer>(),
 					  								   FileState.IDLE);
 		++nextId;
@@ -159,7 +159,7 @@ FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>()
 			throw new InvalidOperation(3, "Invalid path. You cannot create file in a file");
 		FileEntry fileEntry = new FileEntry(FileType.FILE, 
 											System.currentTimeMillis()/1000,
-											nextId, parent.id, 0, 0, name);
+											nextId, parent.id, 0, size, name);
 		FileEntryExtended file = new FileEntryExtended(fileEntry, new ArrayList<Integer>(),
 							   						   FileState.IDLE);
 		++nextId;
