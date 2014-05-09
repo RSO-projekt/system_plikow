@@ -94,19 +94,7 @@ public class FileSystemMonitor {
 			parentPath="/";
 		String dirName = path.substring(path.lastIndexOf('/')+1, path.length());
 		FileEntryExtended parentDir = getEntry(parentPath);
-		Long parentDirId = parentDir.entry.id;
-		if (parentDir.entry.type==FileType.FILE)
-			throw new InvalidOperation(1, "Invalid path. You cannot create folder in a file");
-		FileEntry dirEntry = new FileEntry(FileType.DIRECTORY, 
-										   System.currentTimeMillis()/1000,
-										   nextId, parentDirId, 0, 0, dirName);
-FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>(),
-                           					  FileState.IDLE);
-		++nextId;
-		idMap.put(dir.entry.id, dir);
-		parentIdMap.put(dir.entry.id, new TreeSet<FileEntryExtended>());
-		parentIdMap.get(parentDirId).add(dir);
-		return dir.entry.deepCopy();
+		return makeDirectory2(parentDir.entry, dirName);
 	}
 	
 	public synchronized FileEntry makeDirectory2(FileEntry parent, String name) throws EntryNotFound, InvalidOperation {
@@ -135,21 +123,8 @@ FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>()
 			path =path.substring(0, path.length()-1);
 		String parentPath = path.substring(0, path.lastIndexOf('/'));
 		String fileName = path.substring(path.lastIndexOf('/')+1, path.length());
-		FileEntryExtended parentDir = getEntry(parentPath);
-		Long parentDirId = parentDir.entry.id;
-		if (parentDir.entry.type==FileType.FILE)
-			throw new InvalidOperation(3, "Invalid path. You cannot create file in a file");
-		
-		FileEntry fileEntry = new FileEntry(FileType.FILE, 
-				                           System.currentTimeMillis()/1000,
-				                           nextId, parentDirId, 0, size, fileName);
-		FileEntryExtended file = new FileEntryExtended(fileEntry, new ArrayList<Integer>(),
-					  								   FileState.IDLE);
-		++nextId;
-		
-		idMap.put(file.entry.id, file);
-		parentIdMap.get(parentDirId).add(file);
-		return file.entry.deepCopy();
+		FileEntryExtended parentEntry = getEntry(parentPath);
+		return makeFile2(parentEntry.entry, fileName, size);
 	}
 	
 	public synchronized FileEntry makeFile2(FileEntry parent, String name, long size) throws EntryNotFound, InvalidOperation {
@@ -191,8 +166,16 @@ FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>()
 	
 	public synchronized FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound, InvalidOperation {
 		FileEntryExtended from = getEntry(fromPath);
-		FileEntryExtended to = getEntry(toPath);
-		return moveEntry2(from.entry, to.entry, null);
+		FileEntryExtended to;
+		try {
+			to = getEntry(toPath);
+			return moveEntry2(from.entry, to.entry, null);
+		} catch (Exception e) {
+			String parentPath = getParentPath(toPath);
+			to = getEntry(parentPath);
+			String name =  toPath.substring(toPath.lastIndexOf('/')+1, toPath.length());
+			return moveEntry2(from.entry, to.entry, name);
+		}
 	}
 	
 	public synchronized FileEntry moveEntry2(FileEntry entry, FileEntry parent, String name) throws EntryNotFound, InvalidOperation {
@@ -211,6 +194,18 @@ FileEntryExtended dir = new FileEntryExtended(dirEntry, new ArrayList<Integer>()
 			movingEntry.entry.name = name;
 		}
 		return movingEntry.entry.deepCopy();
+	}
+	
+	private String getParentPath(String path) {
+		if (path.charAt(path.length()-1)=='/') 
+			path =path.substring(0, path.length()-1);
+		String parentPath = path;
+		if (path.lastIndexOf('/')!=0) {
+			parentPath = path.substring(0, path.lastIndexOf('/'));
+		}
+		else
+			parentPath="/";
+		return parentPath;
 	}
 }
 
