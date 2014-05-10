@@ -126,6 +126,9 @@ public class Client {
 	private void showListOfEntries(List<FileEntry> entries){
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		if (entries.isEmpty()){
+			System.out.println("Wybrany katalog jest pusty");
+		} 
 		for (FileEntry entry : entries){
 			Date modificationTime = new Date((long)entry.getModificationTime()*1000);
 			sb.append(format.format(modificationTime));

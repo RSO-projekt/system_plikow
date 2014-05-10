@@ -1,0 +1,8 @@
+brak parametrów wywołania 	: 10
+NumberFormatException 		: 11
+FileNotFound 				: 12 (nie udało się znaleźć pliku konfiguracyjnego)
+IOException 				: 13 (nie udało się odczytać pliku konfiguracyjnego)
+IOException 				: 14 (błąd odczytu pliku)
+EntryNotFound 				: 15 (nie znaleziono pliku)
+InvalidOperation 			: 16 (niewłaściwie wybrana operacja)
+TException 					: 17 (ogólny problem Thrifta) ? 
