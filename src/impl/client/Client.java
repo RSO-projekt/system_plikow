@@ -24,11 +24,11 @@ import rso.at.InvalidOperation;
  */
 public class Client {
 
-	public static int main(String[] args) {
+	public static void main(String[] args) {
 		if (args.length == 0) {
 		    System.err.println("Błąd: Brak parametrów wywołania!");
 		    System.out.println(help());
-		    return 10;
+		    System.exit(10);
 		}
 		Client client = new Client();
 		FileSystem fs = null;
@@ -36,27 +36,27 @@ public class Client {
 			fs = new FileSystemImpl();
 		} catch (NumberFormatException e1) {
 			System.err.println(e1.getMessage());
-			return 11;
+			System.exit(11);
 		} catch (FileNotFoundException e1) {
 			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
-			return 12;
+			System.exit(12);
 		} catch (IOException e1) {
 			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
-			return 13;
+			System.exit(13);
 		}
 		try {
 			fs.connect();
 			int returnCode = client.selectAction(args, fs);
 			if(returnCode !=0){
-				return returnCode;
+				System.exit(returnCode);
 			}
 		} catch (TTransportException e) {
 			System.out.println("Błąd: Nie udało się nawiązać połączenia z żadnym serwerem!");
-			return 14;
+			System.exit(14);
 		} finally {
 			fs.disconnect();
 		}
-		return 0;
+		System.exit(0);
 	}
 
 	private int selectAction(String[] args, FileSystem fs) {
