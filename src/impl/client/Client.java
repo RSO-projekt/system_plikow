@@ -24,11 +24,11 @@ import rso.at.InvalidOperation;
  */
 public class Client {
 
-	public static void main(String[] args) {
+	public static int main(String[] args) {
 		if (args.length == 0) {
 		    System.err.println("Błąd: Brak parametrów wywołania!");
 		    System.out.println(help());
-		    return;
+		    return 10;
 		}
 		Client client = new Client();
 		FileSystem fs = null;
@@ -36,25 +36,30 @@ public class Client {
 			fs = new FileSystemImpl();
 		} catch (NumberFormatException e1) {
 			System.err.println(e1.getMessage());
-			return;
+			return 11;
 		} catch (FileNotFoundException e1) {
 			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
-			return;
+			return 12;
 		} catch (IOException e1) {
 			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
-			return;
+			return 13;
 		}
 		try {
 			fs.connect();
-			client.selectAction(args, fs);
+			int returnCode = client.selectAction(args, fs);
+			if(returnCode !=0){
+				return returnCode;
+			}
 		} catch (TTransportException e) {
 			System.out.println("Błąd: Nie udało się nawiązać połączenia z żadnym serwerem!");
+			return 14;
 		} finally {
 			fs.disconnect();
 		}
+		return 0;
 	}
 
-	private void selectAction(String[] args, FileSystem fs) {
+	private int selectAction(String[] args, FileSystem fs) {
 		String action = null;
 		if (args[0].startsWith("-"))
 			action = args[0].substring(1);
@@ -106,21 +111,18 @@ public class Client {
 				break;
 			default:
 				System.err.println("Błąd: Niewłaściwe parametry wywołania!");
-				break;
+				return 16;
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return 14;
 		} catch (EntryNotFound e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return 15;
 		} catch (InvalidOperation e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return 16;
 		} catch (TException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return 17;
 		}
+		return 0;
 	}
 
 	private void showListOfEntries(List<FileEntry> entries){
