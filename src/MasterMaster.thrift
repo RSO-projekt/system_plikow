@@ -15,10 +15,9 @@ service MasterMasterService
                                 3: DataTypes.FileEntryExtended newEntry),
 
     // It can happen that server will be shutdown for a long time and it's
-    // not possible to resync with master on delta basis. It's a function
-    // to transmit all metadata in [compressed], binary fromat. [Called by
-    // mirror Master Server].
-    list<DataTypes.FileEntryExtended> updateMetadata(),
+    // not possible to resync with master on delta basis.
+    // [Called by mirror Master Server].
+    DataTypes.FileSystemSnapshot recreateFileSystem(),
 
     //------ ELECTION FUNCTIONS ------------------------------------------------
 

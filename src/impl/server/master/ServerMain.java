@@ -1,7 +1,5 @@
 package impl.server.master;
 
-import impl.server.master.FileSystemMonitor.Connection;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;

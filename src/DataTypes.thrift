@@ -40,6 +40,13 @@ struct FileEntryExtended
     3: FileState state       // State of a file
 }
 
+// File system snapshot
+struct FileSystemSnapshot
+{
+    1: list<FileEntryExtended> entries, // List of all fs entries
+    2: i64 version;                     // Current file system version
+}
+
 // File transaction
 enum TransactionType
 {

@@ -32,12 +32,6 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 	}
 
 	@Override
-	public List<FileEntryExtended> updateMetadata() throws TException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void updateCreateEntry(long fsVersion, FileEntryExtended entry)
 			throws TException {
 		monitor.updateCreateEntry(fsVersion, entry);
@@ -53,6 +47,12 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 	public void updateMoveEntry(long fsVersion, FileEntryExtended oldEntry,
 			FileEntryExtended newEntry) throws TException {
 		monitor.updateMoveEntry(fsVersion, oldEntry, newEntry);
+	}
+
+	@Override
+	public FileSystemSnapshot recreateFileSystem() throws TException {
+		// TODO Funkcja zwracająca strukturę plików + numer wersji.
+		return null;
 	}
 
 }

@@ -32,6 +32,10 @@ public class FileSystemMonitor {
 	
 	private ArrayList<MasterConnection> masterList;
 	
+	private String showFileEntryExtended(FileEntryExtended entry) {
+		return null;
+	}
+	
 	class Connection {
 		public Connection(String host, int port, String service) {
 			transport = new TSocket(host, port);
@@ -201,11 +205,13 @@ public class FileSystemMonitor {
 		idMap.put(dir.entry.id, dir);
 		parentIdMap.put(dir.entry.id, new TreeSet<FileEntryExtended>());
 		parentIdMap.get(parent.id).add(dir);
+		
 		broadcastCreateEntry(dir);
 		return dir.entry.deepCopy();
 	}
 	
 	public synchronized void broadcastCreateEntry(FileEntryExtended entry) {
+		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
 				conn.getService().updateCreateEntry(fsVersion, entry);
@@ -213,7 +219,6 @@ public class FileSystemMonitor {
 				System.out.println("Election..??");
 			}
 		}
-		fsVersion++;
 	}
 	
 	public synchronized FileEntry makeFile(String path, long size) throws EntryNotFound, InvalidOperation {
@@ -230,6 +235,7 @@ public class FileSystemMonitor {
 		
 		idMap.put(file.entry.id, file);
 		parentIdMap.get(parent.id).add(file);
+		broadcastCreateEntry(file);
 		return file.entry.deepCopy();
 	}
 	
@@ -261,6 +267,18 @@ public class FileSystemMonitor {
 		
 		idMap.remove(removingEntry.entry.id);
 		childrenSet2.remove(removingEntry);
+		broadcastRemoveEntry(removingEntry);
+	}
+	
+	public synchronized void broadcastRemoveEntry(FileEntryExtended entry) {
+		fsVersion++;
+		for (MasterConnection conn : masterList) {
+			try {
+				conn.getService().updateRemoveEntry(fsVersion, entry);
+			} catch (TException e) {
+				System.out.println("Election..??");
+			}
+		}
 	}
 	
 	public synchronized FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound, InvalidOperation {
@@ -273,12 +291,16 @@ public class FileSystemMonitor {
 	public synchronized FileEntry moveEntry2(FileEntry entry, FileEntry parent, String name) throws EntryNotFound, InvalidOperation {
 		checkParentAndName(parent, name);
 		FileEntryExtended entryExtended = idMap.get(entry.id);
+		
 		if (entryExtended == null) {
 			throw new InvalidOperation(16, "Entry doesn't exist: " + entry.name);
 		}
 		
+		FileEntryExtended oldEntryExtended = entryExtended.deepCopy();
+		
 		if (entry.parentID == parent.id) {
 			entryExtended.entry.name = name;
+			broadcastMoveEntry(oldEntryExtended, entryExtended);
 			return entryExtended.entry.deepCopy();
 		}
 		
@@ -295,9 +317,23 @@ public class FileSystemMonitor {
 		newParentChildrenSet.add(entryExtended);
 		entryExtended.entry.parentID = parent.id;
 		entryExtended.entry.name = name;
+		
+		broadcastMoveEntry(oldEntryExtended, entryExtended);
 		return entryExtended.entry.deepCopy();
 	}
 
+	public synchronized void broadcastMoveEntry(FileEntryExtended oldEntry,
+												FileEntryExtended newEntry) {
+		fsVersion++;
+		for (MasterConnection conn : masterList) {
+			try {
+				conn.getService().updateMoveEntry(fsVersion, oldEntry, newEntry);
+			} catch (TException e) {
+				System.out.println("Election..??");
+			}
+		}
+	}
+	
 	public synchronized void updateCreateEntry(long fsVersion, FileEntryExtended entry) {
 		if (fsVersion != this.fsVersion + 1) {
 			// TODO: Update all metadata

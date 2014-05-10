@@ -42,7 +42,7 @@ public class MasterMasterService {
 
     public void updateMoveEntry(long fsVersion, rso.at.FileEntryExtended oldEntry, rso.at.FileEntryExtended newEntry) throws org.apache.thrift.TException;
 
-    public List<rso.at.FileEntryExtended> updateMetadata() throws org.apache.thrift.TException;
+    public rso.at.FileSystemSnapshot recreateFileSystem() throws org.apache.thrift.TException;
 
     public void election(int serverID) throws org.apache.thrift.TException;
 
@@ -60,7 +60,7 @@ public class MasterMasterService {
 
     public void updateMoveEntry(long fsVersion, rso.at.FileEntryExtended oldEntry, rso.at.FileEntryExtended newEntry, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void updateMetadata(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void recreateFileSystem(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void election(int serverID, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -130,26 +130,26 @@ public class MasterMasterService {
       sendBase("updateMoveEntry", args);
     }
 
-    public List<rso.at.FileEntryExtended> updateMetadata() throws org.apache.thrift.TException
+    public rso.at.FileSystemSnapshot recreateFileSystem() throws org.apache.thrift.TException
     {
-      send_updateMetadata();
-      return recv_updateMetadata();
+      send_recreateFileSystem();
+      return recv_recreateFileSystem();
     }
 
-    public void send_updateMetadata() throws org.apache.thrift.TException
+    public void send_recreateFileSystem() throws org.apache.thrift.TException
     {
-      updateMetadata_args args = new updateMetadata_args();
-      sendBase("updateMetadata", args);
+      recreateFileSystem_args args = new recreateFileSystem_args();
+      sendBase("recreateFileSystem", args);
     }
 
-    public List<rso.at.FileEntryExtended> recv_updateMetadata() throws org.apache.thrift.TException
+    public rso.at.FileSystemSnapshot recv_recreateFileSystem() throws org.apache.thrift.TException
     {
-      updateMetadata_result result = new updateMetadata_result();
-      receiveBase(result, "updateMetadata");
+      recreateFileSystem_result result = new recreateFileSystem_result();
+      receiveBase(result, "recreateFileSystem");
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "updateMetadata failed: unknown result");
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "recreateFileSystem failed: unknown result");
     }
 
     public void election(int serverID) throws org.apache.thrift.TException
@@ -335,32 +335,32 @@ public class MasterMasterService {
       }
     }
 
-    public void updateMetadata(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void recreateFileSystem(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      updateMetadata_call method_call = new updateMetadata_call(resultHandler, this, ___protocolFactory, ___transport);
+      recreateFileSystem_call method_call = new recreateFileSystem_call(resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class updateMetadata_call extends org.apache.thrift.async.TAsyncMethodCall {
-      public updateMetadata_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class recreateFileSystem_call extends org.apache.thrift.async.TAsyncMethodCall {
+      public recreateFileSystem_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("updateMetadata", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        updateMetadata_args args = new updateMetadata_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("recreateFileSystem", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        recreateFileSystem_args args = new recreateFileSystem_args();
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public List<rso.at.FileEntryExtended> getResult() throws org.apache.thrift.TException {
+      public rso.at.FileSystemSnapshot getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_updateMetadata();
+        return (new Client(prot)).recv_recreateFileSystem();
       }
     }
 
@@ -476,7 +476,7 @@ public class MasterMasterService {
       processMap.put("updateCreateEntry", new updateCreateEntry());
       processMap.put("updateRemoveEntry", new updateRemoveEntry());
       processMap.put("updateMoveEntry", new updateMoveEntry());
-      processMap.put("updateMetadata", new updateMetadata());
+      processMap.put("recreateFileSystem", new recreateFileSystem());
       processMap.put("election", new election());
       processMap.put("elected", new elected());
       processMap.put("ok", new ok());
@@ -540,22 +540,22 @@ public class MasterMasterService {
       }
     }
 
-    public static class updateMetadata<I extends Iface> extends org.apache.thrift.ProcessFunction<I, updateMetadata_args> {
-      public updateMetadata() {
-        super("updateMetadata");
+    public static class recreateFileSystem<I extends Iface> extends org.apache.thrift.ProcessFunction<I, recreateFileSystem_args> {
+      public recreateFileSystem() {
+        super("recreateFileSystem");
       }
 
-      public updateMetadata_args getEmptyArgsInstance() {
-        return new updateMetadata_args();
+      public recreateFileSystem_args getEmptyArgsInstance() {
+        return new recreateFileSystem_args();
       }
 
       protected boolean isOneway() {
         return false;
       }
 
-      public updateMetadata_result getResult(I iface, updateMetadata_args args) throws org.apache.thrift.TException {
-        updateMetadata_result result = new updateMetadata_result();
-        result.success = iface.updateMetadata();
+      public recreateFileSystem_result getResult(I iface, recreateFileSystem_args args) throws org.apache.thrift.TException {
+        recreateFileSystem_result result = new recreateFileSystem_result();
+        result.success = iface.recreateFileSystem();
         return result;
       }
     }
@@ -636,7 +636,7 @@ public class MasterMasterService {
       processMap.put("updateCreateEntry", new updateCreateEntry());
       processMap.put("updateRemoveEntry", new updateRemoveEntry());
       processMap.put("updateMoveEntry", new updateMoveEntry());
-      processMap.put("updateMetadata", new updateMetadata());
+      processMap.put("recreateFileSystem", new recreateFileSystem());
       processMap.put("election", new election());
       processMap.put("elected", new elected());
       processMap.put("ok", new ok());
@@ -727,20 +727,20 @@ public class MasterMasterService {
       }
     }
 
-    public static class updateMetadata<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateMetadata_args, List<rso.at.FileEntryExtended>> {
-      public updateMetadata() {
-        super("updateMetadata");
+    public static class recreateFileSystem<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, recreateFileSystem_args, rso.at.FileSystemSnapshot> {
+      public recreateFileSystem() {
+        super("recreateFileSystem");
       }
 
-      public updateMetadata_args getEmptyArgsInstance() {
-        return new updateMetadata_args();
+      public recreateFileSystem_args getEmptyArgsInstance() {
+        return new recreateFileSystem_args();
       }
 
-      public AsyncMethodCallback<List<rso.at.FileEntryExtended>> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<rso.at.FileSystemSnapshot> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<List<rso.at.FileEntryExtended>>() { 
-          public void onComplete(List<rso.at.FileEntryExtended> o) {
-            updateMetadata_result result = new updateMetadata_result();
+        return new AsyncMethodCallback<rso.at.FileSystemSnapshot>() { 
+          public void onComplete(rso.at.FileSystemSnapshot o) {
+            recreateFileSystem_result result = new recreateFileSystem_result();
             result.success = o;
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
@@ -753,7 +753,7 @@ public class MasterMasterService {
           public void onError(Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TBase msg;
-            updateMetadata_result result = new updateMetadata_result();
+            recreateFileSystem_result result = new recreateFileSystem_result();
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
               msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
@@ -773,8 +773,8 @@ public class MasterMasterService {
         return false;
       }
 
-      public void start(I iface, updateMetadata_args args, org.apache.thrift.async.AsyncMethodCallback<List<rso.at.FileEntryExtended>> resultHandler) throws TException {
-        iface.updateMetadata(resultHandler);
+      public void start(I iface, recreateFileSystem_args args, org.apache.thrift.async.AsyncMethodCallback<rso.at.FileSystemSnapshot> resultHandler) throws TException {
+        iface.recreateFileSystem(resultHandler);
       }
     }
 
@@ -2406,14 +2406,14 @@ public class MasterMasterService {
 
   }
 
-  public static class updateMetadata_args implements org.apache.thrift.TBase<updateMetadata_args, updateMetadata_args._Fields>, java.io.Serializable, Cloneable, Comparable<updateMetadata_args>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateMetadata_args");
+  public static class recreateFileSystem_args implements org.apache.thrift.TBase<recreateFileSystem_args, recreateFileSystem_args._Fields>, java.io.Serializable, Cloneable, Comparable<recreateFileSystem_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("recreateFileSystem_args");
 
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new updateMetadata_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new updateMetadata_argsTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new recreateFileSystem_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new recreateFileSystem_argsTupleSchemeFactory());
     }
 
 
@@ -2476,20 +2476,20 @@ public class MasterMasterService {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateMetadata_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(recreateFileSystem_args.class, metaDataMap);
     }
 
-    public updateMetadata_args() {
+    public recreateFileSystem_args() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public updateMetadata_args(updateMetadata_args other) {
+    public recreateFileSystem_args(recreateFileSystem_args other) {
     }
 
-    public updateMetadata_args deepCopy() {
-      return new updateMetadata_args(this);
+    public recreateFileSystem_args deepCopy() {
+      return new recreateFileSystem_args(this);
     }
 
     @Override
@@ -2522,12 +2522,12 @@ public class MasterMasterService {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof updateMetadata_args)
-        return this.equals((updateMetadata_args)that);
+      if (that instanceof recreateFileSystem_args)
+        return this.equals((recreateFileSystem_args)that);
       return false;
     }
 
-    public boolean equals(updateMetadata_args that) {
+    public boolean equals(recreateFileSystem_args that) {
       if (that == null)
         return false;
 
@@ -2540,7 +2540,7 @@ public class MasterMasterService {
     }
 
     @Override
-    public int compareTo(updateMetadata_args other) {
+    public int compareTo(recreateFileSystem_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -2564,7 +2564,7 @@ public class MasterMasterService {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("updateMetadata_args(");
+      StringBuilder sb = new StringBuilder("recreateFileSystem_args(");
       boolean first = true;
 
       sb.append(")");
@@ -2592,15 +2592,15 @@ public class MasterMasterService {
       }
     }
 
-    private static class updateMetadata_argsStandardSchemeFactory implements SchemeFactory {
-      public updateMetadata_argsStandardScheme getScheme() {
-        return new updateMetadata_argsStandardScheme();
+    private static class recreateFileSystem_argsStandardSchemeFactory implements SchemeFactory {
+      public recreateFileSystem_argsStandardScheme getScheme() {
+        return new recreateFileSystem_argsStandardScheme();
       }
     }
 
-    private static class updateMetadata_argsStandardScheme extends StandardScheme<updateMetadata_args> {
+    private static class recreateFileSystem_argsStandardScheme extends StandardScheme<recreateFileSystem_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, updateMetadata_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, recreateFileSystem_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -2621,7 +2621,7 @@ public class MasterMasterService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, updateMetadata_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, recreateFileSystem_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -2631,39 +2631,39 @@ public class MasterMasterService {
 
     }
 
-    private static class updateMetadata_argsTupleSchemeFactory implements SchemeFactory {
-      public updateMetadata_argsTupleScheme getScheme() {
-        return new updateMetadata_argsTupleScheme();
+    private static class recreateFileSystem_argsTupleSchemeFactory implements SchemeFactory {
+      public recreateFileSystem_argsTupleScheme getScheme() {
+        return new recreateFileSystem_argsTupleScheme();
       }
     }
 
-    private static class updateMetadata_argsTupleScheme extends TupleScheme<updateMetadata_args> {
+    private static class recreateFileSystem_argsTupleScheme extends TupleScheme<recreateFileSystem_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, updateMetadata_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, recreateFileSystem_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, updateMetadata_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, recreateFileSystem_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 
   }
 
-  public static class updateMetadata_result implements org.apache.thrift.TBase<updateMetadata_result, updateMetadata_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateMetadata_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateMetadata_result");
+  public static class recreateFileSystem_result implements org.apache.thrift.TBase<recreateFileSystem_result, recreateFileSystem_result._Fields>, java.io.Serializable, Cloneable, Comparable<recreateFileSystem_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("recreateFileSystem_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new updateMetadata_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new updateMetadata_resultTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new recreateFileSystem_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new recreateFileSystem_resultTupleSchemeFactory());
     }
 
-    public List<rso.at.FileEntryExtended> success; // required
+    public rso.at.FileSystemSnapshot success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -2728,17 +2728,16 @@ public class MasterMasterService {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.FileEntryExtended.class))));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.FileSystemSnapshot.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateMetadata_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(recreateFileSystem_result.class, metaDataMap);
     }
 
-    public updateMetadata_result() {
+    public recreateFileSystem_result() {
     }
 
-    public updateMetadata_result(
-      List<rso.at.FileEntryExtended> success)
+    public recreateFileSystem_result(
+      rso.at.FileSystemSnapshot success)
     {
       this();
       this.success = success;
@@ -2747,18 +2746,14 @@ public class MasterMasterService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public updateMetadata_result(updateMetadata_result other) {
+    public recreateFileSystem_result(recreateFileSystem_result other) {
       if (other.isSetSuccess()) {
-        List<rso.at.FileEntryExtended> __this__success = new ArrayList<rso.at.FileEntryExtended>(other.success.size());
-        for (rso.at.FileEntryExtended other_element : other.success) {
-          __this__success.add(new rso.at.FileEntryExtended(other_element));
-        }
-        this.success = __this__success;
+        this.success = new rso.at.FileSystemSnapshot(other.success);
       }
     }
 
-    public updateMetadata_result deepCopy() {
-      return new updateMetadata_result(this);
+    public recreateFileSystem_result deepCopy() {
+      return new recreateFileSystem_result(this);
     }
 
     @Override
@@ -2766,26 +2761,11 @@ public class MasterMasterService {
       this.success = null;
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<rso.at.FileEntryExtended> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(rso.at.FileEntryExtended elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<rso.at.FileEntryExtended>();
-      }
-      this.success.add(elem);
-    }
-
-    public List<rso.at.FileEntryExtended> getSuccess() {
+    public rso.at.FileSystemSnapshot getSuccess() {
       return this.success;
     }
 
-    public updateMetadata_result setSuccess(List<rso.at.FileEntryExtended> success) {
+    public recreateFileSystem_result setSuccess(rso.at.FileSystemSnapshot success) {
       this.success = success;
       return this;
     }
@@ -2811,7 +2791,7 @@ public class MasterMasterService {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((List<rso.at.FileEntryExtended>)value);
+          setSuccess((rso.at.FileSystemSnapshot)value);
         }
         break;
 
@@ -2844,12 +2824,12 @@ public class MasterMasterService {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof updateMetadata_result)
-        return this.equals((updateMetadata_result)that);
+      if (that instanceof recreateFileSystem_result)
+        return this.equals((recreateFileSystem_result)that);
       return false;
     }
 
-    public boolean equals(updateMetadata_result that) {
+    public boolean equals(recreateFileSystem_result that) {
       if (that == null)
         return false;
 
@@ -2871,7 +2851,7 @@ public class MasterMasterService {
     }
 
     @Override
-    public int compareTo(updateMetadata_result other) {
+    public int compareTo(recreateFileSystem_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
@@ -2905,7 +2885,7 @@ public class MasterMasterService {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("updateMetadata_result(");
+      StringBuilder sb = new StringBuilder("recreateFileSystem_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -2922,6 +2902,9 @@ public class MasterMasterService {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
+      if (success != null) {
+        success.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -2940,15 +2923,15 @@ public class MasterMasterService {
       }
     }
 
-    private static class updateMetadata_resultStandardSchemeFactory implements SchemeFactory {
-      public updateMetadata_resultStandardScheme getScheme() {
-        return new updateMetadata_resultStandardScheme();
+    private static class recreateFileSystem_resultStandardSchemeFactory implements SchemeFactory {
+      public recreateFileSystem_resultStandardScheme getScheme() {
+        return new recreateFileSystem_resultStandardScheme();
       }
     }
 
-    private static class updateMetadata_resultStandardScheme extends StandardScheme<updateMetadata_result> {
+    private static class recreateFileSystem_resultStandardScheme extends StandardScheme<recreateFileSystem_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, updateMetadata_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, recreateFileSystem_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -2959,19 +2942,9 @@ public class MasterMasterService {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
-                {
-                  org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
-                  struct.success = new ArrayList<rso.at.FileEntryExtended>(_list0.size);
-                  for (int _i1 = 0; _i1 < _list0.size; ++_i1)
-                  {
-                    rso.at.FileEntryExtended _elem2;
-                    _elem2 = new rso.at.FileEntryExtended();
-                    _elem2.read(iprot);
-                    struct.success.add(_elem2);
-                  }
-                  iprot.readListEnd();
-                }
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.success = new rso.at.FileSystemSnapshot();
+                struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -2988,20 +2961,13 @@ public class MasterMasterService {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, updateMetadata_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, recreateFileSystem_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
         if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          {
-            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (rso.at.FileEntryExtended _iter3 : struct.success)
-            {
-              _iter3.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
+          struct.success.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -3010,16 +2976,16 @@ public class MasterMasterService {
 
     }
 
-    private static class updateMetadata_resultTupleSchemeFactory implements SchemeFactory {
-      public updateMetadata_resultTupleScheme getScheme() {
-        return new updateMetadata_resultTupleScheme();
+    private static class recreateFileSystem_resultTupleSchemeFactory implements SchemeFactory {
+      public recreateFileSystem_resultTupleScheme getScheme() {
+        return new recreateFileSystem_resultTupleScheme();
       }
     }
 
-    private static class updateMetadata_resultTupleScheme extends TupleScheme<updateMetadata_result> {
+    private static class recreateFileSystem_resultTupleScheme extends TupleScheme<recreateFileSystem_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, updateMetadata_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, recreateFileSystem_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
         if (struct.isSetSuccess()) {
@@ -3027,32 +2993,17 @@ public class MasterMasterService {
         }
         oprot.writeBitSet(optionals, 1);
         if (struct.isSetSuccess()) {
-          {
-            oprot.writeI32(struct.success.size());
-            for (rso.at.FileEntryExtended _iter4 : struct.success)
-            {
-              _iter4.write(oprot);
-            }
-          }
+          struct.success.write(oprot);
         }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, updateMetadata_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, recreateFileSystem_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          {
-            org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<rso.at.FileEntryExtended>(_list5.size);
-            for (int _i6 = 0; _i6 < _list5.size; ++_i6)
-            {
-              rso.at.FileEntryExtended _elem7;
-              _elem7 = new rso.at.FileEntryExtended();
-              _elem7.read(iprot);
-              struct.success.add(_elem7);
-            }
-          }
+          struct.success = new rso.at.FileSystemSnapshot();
+          struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }
       }
