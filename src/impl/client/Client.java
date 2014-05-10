@@ -84,6 +84,9 @@ public class Client {
 				System.out.println("OK");
 				break;
 			case "mv":
+				if (args.length != 3){
+					throw new InvalidOperation(16, "Niewłaściwa ilość argumentów polecenia MV");
+				}
 				fs.moveEntry(args[1], args[2]);
 				System.out.println("OK");
 				break;
@@ -114,12 +117,16 @@ public class Client {
 				return 16;
 			}
 		} catch (IOException e) {
+			System.out.println(e.getMessage());
 			return 14;
 		} catch (EntryNotFound e) {
+			System.out.println(e.getMessage());
 			return 15;
 		} catch (InvalidOperation e) {
+			System.out.println(e.getMessage());
 			return 16;
 		} catch (TException e) {
+			System.out.println(e.getMessage());
 			return 17;
 		}
 		return 0;
