@@ -5,12 +5,21 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
+
 import rso.at.FileEntry;
 import rso.at.FileEntryExtended;
 import rso.at.EntryNotFound;
 import rso.at.FileState;
 import rso.at.FileType;
 import rso.at.InvalidOperation;
+import rso.at.MasterMasterService;
+import rso.at.MasterMasterService.Iface;
 
 public class FileSystemMonitor {
 	private TreeMap<Long, FileEntryExtended> idMap;
@@ -20,7 +29,48 @@ public class FileSystemMonitor {
 	
 	private String pathParent;
 	private String pathName;
+	
+	private ArrayList<MasterConnection> masterList;
+	
+	class Connection {
+		public Connection(String host, int port, String service) {
+			transport = new TSocket(host, port);
+			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
+		}
 		
+		public void open() throws TTransportException {
+			transport.open();
+		}
+		
+		protected TTransport transport;
+		protected TMultiplexedProtocol protocol;
+	}
+	
+	class MasterConnection extends Connection {
+		public MasterConnection(String host, int port) {
+			super(host, port, "MasterMaster");
+			service = new MasterMasterService.Client(protocol);
+		}
+		public Iface getService() {
+			return service;
+		}
+		private MasterMasterService.Iface service;
+	}
+	
+	public synchronized void addMasterConnection(String host, int port) {
+		MasterConnection conn = new MasterConnection(host, port);
+		masterList.add(conn);
+	}
+	
+	public synchronized void openConnections() {
+		for (MasterConnection conn : masterList) {
+			try {
+				conn.open();
+			} catch (TTransportException e) {
+				System.out.println("Cannot open... HANDLE");
+			}
+		}
+	}
 	
 	private FileEntryExtended createFileEntryExtended(FileType fileType, long time,
 													  long parentId, long size, String name)
@@ -77,6 +127,7 @@ public class FileSystemMonitor {
 	public FileSystemMonitor() {
 		nextId = new Long(0);
 		fsVersion = new Long(0);
+		masterList = new ArrayList<FileSystemMonitor.MasterConnection>();
 		idMap = new TreeMap<Long, FileEntryExtended>();
 		parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
 		FileEntryExtended root = createFileEntryExtended(FileType.DIRECTORY, 
@@ -150,7 +201,19 @@ public class FileSystemMonitor {
 		idMap.put(dir.entry.id, dir);
 		parentIdMap.put(dir.entry.id, new TreeSet<FileEntryExtended>());
 		parentIdMap.get(parent.id).add(dir);
+		broadcastCreateEntry(dir);
 		return dir.entry.deepCopy();
+	}
+	
+	public synchronized void broadcastCreateEntry(FileEntryExtended entry) {
+		for (MasterConnection conn : masterList) {
+			try {
+				conn.getService().updateCreateEntry(fsVersion, entry);
+			} catch (TException e) {
+				System.out.println("Election..??");
+			}
+		}
+		fsVersion++;
 	}
 	
 	public synchronized FileEntry makeFile(String path, long size) throws EntryNotFound, InvalidOperation {

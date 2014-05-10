@@ -1,8 +1,12 @@
 package impl.server.master;
 
+import impl.server.master.FileSystemMonitor.Connection;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 import org.apache.thrift.TMultiplexedProcessor;
@@ -54,6 +58,12 @@ public class ServerMain {
 			TMultiplexedProcessor processor = new TMultiplexedProcessor();
 			
 			FileSystemMonitor monitor = new FileSystemMonitor();
+			String myIP = InetAddress.getLocalHost().getHostAddress();
+			for (String ip : Configuration.sMainServerIPs) {
+				if (!ip.equals(myIP)) {
+					monitor.addMasterConnection(ip, Configuration.sInternalPort);
+				}
+			}
 			
 			processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl(monitor)));
 			processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
@@ -62,9 +72,14 @@ public class ServerMain {
 			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).
 					processor(processor));
 			System.out.println("Starting server on port " + Configuration.sInternalPort +" ...");
+			
+			monitor.openConnections();
 			server.serve();
 			
 		} catch (TTransportException e) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
