@@ -16,6 +16,7 @@ public class FileSystemMonitor {
 	private TreeMap<Long, FileEntryExtended> idMap;
 	private TreeMap<Long, TreeSet<FileEntryExtended>> parentIdMap;
 	private Long nextId;
+	private Long fsVersion;
 	
 	private String pathParent;
 	private String pathName;
@@ -75,6 +76,7 @@ public class FileSystemMonitor {
 	
 	public FileSystemMonitor() {
 		nextId = new Long(0);
+		fsVersion = new Long(0);
 		idMap = new TreeMap<Long, FileEntryExtended>();
 		parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
 		FileEntryExtended root = createFileEntryExtended(FileType.DIRECTORY, 
@@ -231,6 +233,81 @@ public class FileSystemMonitor {
 		entryExtended.entry.parentID = parent.id;
 		entryExtended.entry.name = name;
 		return entryExtended.entry.deepCopy();
+	}
+
+	public synchronized void updateCreateEntry(long fsVersion, FileEntryExtended entry) {
+		if (fsVersion != this.fsVersion + 1) {
+			// TODO: Update all metadata
+			return;
+		}
+		
+		FileEntryExtended parent = idMap.get(entry.entry.parentID);
+		if (parent == null) return;
+		
+		if (entry.entry.type == FileType.DIRECTORY) {
+			try {
+				FileEntry newDir = makeDirectory2(parent.entry, entry.entry.name);
+				FileEntryExtended newDirExtended = idMap.get(newDir.id);
+				newDirExtended.entry = entry.entry.deepCopy();
+				newDirExtended.mirrors = new ArrayList<>(entry.mirrors);
+				newDirExtended.state = entry.state;
+			} catch (EntryNotFound | InvalidOperation e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				FileEntry newFile = makeFile2(parent.entry, entry.entry.name, entry.entry.size);
+				FileEntryExtended newFileExtended = idMap.get(newFile.id);
+				newFileExtended.entry = entry.entry.deepCopy();
+				newFileExtended.mirrors = new ArrayList<>(entry.mirrors);
+				newFileExtended.state = entry.state;
+			} catch (EntryNotFound | InvalidOperation e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		this.fsVersion = fsVersion;
+	}
+	
+	public synchronized void updateRemoveEntry(long fsVersion, FileEntryExtended entry) {
+		if (fsVersion != this.fsVersion + 1) {
+			// TODO: Update all metadata
+			return;
+		}
+		
+		try {
+			removeEntry2(entry.entry);
+		} catch (EntryNotFound | InvalidOperation e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.fsVersion = fsVersion;
+	}
+	
+	public synchronized void updateMoveEntry(long fsVersion, FileEntryExtended oldEntry, 
+			                             FileEntryExtended newEntry) {
+		if (fsVersion != this.fsVersion + 1) {
+			// TODO: Update all metadata
+			return;
+		}
+		
+		FileEntryExtended parent = idMap.get(newEntry.entry.parentID);
+		if (parent == null) return;
+		
+		try {
+			FileEntry newEntry2 = moveEntry2(oldEntry.entry, parent.entry, newEntry.entry.name);
+			FileEntryExtended newEntryExtended = idMap.get(newEntry2.id);
+			newEntryExtended.entry = newEntry.entry.deepCopy();
+			newEntryExtended.mirrors = new ArrayList<>(newEntry.mirrors);
+			newEntryExtended.state = newEntry.state;
+		} catch (EntryNotFound | InvalidOperation e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.fsVersion = fsVersion;
 	}
 }
 

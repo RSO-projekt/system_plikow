@@ -9,10 +9,10 @@ namespace * rso.at
 service MasterMasterService
 {
     //----- SYNCHRONIZATION FUNCTIONS ------------------------------------------
-    // Every change in a metadata should be broadcasted to every mirror
-    // Master Server. It's an one way operation. [Called by current Master
-    // Server].
-    oneway void updateEntry(1: DataTypes.FileEntry entry, 2: i64 modNumber),
+    oneway void updateCreateEntry(1: i64 fsVersion, 2: DataTypes.FileEntryExtended entry),
+    oneway void updateRemoveEntry(1: i64 fsVersion, 2: DataTypes.FileEntryExtended entry),
+    oneway void updateMoveEntry(1: i64 fsVersion, 2: DataTypes.FileEntryExtended oldEntry,
+                                3: DataTypes.FileEntryExtended newEntry),
 
     // It can happen that server will be shutdown for a long time and it's
     // not possible to resync with master on delta basis. It's a function

@@ -13,14 +13,6 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 		this.monitor=monitor;
 	}
 
-
-	@Override
-	public void updateEntry(FileEntry entry, long modNumber) throws TException {
-		// TODO Auto-generated method stub
-
-	}
-
-
 	@Override
 	public void election(int serverID) throws TException {
 		// TODO Auto-generated method stub
@@ -39,10 +31,28 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 
 	}
 
-
 	@Override
 	public List<FileEntryExtended> updateMetadata() throws TException {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void updateCreateEntry(long fsVersion, FileEntryExtended entry)
+			throws TException {
+		monitor.updateCreateEntry(fsVersion, entry);
+	}
+
+	@Override
+	public void updateRemoveEntry(long fsVersion, FileEntryExtended entry)
+			throws TException {
+		monitor.updateRemoveEntry(fsVersion, entry);
+	}
+
+	@Override
+	public void updateMoveEntry(long fsVersion, FileEntryExtended oldEntry,
+			FileEntryExtended newEntry) throws TException {
+		monitor.updateMoveEntry(fsVersion, oldEntry, newEntry);
+	}
+
 }

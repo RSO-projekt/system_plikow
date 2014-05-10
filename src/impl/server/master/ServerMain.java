@@ -62,8 +62,6 @@ public class ServerMain {
 			TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).
 					processor(processor));
 			System.out.println("Starting server on port " + Configuration.sInternalPort +" ...");
-			monitor.makeDirectory("/temp/");
-			monitor.makeDirectory("/temp/temp2");
 			server.serve();
 			
 		} catch (TTransportException e) {
