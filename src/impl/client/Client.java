@@ -28,7 +28,7 @@ public class Client {
 		if (args.length == 0) {
 		    System.err.println("Błąd: Brak parametrów wywołania!");
 		    System.out.println(help());
-		    return;
+		    System.exit(10);
 		}
 		Client client = new Client();
 		FileSystem fs = null;
@@ -36,25 +36,30 @@ public class Client {
 			fs = new FileSystemImpl();
 		} catch (NumberFormatException e1) {
 			System.err.println(e1.getMessage());
-			return;
+			System.exit(11);
 		} catch (FileNotFoundException e1) {
 			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
-			return;
+			System.exit(12);
 		} catch (IOException e1) {
 			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
-			return;
+			System.exit(13);
 		}
 		try {
 			fs.connect();
-			client.selectAction(args, fs);
+			int returnCode = client.selectAction(args, fs);
+			if(returnCode !=0){
+				System.exit(returnCode);
+			}
 		} catch (TTransportException e) {
 			System.out.println("Błąd: Nie udało się nawiązać połączenia z żadnym serwerem!");
+			System.exit(14);
 		} finally {
 			fs.disconnect();
 		}
+		System.exit(0);
 	}
 
-	private void selectAction(String[] args, FileSystem fs) {
+	private int selectAction(String[] args, FileSystem fs) {
 		String action = null;
 		if (args[0].startsWith("-"))
 			action = args[0].substring(1);
@@ -79,6 +84,9 @@ public class Client {
 				System.out.println("OK");
 				break;
 			case "mv":
+				if (args.length != 3){
+					throw new InvalidOperation(16, "Niewłaściwa ilość argumentów polecenia MV");
+				}
 				fs.moveEntry(args[1], args[2]);
 				System.out.println("OK");
 				break;
@@ -106,26 +114,30 @@ public class Client {
 				break;
 			default:
 				System.err.println("Błąd: Niewłaściwe parametry wywołania!");
-				break;
+				return 16;
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return 14;
 		} catch (EntryNotFound e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return 15;
 		} catch (InvalidOperation e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return 16;
 		} catch (TException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return 17;
 		}
+		return 0;
 	}
 
 	private void showListOfEntries(List<FileEntry> entries){
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		if (entries.isEmpty()){
+			System.out.println("Wybrany katalog jest pusty");
+		} 
 		for (FileEntry entry : entries){
 			Date modificationTime = new Date((long)entry.getModificationTime()*1000);
 			sb.append(format.format(modificationTime));
