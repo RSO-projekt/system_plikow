@@ -52,7 +52,7 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 	@Override
 	public FileSystemSnapshot recreateFileSystem() throws TException {
 		// TODO Funkcja zwracająca strukturę plików + numer wersji.
-		return null;
+		return monitor.makeRecreateFileSystem();
 	}
 
 }

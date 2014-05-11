@@ -2,6 +2,8 @@ package impl.server.master;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -16,6 +18,7 @@ import rso.at.FileEntry;
 import rso.at.FileEntryExtended;
 import rso.at.EntryNotFound;
 import rso.at.FileState;
+import rso.at.FileSystemSnapshot;
 import rso.at.FileType;
 import rso.at.InvalidOperation;
 import rso.at.MasterMasterService;
@@ -33,7 +36,12 @@ public class FileSystemMonitor {
 	private ArrayList<MasterConnection> masterList;
 	
 	private String showFileEntryExtended(FileEntryExtended entry) {
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("FileEntryExt: " +entry.entry.name +"\n");
+		sb.append("ID: " +entry.entry.id +"\n");
+		sb.append("parentID: " +entry.entry.parentID +"\n");
+		sb.append("version: " +entry.entry.version+"\n");
+		return sb.toString();
 	}
 	
 	class Connection {
@@ -407,6 +415,14 @@ public class FileSystemMonitor {
 		}
 		
 		this.fsVersion = fsVersion;
+	}
+	
+	public FileSystemSnapshot makeRecreateFileSystem(){
+		List<FileEntryExtended> entryList = new ArrayList<FileEntryExtended>();
+		for (Entry<Long, FileEntryExtended> entry : idMap.entrySet()) {
+			entryList.add(entry.getValue());
+		}
+		return new FileSystemSnapshot(entryList, fsVersion);
 	}
 }
 
