@@ -54,5 +54,10 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 		// TODO Funkcja zwracająca strukturę plików + numer wersji.
 		return monitor.makeRecreateFileSystem();
 	}
+	
+	//tu pewnie w interface trzeba dopisac naglowek metody zeby on tam mogl ja przeciazyc?
+	public void getFileSystemFromSnapshot(FileSystemSnapshot snapshot){
+		monitor.makeGetFileSystemFromSnapshot(snapshot);
+	}
 
 }

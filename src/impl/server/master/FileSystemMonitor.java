@@ -2,7 +2,6 @@ package impl.server.master;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -423,6 +422,25 @@ public class FileSystemMonitor {
 			entryList.add(entry.getValue().deepCopy());
 		}
 		return new FileSystemSnapshot(entryList, fsVersion);
+	}
+	
+	public void makeGetFileSystemFromSnapshot(FileSystemSnapshot snapshot){
+		this.idMap.clear(); 		// tu nie wiem czy czyszczenie na zewnatrz czy juz w tej funkcji od razu
+		this.parentIdMap.clear();	// j.w.
+		FileSystemSnapshot outerSnap = snapshot.deepCopy();		// nie wiem czy jak poiteruje jednoczesnie po snapshot.entries w dwoch miejscach
+		FileSystemSnapshot innerSnap = snapshot.deepCopy();		// na tym samym obiekcie to czy sie nie posypie, dlatego robie oddzielne kopie
+		for (FileEntryExtended listEntry : outerSnap.entries) {
+			idMap.put(listEntry.entry.id, listEntry.deepCopy());
+			if (listEntry.entry.type == FileType.DIRECTORY){		// jesli folder to od razu buduje mu drzewo dzieci i dopiero calosc wstawiam do parentIdMap
+				TreeSet<FileEntryExtended> tmpTreeToCopy = new TreeSet<FileEntryExtended>(); 
+				for (FileEntryExtended listEntryChildrens : innerSnap.entries){
+					if (listEntryChildrens.entry.parentID == listEntry.entry.id){
+						tmpTreeToCopy.add(listEntryChildrens);
+					}
+				}
+				parentIdMap.put(listEntry.entry.id, new TreeSet<FileEntryExtended>(tmpTreeToCopy));
+			}
+		}
 	}
 }
 
