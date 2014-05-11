@@ -43,6 +43,9 @@ public class Client {
 		} catch (IOException e1) {
 			System.err.println("Error: Could not read configuration file!");
 			System.exit(13);
+		} catch (InvalidOperation e) {
+			System.err.println("Error(" + e.code + ") " + e.message);
+			System.exit(14);
 		}
 		try {
 			fs.connect();
@@ -75,7 +78,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"ls\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "mkdir":
 				if(args.length == 2){
@@ -85,7 +88,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"mkdir\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "mkfile":
 				if(args.length == 3){
@@ -97,7 +100,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"mkfile\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "rm":
 				if(args.length == 2){
@@ -105,7 +108,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"rm\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "mv":
 				//TODO moze dodac druga wersje z 3 argumentami (tak jak w FileSystem)?
@@ -114,7 +117,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"mv\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "readPart":
 				if(args.length == 4){
@@ -132,7 +135,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"readAll\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "writePart":
 				if(args.length == 4){
@@ -141,7 +144,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"writePart\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "writeAll":
 				if(args.length == 3){
@@ -149,7 +152,7 @@ public class Client {
 				}else{
 					throw new InvalidOperation(16, "Wrong number of arguments in \"writeAll\" call");
 				}
-				System.out.println("OK");
+				System.out.println("Done.");
 				break;
 			case "help":
 				System.out.println(help());
@@ -191,7 +194,7 @@ public class Client {
 			sb.append(entry.getName());
 			sb.append("\n");
 		}
-		System.out.println(sb.toString());
+		System.out.print(sb.toString());
 	}
 
 	private void readFile(FileSystem fs, String from, String to)
@@ -215,16 +218,16 @@ public class Client {
 	}
 
 	private static String help(){
-		return "Dostępne parametry wywołania:\n"
-				+ "-ls katalog \t\t\t Zwraca zawartość katalogu\n"
-				+ "-mkdir katalog \t\t\t Tworzy nowy katalog\n"
-				+ "-mkfile ścieżka rozmiar\t\t Tworzy nowy plik o podanym rozmiarze\n"
-				+ "-rm ścieżka \t\t\t Usuwa podany plik lub katalog\n"
-				+ "-mv obecna nowa \t\t Przenosi / Zmienia nazwę pliku/folderu\n"
-				+ "-readPart ścieżka offset rozmiar Odczyt fragmentu pliku z serwera\n"
-				+ "-readAll zdalny lokalny \t Odczyt pliku z serwera\n"
-				+ "-writePart ścieżka offset dane \t Modyfikacja pliku na serwerze\n" 
-				+ "-writeAll zdalny lokalny \t Zapis pliku na serwerze\n"
-				+ "-help \t\t\t\t Dostępne parametry wywołania"; 
+		return "Available commands:\n"
+				+ "- ls <directory> ......................List directory's entries\n"
+				+ "- mkdir <directory>....................Create new directory\n"
+				+ "- mkfile <path> <fileSize>.............Create new file with specified size\n"
+				+ "- rm <path>............................Remove a directory or a file\n"
+				+ "- mv <currentPath> <newPath>...........Move a directory or a path\n"
+				+ "- readPart <path> <offset> <size>......Read file fragment\n"
+				+ "- readAll <remotePath> <localPath>.....Download file from a server\n"
+				+ "- writePart <path> <offset> <data>.....Modify file on a server\n" 
+				+ "- writeAll <remotePath> <localPath>....Save local file on a server\n"
+				+ "- help.................................Help"; 
 	}
 }

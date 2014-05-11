@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import javax.management.openmbean.InvalidOpenTypeException;
+
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -25,8 +27,8 @@ public class FileSystemImpl implements FileSystem {
 
 	private static final String MASTER_SERVER_HOST = "master-server";
 	private static final String MASTER_SERVER_NUM = "master-server-num";
-	private static final String EXTERNAL_TIMEOUT = "external-timeout";
-	private static final String EXTERNAL_PORT = "external-port";
+	private static final String TIMEOUT = "timeout";
+	private static final String PORT = "port";
 	private final static String PATH_TO_CONFIG_FILE = "properties.conf";
 	private ClientMasterService.Iface service;
 	private TTransport transport;
@@ -34,21 +36,27 @@ public class FileSystemImpl implements FileSystem {
 	private Integer port;
 	private Integer timeout;
 
-	public FileSystemImpl() throws FileNotFoundException, IOException, NumberFormatException {
+	public FileSystemImpl() throws FileNotFoundException, IOException, NumberFormatException, InvalidOperation {
 		prop = new Properties();
 		File configFile = new File(PATH_TO_CONFIG_FILE);
 		prop.load(new FileReader(configFile));
-		String portString = prop.getProperty(EXTERNAL_PORT);
-		String timeoutString = prop.getProperty(EXTERNAL_TIMEOUT);
+		String portString = prop.getProperty(PORT);
+		if (portString == null) {
+			throw new InvalidOperation(202, "\"port\" (int) key expected in configuration file");
+		}
+		String timeoutString = prop.getProperty(TIMEOUT);
+		if (timeoutString == null) {
+			throw new InvalidOperation(202, "\"timeout\" (int) key expected in configuration file");
+		}
 		try {
 			port = new Integer(portString);
 		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Błąd: Niepoprawny port: "+portString);
+			throw new NumberFormatException("Error: Invalid port number: " + portString);
 		}
 		try {
 			timeout = new Integer(timeoutString);
 		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Błąd: Niepoprawny timeout: "+timeoutString);
+			throw new NumberFormatException("Error: Invalid timeout number: " + timeoutString);
 		}
 	}
 	
@@ -60,20 +68,19 @@ public class FileSystemImpl implements FileSystem {
 			String host = prop.getProperty(MASTER_SERVER_HOST+i);
 			if (host != null){
 				try {
-					System.out.println("Trwa łączenie z serwerem: "+host);
+					System.out.print("Connecting with host: " + host + "...");
 					createTransport(host, port, timeout);
 					TProtocol protocol = new TBinaryProtocol(transport);
 					TMultiplexedProtocol multiplexed = new TMultiplexedProtocol(protocol, "ClientMaster");
 					service = new ClientMasterService.Client(multiplexed);
-					System.out.println("Połączono.");
+					System.out.println(" OK.");
 				} catch (TTransportException e) {
-					System.out.println("Niepowodzenie.");
+					System.out.println(" Failed.");
 					++i;
 				}
-			}
-			else{
+			} else {
 				++i;
-				System.err.println("Błąd: Master-server-host-"+i+" jest null!");
+				System.err.println("Error: master-server-host-"+i+" not specified!");
 			}
 		}
 		if (service == null)

@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class Configuration {
 	public static int sRedundancy = 3;
 	public static int sMinRedundancy = 2;
-	public static int sInternalPort = 1200;
-	public static int sExternalPort = 800;
+	public static int sPort = 1200;
 	public static ArrayList<String> sMainServerIPs;
 	public static ArrayList<String> sDataServerIPs;
+	public static int sTimeout = 1000;
 	static{
 		sMainServerIPs = new ArrayList<String>();
 		sMainServerIPs.add("192.168.11.11");

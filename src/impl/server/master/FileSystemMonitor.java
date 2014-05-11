@@ -46,7 +46,7 @@ public class FileSystemMonitor {
 	
 	class Connection {
 		public Connection(String host, int port, String service) {
-			transport = new TSocket(host, port);
+			transport = new TSocket(host, port, Configuration.sTimeout);
 			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
 		}
 		
