@@ -420,7 +420,7 @@ public class FileSystemMonitor {
 	public FileSystemSnapshot makeRecreateFileSystem(){
 		List<FileEntryExtended> entryList = new ArrayList<FileEntryExtended>();
 		for (Entry<Long, FileEntryExtended> entry : idMap.entrySet()) {
-			entryList.add(entry.getValue());
+			entryList.add(entry.getValue().deepCopy());
 		}
 		return new FileSystemSnapshot(entryList, fsVersion);
 	}
