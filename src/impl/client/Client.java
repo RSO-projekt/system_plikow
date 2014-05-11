@@ -26,9 +26,9 @@ public class Client {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-		    System.err.println("Błąd: Brak parametrów wywołania!");
-		    System.out.println(help());
-		    System.exit(10);
+			System.err.println("Error: No arguments!");
+			System.out.println(help());
+			System.exit(10);
 		}
 		Client client = new Client();
 		FileSystem fs = null;
@@ -38,10 +38,10 @@ public class Client {
 			System.err.println(e1.getMessage());
 			System.exit(11);
 		} catch (FileNotFoundException e1) {
-			System.err.println("Błąd: Nie znaleziono pliku konfiguracyjnego!");
+			System.err.println("Error: Could not find configuration file!");
 			System.exit(12);
 		} catch (IOException e1) {
-			System.err.println("Błąd: Nie udało się odczytać pliku konfiguracyjnego!");
+			System.err.println("Error: Could not read configuration file!");
 			System.exit(13);
 		}
 		try {
@@ -51,7 +51,7 @@ public class Client {
 				System.exit(returnCode);
 			}
 		} catch (TTransportException e) {
-			System.out.println("Błąd: Nie udało się nawiązać połączenia z żadnym serwerem!");
+			System.out.println("Error: Could not establish connection to any server!");
 			System.exit(14);
 		} finally {
 			fs.disconnect();
@@ -68,53 +68,94 @@ public class Client {
 		try {
 			switch (action) {
 			case "ls":
-				showListOfEntries(fs.lookup(args[1]));
+				if(args.length == 1){
+					showListOfEntries(fs.lookup("/"));
+				}else if(args.length == 2){
+					showListOfEntries(fs.lookup(args[1]));
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"ls\" call");
+				}
+				System.out.println("OK");
 				break;
 			case "mkdir":
-				fs.makeDirectory(args[1]);
+				if(args.length == 2){
+					fs.makeDirectory(args[1]);
+				}else if(args.length == 3){
+					fs.makeDirectory(fs.getFileEntry(args[1]),args[2]);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"mkdir\" call");
+				}
 				System.out.println("OK");
 				break;
 			case "mkfile":
-				Integer size = new Integer(args[2]);
-				fs.makeFile(args[1], size);
+				if(args.length == 3){
+					Integer size = new Integer(args[2]);
+					fs.makeFile(args[1], size);
+				}else if(args.length == 4){
+					Integer size = new Integer(args[3]);
+					fs.makeFile(fs.getFileEntry(args[1]),args[2], size);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"mkfile\" call");
+				}
 				System.out.println("OK");
 				break;
 			case "rm":
-				fs.removeEntry(args[1]);
+				if(args.length == 2){
+					fs.removeEntry(args[1]);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"rm\" call");
+				}
 				System.out.println("OK");
 				break;
 			case "mv":
-				if (args.length != 3){
-					throw new InvalidOperation(16, "Niewłaściwa ilość argumentów polecenia MV");
+				//TODO moze dodac druga wersje z 3 argumentami (tak jak w FileSystem)?
+				if (args.length == 3){
+					fs.moveEntry(args[1], args[2]);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"mv\" call");
 				}
-				fs.moveEntry(args[1], args[2]);
 				System.out.println("OK");
 				break;
 			case "readPart":
-				long offset = new Long(args[2]);
-				long num = new Long(args[3]);
-				byte[] bytes = fs.readFromFile(args[1], offset, num);
-				System.out.println(bytes);
+				if(args.length == 4){
+					long offset = new Long(args[2]);
+					long num = new Long(args[3]);
+					byte[] bytes = fs.readFromFile(args[1], offset, num);
+					System.out.println(bytes);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"readPart\" call");
+				}
 				break;
 			case "readAll":
-				readFile(fs, args[1], args[2]);
+				if(args.length == 3){
+					readFile(fs, args[1], args[2]);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"readAll\" call");
+				}
 				System.out.println("OK");
 				break;
 			case "writePart":
-				long offset2 = new Long(args[2]);
-				fs.writeToFile(args[1], offset2, args[3].getBytes());
+				if(args.length == 4){
+					long offset2 = new Long(args[2]);
+					fs.writeToFile(args[1], offset2, args[3].getBytes());
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"writePart\" call");
+				}
 				System.out.println("OK");
 				break;
 			case "writeAll":
-				writeFile(fs, args[1], args[2]);
+				if(args.length == 3){
+					writeFile(fs, args[1], args[2]);
+				}else{
+					throw new InvalidOperation(16, "Wrong number of arguments in \"writeAll\" call");
+				}
 				System.out.println("OK");
 				break;
 			case "help":
 				System.out.println(help());
 				break;
 			default:
-				System.err.println("Błąd: Niewłaściwe parametry wywołania!");
-				return 16;
+				throw new InvalidOperation(16, "Wrong arguments");
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -136,7 +177,7 @@ public class Client {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		if (entries.isEmpty()){
-			System.out.println("Wybrany katalog jest pusty");
+			System.out.println("Chosen folder is empty");
 		} 
 		for (FileEntry entry : entries){
 			Date modificationTime = new Date((long)entry.getModificationTime()*1000);
@@ -152,7 +193,7 @@ public class Client {
 		}
 		System.out.println(sb.toString());
 	}
-	
+
 	private void readFile(FileSystem fs, String from, String to)
 			throws  IOException, EntryNotFound, InvalidOperation, TException {
 		FileEntry entry = fs.getFileEntry(from);
@@ -165,14 +206,14 @@ public class Client {
 		fos.write(bytes);
 		fos.close();
 	}
-	
+
 	private void writeFile(FileSystem fs, String to, String from)
 			throws IOException, EntryNotFound, InvalidOperation, TException {
 		File file = new File(from);
 		byte[] bytes = Files.readAllBytes(file.toPath());
 		fs.writeToFile(to, 0, bytes);
 	}
-	
+
 	private static String help(){
 		return "Dostępne parametry wywołania:\n"
 				+ "-ls katalog \t\t\t Zwraca zawartość katalogu\n"
