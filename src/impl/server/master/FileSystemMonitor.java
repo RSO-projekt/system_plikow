@@ -1,5 +1,6 @@
 package impl.server.master;
 
+import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,10 +96,20 @@ public class FileSystemMonitor {
 			this.host = host;
 			this.port = port;
 			this.serverID = serverID;
+			this.service = service;
 		}
 		
-		public void reopen() throws TTransportException {
-			if (!transport.isOpen()) transport.open();
+		public void reopen() {
+			if (!transport.isOpen())
+				try {
+					transport.open();
+				} catch (TTransportException e) {
+					// It's unrecoverable state of a socket: close it and
+					// create a new one.
+					transport.close();
+					transport = new TSocket(host, port, Configuration.sTimeout);
+					protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
+				}
 		}
 		
 		public String getHostAddress() {
@@ -118,6 +129,7 @@ public class FileSystemMonitor {
 		protected String host;
 		protected int port;
 		protected int serverID;
+		String service;
 	}
 	
 	// Master server connection.
@@ -126,6 +138,13 @@ public class FileSystemMonitor {
 			super(host, port, priority, "MasterMaster");
 			service = new MasterMasterService.Client(protocol);
 		}
+		
+		@Override
+		public void reopen() {
+			super.reopen();
+			service = new MasterMasterService.Client(protocol);
+		}
+
 		public Iface getService() {
 			return service;
 		}
