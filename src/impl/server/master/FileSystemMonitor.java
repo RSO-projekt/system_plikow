@@ -107,6 +107,7 @@ public class FileSystemMonitor {
 			} catch (TTransportException e) {
 				System.out.println("Should open...");
 				e.printStackTrace();
+				System.out.println("Yeah");
 			}
 			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
 		}
@@ -606,6 +607,7 @@ public class FileSystemMonitor {
 				try {
 					snap = conn.getService().getFileSystemSnapshot(serverID);
 					log("Got snapshot");
+					break;
 				} catch (TException e) {
 					log("Can't recreate file system snapshot: connection lost from " +
 				        conn.getHostAddress() + "(" + conn.getServerID() + ")");
@@ -693,7 +695,7 @@ public class FileSystemMonitor {
 						log("Send elected to: " + conn.getHostAddress() + 
 							"(" + conn.getServerID() + ")");
 					} catch (TException e) {
-						log("Coudn't send elected to " + conn.getHostAddress() +
+						log("Couldn't send elected to " + conn.getHostAddress() +
 							"(" + conn.getServerID() + ")");
 						conn.reopen();
 						e.printStackTrace();
