@@ -385,6 +385,7 @@ public class FileSystemMonitor {
 			} catch (TException e) {
 				log("Can't broadcast removed entry to " + conn.getHostAddress() +
 					":" + conn.getHostPort());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -451,6 +452,7 @@ public class FileSystemMonitor {
 			} catch (TException e) {
 				log("Can't broadcast moved entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -586,6 +588,7 @@ public class FileSystemMonitor {
 				} catch (TException e) {
 					log("Can't recreate file system snapshot: connection lost from " +
 				        conn.getHostAddress() + "(" + conn.getServerID() + ")");
+					e.printStackTrace();
 				}
 			}
 		}
@@ -640,6 +643,7 @@ public class FileSystemMonitor {
 				} catch (TException e) {
 					log("Can't reach server " + conn.getHostAddress() +
 						"(" + conn.getServerID() + ")");
+					e.printStackTrace();
 				}
 			}
 		}
@@ -657,6 +661,7 @@ public class FileSystemMonitor {
 					} catch (TException e) {
 						log("Coudn't send elected to " + conn.getHostAddress() +
 							"(" + conn.getServerID() + ")");
+						e.printStackTrace();
 					}
 				}
 			}
