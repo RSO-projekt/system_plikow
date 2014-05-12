@@ -109,6 +109,11 @@ public class FileSystemMonitor {
 					transport.close();
 					transport = new TSocket(host, port, Configuration.sTimeout);
 					protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
+					try {
+						transport.open();
+					} catch (TTransportException e1) {
+						// We won't handle it again now...
+					}
 				}
 		}
 		
