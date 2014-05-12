@@ -92,11 +92,11 @@ public class FileSystemMonitor {
 	// Class representing an AT connection. 
 	class Connection {
 		public Connection(String host, int port, int serverID, String service) {
-			reopen();
 			this.host = host;
 			this.port = port;
 			this.serverID = serverID;
 			this.service = service;
+			reopen();
 		}
 		
 		public void reopen() {
