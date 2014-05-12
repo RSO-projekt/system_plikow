@@ -597,6 +597,7 @@ public class FileSystemMonitor {
 	}
 	
 	public synchronized void recreateFileSystem(int copyServerID) {
+		log("Recreating file system from server ID: " + copyServerID);
 		
 		// Find copy server
 		FileSystemSnapshot snap = null;
