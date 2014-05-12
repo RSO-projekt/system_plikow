@@ -73,3 +73,10 @@ exception InvalidOperation
     1: i32 code,
     2: string message
 }
+
+// Exception server not permitted to do a transaction
+exception HostNotPermitted
+{
+    1: i32 currentServerID
+    2: i32 newServerID
+}

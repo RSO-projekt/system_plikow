@@ -102,13 +102,20 @@ public class ServerMain {
 		// Prepare file system monitor and find other's servers IP.
 		FileSystemMonitor monitor = new FileSystemMonitor();
 		boolean foundLocalIP = false;
+		int serverID = 0;
+		int myServerID = 0;
 		for (String ip : Configuration.sMainServerIPs) {
+			serverID++;
 			if (!myIPs.contains(ip)) {
-				monitor.addMasterConnection(ip, Configuration.sPort);
+				monitor.addMasterConnection(ip, Configuration.sPort, serverID);
 			} else {
 				if (foundLocalIP) {
 					throw new InvalidOperation(100, "Multiple local IP's in configuration file are not allowed");
-				} else foundLocalIP = true;
+				} else {
+					foundLocalIP = true;
+					myServerID = serverID;
+					monitor.setServerID(myServerID);
+				}
 			}
 		}
 		
@@ -124,10 +131,13 @@ public class ServerMain {
 		// Create threaded server
 		TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).
 				processor(processor));
-		System.out.println("Starting server on port " + Configuration.sPort +" ...");
+		monitor.log("Starting server on port " + Configuration.sPort + 
+				    " with priority " + myServerID + "...");
+		
+		// Start election on startup
+		monitor.startElection();
 		
 		// Start serving
-		monitor.openConnections();
 		server.serve();
 	}
 
@@ -141,10 +151,10 @@ public class ServerMain {
 		} catch (InvalidOperation e) {
 			System.out.println("Error(" + e.code + "): " + e.message);
 		} catch (TTransportException e) {
-			System.out.println("Error(TTransport:");
+			System.out.println("Error(TTransport):");
 			e.printStackTrace();
 		} catch (SocketException e) {
-			System.out.println("Error(Socket:");
+			System.out.println("Error(Socket):");
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println("Error(IO): Configuration file not found or bad syntax");

@@ -111,7 +111,6 @@ public class Client {
 				System.out.println("Done.");
 				break;
 			case "mv":
-				//TODO moze dodac druga wersje z 3 argumentami (tak jak w FileSystem)?
 				if (args.length == 3){
 					fs.moveEntry(args[1], args[2]);
 				}else{

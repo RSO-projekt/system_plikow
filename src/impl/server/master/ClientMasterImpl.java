@@ -6,8 +6,7 @@ import org.apache.thrift.TException;
 import rso.at.ClientMasterService;
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
-import rso.at.FileEntryExtended;
-import rso.at.FileType;
+import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
 import rso.at.Transaction;
 
@@ -19,72 +18,71 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 	}
 
 	@Override
-	public FileEntry getFileEntry(String path) throws EntryNotFound,
-			InvalidOperation, TException {
+	public FileEntry getFileEntry(String path) throws EntryNotFound, HostNotPermitted {
 	
-		return monitor.getEntry(path).entry;
+		return monitor.getEntry(true, path).entry;
 	}
 
 	@Override
 	public List<FileEntry> lookup(String path) throws EntryNotFound,
 			InvalidOperation, TException {
 		
-		return monitor.lookup(path, null);
+		return monitor.lookup(true, path, null);
 	}
 
 	@Override
 	public List<FileEntry> lookup2(FileEntry parent) throws EntryNotFound,
 			InvalidOperation, TException {
-		return monitor.lookup("", parent);
+		return monitor.lookup(true, "", parent);
 	}
 
 	@Override
 	public FileEntry makeDirectory(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		return monitor.makeDirectory(path);
+		return monitor.makeDirectory(true, path);
 	}
 
 	@Override
 	public FileEntry makeDirectory2(FileEntry parent, String name)
 			throws EntryNotFound, InvalidOperation, TException {
-		return monitor.makeDirectory2(parent, name);
+		return monitor.makeDirectory2(true, parent, name);
 	}
 
 	@Override
 	public FileEntry makeFile(String path, long size) throws EntryNotFound,
 			InvalidOperation, TException {
-		return monitor.makeFile(path, size);
+		return monitor.makeFile(true, path, size);
 	}
 
 	@Override
 	public FileEntry makeFile2(FileEntry parent, String name, long size)
 			throws EntryNotFound, InvalidOperation, TException {
-		return monitor.makeFile2(parent, name, size);
+		return monitor.makeFile2(true, parent, name, size);
 	}
 
 	@Override
 	public void removeEntry(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		monitor.removeEntry(path);
+		monitor.removeEntry(true, path);
 		
 	}
 
 	@Override
 	public void removeEntry2(FileEntry entry) throws EntryNotFound,
 			InvalidOperation, TException {
-		monitor.removeEntry2(entry);
+		monitor.removeEntry2(true, entry);
 	}
 
 	@Override
 	public FileEntry moveEntry(String fromPath, String toPath)
 			throws EntryNotFound, InvalidOperation, TException {
-		return monitor.moveEntry(fromPath, toPath);
+		return monitor.moveEntry(true, fromPath, toPath);
 	}
 
 	@Override
 	public FileEntry moveEntry2(FileEntry entry, FileEntry parent, String name)
 			throws EntryNotFound, InvalidOperation, TException {
-		return monitor.moveEntry2(entry, parent, name);
+		return monitor.moveEntry2(true, entry, parent, name);
 	}
 
 	@Override

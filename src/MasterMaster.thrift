@@ -9,15 +9,22 @@ namespace * rso.at
 service MasterMasterService
 {
     //----- SYNCHRONIZATION FUNCTIONS ------------------------------------------
-    oneway void updateCreateEntry(1: i64 fsVersion, 2: DataTypes.FileEntryExtended entry),
-    oneway void updateRemoveEntry(1: i64 fsVersion, 2: DataTypes.FileEntryExtended entry),
-    oneway void updateMoveEntry(1: i64 fsVersion, 2: DataTypes.FileEntryExtended oldEntry,
-                                3: DataTypes.FileEntryExtended newEntry),
+    oneway void updateCreateEntry(1: i32 serverID, 
+                                  2: i64 fsVersion, 
+                                  3: DataTypes.FileEntryExtended entry),
+    oneway void updateRemoveEntry(1: i32 serverID,
+                                  2: i64 fsVersion, 
+                                  3: DataTypes.FileEntryExtended entry),
+    oneway void updateMoveEntry(1: i32 serverID,
+                                2: i64 fsVersion, 
+                                3: DataTypes.FileEntryExtended oldEntry,
+                                4: DataTypes.FileEntryExtended newEntry),
 
     // It can happen that server will be shutdown for a long time and it's
     // not possible to resync with master on delta basis.
     // [Called by mirror Master Server].
-    DataTypes.FileSystemSnapshot recreateFileSystem(),
+    DataTypes.FileSystemSnapshot getFileSystemSnapshot(1: i32 serverID)
+        throws (1: DataTypes.HostNotPermitted err),
 
     //------ ELECTION FUNCTIONS ------------------------------------------------
 
@@ -28,7 +35,4 @@ service MasterMasterService
 
     // Message is sent by a server when no one is responding after an election.
     void elected(1: i32 serverID),
-
-    // Message is sent to stop election for lower priority server.
-    void ok(1: i32 serverID)
 }

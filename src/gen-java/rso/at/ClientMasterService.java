@@ -36,35 +36,35 @@ public class ClientMasterService {
 
   public interface Iface {
 
-    public rso.at.FileEntry getFileEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry getFileEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public List<rso.at.FileEntry> lookup(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public List<rso.at.FileEntry> lookup(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public List<rso.at.FileEntry> lookup2(rso.at.FileEntry parent) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public List<rso.at.FileEntry> lookup2(rso.at.FileEntry parent) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.FileEntry makeDirectory(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry makeDirectory(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.FileEntry makeDirectory2(rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry makeDirectory2(rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.FileEntry makeFile(String path, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry makeFile(String path, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.FileEntry makeFile2(rso.at.FileEntry parent, String name, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry makeFile2(rso.at.FileEntry parent, String name, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public void removeEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public void removeEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public void removeEntry2(rso.at.FileEntry entry) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public void removeEntry2(rso.at.FileEntry entry) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.FileEntry moveEntry(String fromPath, String toPath) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry moveEntry(String fromPath, String toPath) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.FileEntry moveEntry2(rso.at.FileEntry entry, rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.FileEntry moveEntry2(rso.at.FileEntry entry, rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.Transaction writeToFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.Transaction writeToFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.Transaction writeToFile2(rso.at.FileEntry file, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.Transaction writeToFile2(rso.at.FileEntry file, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.Transaction readFromFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.Transaction readFromFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.Transaction readFromFile2(rso.at.FileEntry entry, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException;
+    public rso.at.Transaction readFromFile2(rso.at.FileEntry entry, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
   }
 
@@ -122,7 +122,7 @@ public class ClientMasterService {
       super(iprot, oprot);
     }
 
-    public rso.at.FileEntry getFileEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry getFileEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_getFileEntry(path);
       return recv_getFileEntry();
@@ -135,7 +135,7 @@ public class ClientMasterService {
       sendBase("getFileEntry", args);
     }
 
-    public rso.at.FileEntry recv_getFileEntry() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_getFileEntry() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       getFileEntry_result result = new getFileEntry_result();
       receiveBase(result, "getFileEntry");
@@ -148,10 +148,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getFileEntry failed: unknown result");
     }
 
-    public List<rso.at.FileEntry> lookup(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public List<rso.at.FileEntry> lookup(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_lookup(path);
       return recv_lookup();
@@ -164,7 +167,7 @@ public class ClientMasterService {
       sendBase("lookup", args);
     }
 
-    public List<rso.at.FileEntry> recv_lookup() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public List<rso.at.FileEntry> recv_lookup() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       lookup_result result = new lookup_result();
       receiveBase(result, "lookup");
@@ -177,10 +180,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "lookup failed: unknown result");
     }
 
-    public List<rso.at.FileEntry> lookup2(rso.at.FileEntry parent) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public List<rso.at.FileEntry> lookup2(rso.at.FileEntry parent) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_lookup2(parent);
       return recv_lookup2();
@@ -193,7 +199,7 @@ public class ClientMasterService {
       sendBase("lookup2", args);
     }
 
-    public List<rso.at.FileEntry> recv_lookup2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public List<rso.at.FileEntry> recv_lookup2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       lookup2_result result = new lookup2_result();
       receiveBase(result, "lookup2");
@@ -206,10 +212,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "lookup2 failed: unknown result");
     }
 
-    public rso.at.FileEntry makeDirectory(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry makeDirectory(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_makeDirectory(path);
       return recv_makeDirectory();
@@ -222,7 +231,7 @@ public class ClientMasterService {
       sendBase("makeDirectory", args);
     }
 
-    public rso.at.FileEntry recv_makeDirectory() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_makeDirectory() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       makeDirectory_result result = new makeDirectory_result();
       receiveBase(result, "makeDirectory");
@@ -235,10 +244,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "makeDirectory failed: unknown result");
     }
 
-    public rso.at.FileEntry makeDirectory2(rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry makeDirectory2(rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_makeDirectory2(parent, name);
       return recv_makeDirectory2();
@@ -252,7 +264,7 @@ public class ClientMasterService {
       sendBase("makeDirectory2", args);
     }
 
-    public rso.at.FileEntry recv_makeDirectory2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_makeDirectory2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       makeDirectory2_result result = new makeDirectory2_result();
       receiveBase(result, "makeDirectory2");
@@ -265,10 +277,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "makeDirectory2 failed: unknown result");
     }
 
-    public rso.at.FileEntry makeFile(String path, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry makeFile(String path, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_makeFile(path, size);
       return recv_makeFile();
@@ -282,7 +297,7 @@ public class ClientMasterService {
       sendBase("makeFile", args);
     }
 
-    public rso.at.FileEntry recv_makeFile() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_makeFile() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       makeFile_result result = new makeFile_result();
       receiveBase(result, "makeFile");
@@ -295,10 +310,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "makeFile failed: unknown result");
     }
 
-    public rso.at.FileEntry makeFile2(rso.at.FileEntry parent, String name, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry makeFile2(rso.at.FileEntry parent, String name, long size) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_makeFile2(parent, name, size);
       return recv_makeFile2();
@@ -313,7 +331,7 @@ public class ClientMasterService {
       sendBase("makeFile2", args);
     }
 
-    public rso.at.FileEntry recv_makeFile2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_makeFile2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       makeFile2_result result = new makeFile2_result();
       receiveBase(result, "makeFile2");
@@ -326,10 +344,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "makeFile2 failed: unknown result");
     }
 
-    public void removeEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public void removeEntry(String path) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_removeEntry(path);
       recv_removeEntry();
@@ -342,7 +363,7 @@ public class ClientMasterService {
       sendBase("removeEntry", args);
     }
 
-    public void recv_removeEntry() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public void recv_removeEntry() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       removeEntry_result result = new removeEntry_result();
       receiveBase(result, "removeEntry");
@@ -352,10 +373,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       return;
     }
 
-    public void removeEntry2(rso.at.FileEntry entry) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public void removeEntry2(rso.at.FileEntry entry) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_removeEntry2(entry);
       recv_removeEntry2();
@@ -368,7 +392,7 @@ public class ClientMasterService {
       sendBase("removeEntry2", args);
     }
 
-    public void recv_removeEntry2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public void recv_removeEntry2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       removeEntry2_result result = new removeEntry2_result();
       receiveBase(result, "removeEntry2");
@@ -378,10 +402,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       return;
     }
 
-    public rso.at.FileEntry moveEntry(String fromPath, String toPath) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry moveEntry(String fromPath, String toPath) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_moveEntry(fromPath, toPath);
       return recv_moveEntry();
@@ -395,7 +422,7 @@ public class ClientMasterService {
       sendBase("moveEntry", args);
     }
 
-    public rso.at.FileEntry recv_moveEntry() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_moveEntry() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       moveEntry_result result = new moveEntry_result();
       receiveBase(result, "moveEntry");
@@ -408,10 +435,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "moveEntry failed: unknown result");
     }
 
-    public rso.at.FileEntry moveEntry2(rso.at.FileEntry entry, rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry moveEntry2(rso.at.FileEntry entry, rso.at.FileEntry parent, String name) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_moveEntry2(entry, parent, name);
       return recv_moveEntry2();
@@ -426,7 +456,7 @@ public class ClientMasterService {
       sendBase("moveEntry2", args);
     }
 
-    public rso.at.FileEntry recv_moveEntry2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.FileEntry recv_moveEntry2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       moveEntry2_result result = new moveEntry2_result();
       receiveBase(result, "moveEntry2");
@@ -439,10 +469,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "moveEntry2 failed: unknown result");
     }
 
-    public rso.at.Transaction writeToFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction writeToFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_writeToFile(path, offset, num);
       return recv_writeToFile();
@@ -457,7 +490,7 @@ public class ClientMasterService {
       sendBase("writeToFile", args);
     }
 
-    public rso.at.Transaction recv_writeToFile() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction recv_writeToFile() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       writeToFile_result result = new writeToFile_result();
       receiveBase(result, "writeToFile");
@@ -470,10 +503,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "writeToFile failed: unknown result");
     }
 
-    public rso.at.Transaction writeToFile2(rso.at.FileEntry file, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction writeToFile2(rso.at.FileEntry file, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_writeToFile2(file, offset, num);
       return recv_writeToFile2();
@@ -488,7 +524,7 @@ public class ClientMasterService {
       sendBase("writeToFile2", args);
     }
 
-    public rso.at.Transaction recv_writeToFile2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction recv_writeToFile2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       writeToFile2_result result = new writeToFile2_result();
       receiveBase(result, "writeToFile2");
@@ -501,10 +537,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "writeToFile2 failed: unknown result");
     }
 
-    public rso.at.Transaction readFromFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction readFromFile(String path, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_readFromFile(path, offset, num);
       return recv_readFromFile();
@@ -519,7 +558,7 @@ public class ClientMasterService {
       sendBase("readFromFile", args);
     }
 
-    public rso.at.Transaction recv_readFromFile() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction recv_readFromFile() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       readFromFile_result result = new readFromFile_result();
       receiveBase(result, "readFromFile");
@@ -532,10 +571,13 @@ public class ClientMasterService {
       if (result.err2 != null) {
         throw result.err2;
       }
+      if (result.err3 != null) {
+        throw result.err3;
+      }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "readFromFile failed: unknown result");
     }
 
-    public rso.at.Transaction readFromFile2(rso.at.FileEntry entry, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction readFromFile2(rso.at.FileEntry entry, long offset, long num) throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       send_readFromFile2(entry, offset, num);
       return recv_readFromFile2();
@@ -550,7 +592,7 @@ public class ClientMasterService {
       sendBase("readFromFile2", args);
     }
 
-    public rso.at.Transaction recv_readFromFile2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException
+    public rso.at.Transaction recv_readFromFile2() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
       readFromFile2_result result = new readFromFile2_result();
       receiveBase(result, "readFromFile2");
@@ -562,6 +604,9 @@ public class ClientMasterService {
       }
       if (result.err2 != null) {
         throw result.err2;
+      }
+      if (result.err3 != null) {
+        throw result.err3;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "readFromFile2 failed: unknown result");
     }
@@ -606,7 +651,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -638,7 +683,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public List<rso.at.FileEntry> getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public List<rso.at.FileEntry> getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -670,7 +715,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public List<rso.at.FileEntry> getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public List<rso.at.FileEntry> getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -702,7 +747,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -737,7 +782,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -772,7 +817,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -810,7 +855,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -842,7 +887,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public void getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -874,7 +919,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public void getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -909,7 +954,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -947,7 +992,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.FileEntry getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -985,7 +1030,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1023,7 +1068,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1061,7 +1106,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1099,7 +1144,7 @@ public class ClientMasterService {
         prot.writeMessageEnd();
       }
 
-      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, org.apache.thrift.TException {
+      public rso.at.Transaction getResult() throws rso.at.EntryNotFound, rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1161,6 +1206,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1187,6 +1234,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1213,6 +1262,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1239,6 +1290,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1265,6 +1318,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1291,6 +1346,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1317,6 +1374,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1343,6 +1402,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1369,6 +1430,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1395,6 +1458,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1421,6 +1486,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1447,6 +1514,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1473,6 +1542,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1499,6 +1570,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1525,6 +1598,8 @@ public class ClientMasterService {
           result.err1 = err1;
         } catch (rso.at.InvalidOperation err2) {
           result.err2 = err2;
+        } catch (rso.at.HostNotPermitted err3) {
+          result.err3 = err3;
         }
         return result;
       }
@@ -1598,6 +1673,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -1658,6 +1738,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -1722,6 +1807,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -1782,6 +1872,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -1846,6 +1941,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -1906,6 +2006,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -1970,6 +2075,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -2031,6 +2141,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -2090,6 +2205,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -2154,6 +2274,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -2214,6 +2339,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -2278,6 +2408,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -2338,6 +2473,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -2402,6 +2542,11 @@ public class ClientMasterService {
                         result.setErr2IsSet(true);
                         msg = result;
             }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
+                        msg = result;
+            }
              else 
             {
               msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
@@ -2462,6 +2607,11 @@ public class ClientMasterService {
             else             if (e instanceof rso.at.InvalidOperation) {
                         result.err2 = (rso.at.InvalidOperation) e;
                         result.setErr2IsSet(true);
+                        msg = result;
+            }
+            else             if (e instanceof rso.at.HostNotPermitted) {
+                        result.err3 = (rso.at.HostNotPermitted) e;
+                        result.setErr3IsSet(true);
                         msg = result;
             }
              else 
@@ -2851,6 +3001,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -2861,12 +3012,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -2887,6 +3040,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -2936,6 +3091,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getFileEntry_result.class, metaDataMap);
     }
@@ -2946,12 +3103,14 @@ public class ClientMasterService {
     public getFileEntry_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -2967,6 +3126,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public getFileEntry_result deepCopy() {
@@ -2978,6 +3140,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -3052,6 +3215,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public getFileEntry_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -3078,6 +3265,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -3091,6 +3286,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -3109,6 +3307,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -3150,6 +3350,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -3199,6 +3408,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3240,6 +3459,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -3315,6 +3542,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3345,6 +3581,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3372,7 +3613,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -3382,12 +3626,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, getFileEntry_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -3402,6 +3649,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -3768,6 +4020,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -3778,12 +4031,14 @@ public class ClientMasterService {
     public List<rso.at.FileEntry> success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -3804,6 +4059,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -3854,6 +4111,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(lookup_result.class, metaDataMap);
     }
@@ -3864,12 +4123,14 @@ public class ClientMasterService {
     public lookup_result(
       List<rso.at.FileEntry> success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -3889,6 +4150,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public lookup_result deepCopy() {
@@ -3900,6 +4164,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public int getSuccessSize() {
@@ -3989,6 +4254,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public lookup_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -4015,6 +4304,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -4028,6 +4325,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -4046,6 +4346,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -4087,6 +4389,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -4136,6 +4447,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -4177,6 +4498,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -4259,6 +4588,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -4296,6 +4634,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -4323,7 +4666,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
@@ -4339,12 +4685,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, lookup_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           {
             org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
@@ -4368,6 +4717,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -4739,6 +5093,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -4749,12 +5104,14 @@ public class ClientMasterService {
     public List<rso.at.FileEntry> success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -4775,6 +5132,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -4825,6 +5184,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(lookup2_result.class, metaDataMap);
     }
@@ -4835,12 +5196,14 @@ public class ClientMasterService {
     public lookup2_result(
       List<rso.at.FileEntry> success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -4860,6 +5223,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public lookup2_result deepCopy() {
@@ -4871,6 +5237,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public int getSuccessSize() {
@@ -4960,6 +5327,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public lookup2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -4986,6 +5377,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -4999,6 +5398,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -5017,6 +5419,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -5058,6 +5462,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -5107,6 +5520,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -5148,6 +5571,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -5230,6 +5661,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -5267,6 +5707,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -5294,7 +5739,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
@@ -5310,12 +5758,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, lookup2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           {
             org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
@@ -5339,6 +5790,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -5705,6 +6161,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -5715,12 +6172,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -5741,6 +6200,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -5790,6 +6251,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(makeDirectory_result.class, metaDataMap);
     }
@@ -5800,12 +6263,14 @@ public class ClientMasterService {
     public makeDirectory_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -5821,6 +6286,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public makeDirectory_result deepCopy() {
@@ -5832,6 +6300,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -5906,6 +6375,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public makeDirectory_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -5932,6 +6425,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -5945,6 +6446,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -5963,6 +6467,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -6004,6 +6510,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -6053,6 +6568,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -6094,6 +6619,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -6169,6 +6702,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -6199,6 +6741,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -6226,7 +6773,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -6236,12 +6786,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, makeDirectory_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -6256,6 +6809,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -6727,6 +7285,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -6737,12 +7296,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -6763,6 +7324,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -6812,6 +7375,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(makeDirectory2_result.class, metaDataMap);
     }
@@ -6822,12 +7387,14 @@ public class ClientMasterService {
     public makeDirectory2_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -6843,6 +7410,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public makeDirectory2_result deepCopy() {
@@ -6854,6 +7424,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -6928,6 +7499,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public makeDirectory2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -6954,6 +7549,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -6967,6 +7570,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -6985,6 +7591,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -7026,6 +7634,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -7075,6 +7692,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -7116,6 +7743,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -7191,6 +7826,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -7221,6 +7865,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -7248,7 +7897,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -7258,12 +7910,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, makeDirectory2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -7278,6 +7933,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -7742,6 +8402,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -7752,12 +8413,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -7778,6 +8441,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -7827,6 +8492,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(makeFile_result.class, metaDataMap);
     }
@@ -7837,12 +8504,14 @@ public class ClientMasterService {
     public makeFile_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -7858,6 +8527,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public makeFile_result deepCopy() {
@@ -7869,6 +8541,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -7943,6 +8616,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public makeFile_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -7969,6 +8666,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -7982,6 +8687,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -8000,6 +8708,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -8041,6 +8751,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -8090,6 +8809,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -8131,6 +8860,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -8206,6 +8943,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -8236,6 +8982,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -8263,7 +9014,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -8273,12 +9027,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, makeFile_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -8293,6 +9050,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -8862,6 +9624,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -8872,12 +9635,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -8898,6 +9663,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -8947,6 +9714,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(makeFile2_result.class, metaDataMap);
     }
@@ -8957,12 +9726,14 @@ public class ClientMasterService {
     public makeFile2_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -8978,6 +9749,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public makeFile2_result deepCopy() {
@@ -8989,6 +9763,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -9063,6 +9838,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public makeFile2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -9089,6 +9888,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -9102,6 +9909,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -9120,6 +9930,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -9161,6 +9973,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -9210,6 +10031,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -9251,6 +10082,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -9326,6 +10165,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -9356,6 +10204,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -9383,7 +10236,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -9393,12 +10249,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, makeFile2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -9413,6 +10272,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -9778,6 +10642,7 @@ public class ClientMasterService {
 
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -9787,11 +10652,13 @@ public class ClientMasterService {
 
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -9810,6 +10677,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -9857,6 +10726,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(removeEntry_result.class, metaDataMap);
     }
@@ -9866,11 +10737,13 @@ public class ClientMasterService {
 
     public removeEntry_result(
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -9883,6 +10756,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public removeEntry_result deepCopy() {
@@ -9893,6 +10769,7 @@ public class ClientMasterService {
     public void clear() {
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.EntryNotFound getErr1() {
@@ -9943,6 +10820,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public removeEntry_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case ERR1:
@@ -9961,6 +10862,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -9971,6 +10880,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -9987,6 +10899,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -10019,6 +10933,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -10058,6 +10981,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -10091,6 +11024,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -10154,6 +11095,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -10177,6 +11127,11 @@ public class ClientMasterService {
         if (struct.err2 != null) {
           oprot.writeFieldBegin(ERR2_FIELD_DESC);
           struct.err2.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -10203,19 +11158,25 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetErr3()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetErr1()) {
           struct.err1.write(oprot);
         }
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, removeEntry_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.err1 = new rso.at.EntryNotFound();
           struct.err1.read(iprot);
@@ -10225,6 +11186,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -10595,6 +11561,7 @@ public class ClientMasterService {
 
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -10604,11 +11571,13 @@ public class ClientMasterService {
 
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -10627,6 +11596,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -10674,6 +11645,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(removeEntry2_result.class, metaDataMap);
     }
@@ -10683,11 +11656,13 @@ public class ClientMasterService {
 
     public removeEntry2_result(
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -10700,6 +11675,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public removeEntry2_result deepCopy() {
@@ -10710,6 +11688,7 @@ public class ClientMasterService {
     public void clear() {
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.EntryNotFound getErr1() {
@@ -10760,6 +11739,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public removeEntry2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case ERR1:
@@ -10778,6 +11781,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -10788,6 +11799,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -10804,6 +11818,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -10836,6 +11852,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -10875,6 +11900,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -10908,6 +11943,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -10971,6 +12014,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -10994,6 +12046,11 @@ public class ClientMasterService {
         if (struct.err2 != null) {
           oprot.writeFieldBegin(ERR2_FIELD_DESC);
           struct.err2.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -11020,19 +12077,25 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(1);
         }
-        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetErr3()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
         if (struct.isSetErr1()) {
           struct.err1.write(oprot);
         }
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, removeEntry2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
+        BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           struct.err1 = new rso.at.EntryNotFound();
           struct.err1.read(iprot);
@@ -11042,6 +12105,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -11508,6 +12576,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -11518,12 +12587,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -11544,6 +12615,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -11593,6 +12666,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(moveEntry_result.class, metaDataMap);
     }
@@ -11603,12 +12678,14 @@ public class ClientMasterService {
     public moveEntry_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -11624,6 +12701,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public moveEntry_result deepCopy() {
@@ -11635,6 +12715,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -11709,6 +12790,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public moveEntry_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -11735,6 +12840,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -11748,6 +12861,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -11766,6 +12882,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -11807,6 +12925,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -11856,6 +12983,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -11897,6 +13034,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -11972,6 +13117,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -12002,6 +13156,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -12029,7 +13188,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -12039,12 +13201,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, moveEntry_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -12059,6 +13224,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -12635,6 +13805,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -12645,12 +13816,14 @@ public class ClientMasterService {
     public rso.at.FileEntry success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -12671,6 +13844,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -12720,6 +13895,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(moveEntry2_result.class, metaDataMap);
     }
@@ -12730,12 +13907,14 @@ public class ClientMasterService {
     public moveEntry2_result(
       rso.at.FileEntry success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -12751,6 +13930,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public moveEntry2_result deepCopy() {
@@ -12762,6 +13944,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.FileEntry getSuccess() {
@@ -12836,6 +14019,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public moveEntry2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -12862,6 +14069,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -12875,6 +14090,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -12893,6 +14111,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -12934,6 +14154,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -12983,6 +14212,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -13024,6 +14263,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -13099,6 +14346,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -13129,6 +14385,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -13156,7 +14417,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -13166,12 +14430,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, moveEntry2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.FileEntry();
           struct.success.read(iprot);
@@ -13186,6 +14453,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -13744,6 +15016,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -13754,12 +15027,14 @@ public class ClientMasterService {
     public rso.at.Transaction success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -13780,6 +15055,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -13829,6 +15106,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(writeToFile_result.class, metaDataMap);
     }
@@ -13839,12 +15118,14 @@ public class ClientMasterService {
     public writeToFile_result(
       rso.at.Transaction success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -13860,6 +15141,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public writeToFile_result deepCopy() {
@@ -13871,6 +15155,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.Transaction getSuccess() {
@@ -13945,6 +15230,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public writeToFile_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -13971,6 +15280,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -13984,6 +15301,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -14002,6 +15322,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -14043,6 +15365,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -14092,6 +15423,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -14133,6 +15474,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -14208,6 +15557,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -14238,6 +15596,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -14265,7 +15628,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -14275,12 +15641,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, writeToFile_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.Transaction();
           struct.success.read(iprot);
@@ -14295,6 +15664,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -14858,6 +16232,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -14868,12 +16243,14 @@ public class ClientMasterService {
     public rso.at.Transaction success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -14894,6 +16271,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -14943,6 +16322,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(writeToFile2_result.class, metaDataMap);
     }
@@ -14953,12 +16334,14 @@ public class ClientMasterService {
     public writeToFile2_result(
       rso.at.Transaction success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -14974,6 +16357,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public writeToFile2_result deepCopy() {
@@ -14985,6 +16371,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.Transaction getSuccess() {
@@ -15059,6 +16446,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public writeToFile2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -15085,6 +16496,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -15098,6 +16517,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -15116,6 +16538,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -15157,6 +16581,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -15206,6 +16639,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -15247,6 +16690,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -15322,6 +16773,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -15352,6 +16812,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -15379,7 +16844,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -15389,12 +16857,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, writeToFile2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.Transaction();
           struct.success.read(iprot);
@@ -15409,6 +16880,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -15967,6 +17443,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -15977,12 +17454,14 @@ public class ClientMasterService {
     public rso.at.Transaction success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -16003,6 +17482,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -16052,6 +17533,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(readFromFile_result.class, metaDataMap);
     }
@@ -16062,12 +17545,14 @@ public class ClientMasterService {
     public readFromFile_result(
       rso.at.Transaction success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -16083,6 +17568,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public readFromFile_result deepCopy() {
@@ -16094,6 +17582,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.Transaction getSuccess() {
@@ -16168,6 +17657,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public readFromFile_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -16194,6 +17707,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -16207,6 +17728,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -16225,6 +17749,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -16266,6 +17792,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -16315,6 +17850,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -16356,6 +17901,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -16431,6 +17984,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -16461,6 +18023,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -16488,7 +18055,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -16498,12 +18068,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, readFromFile_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.Transaction();
           struct.success.read(iprot);
@@ -16518,6 +18091,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }
@@ -17081,6 +18659,7 @@ public class ClientMasterService {
     private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
     private static final org.apache.thrift.protocol.TField ERR1_FIELD_DESC = new org.apache.thrift.protocol.TField("err1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField ERR2_FIELD_DESC = new org.apache.thrift.protocol.TField("err2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField ERR3_FIELD_DESC = new org.apache.thrift.protocol.TField("err3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -17091,12 +18670,14 @@ public class ClientMasterService {
     public rso.at.Transaction success; // required
     public rso.at.EntryNotFound err1; // required
     public rso.at.InvalidOperation err2; // required
+    public rso.at.HostNotPermitted err3; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success"),
       ERR1((short)1, "err1"),
-      ERR2((short)2, "err2");
+      ERR2((short)2, "err2"),
+      ERR3((short)3, "err3");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -17117,6 +18698,8 @@ public class ClientMasterService {
             return ERR1;
           case 2: // ERR2
             return ERR2;
+          case 3: // ERR3
+            return ERR3;
           default:
             return null;
         }
@@ -17166,6 +18749,8 @@ public class ClientMasterService {
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       tmpMap.put(_Fields.ERR2, new org.apache.thrift.meta_data.FieldMetaData("err2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      tmpMap.put(_Fields.ERR3, new org.apache.thrift.meta_data.FieldMetaData("err3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(readFromFile2_result.class, metaDataMap);
     }
@@ -17176,12 +18761,14 @@ public class ClientMasterService {
     public readFromFile2_result(
       rso.at.Transaction success,
       rso.at.EntryNotFound err1,
-      rso.at.InvalidOperation err2)
+      rso.at.InvalidOperation err2,
+      rso.at.HostNotPermitted err3)
     {
       this();
       this.success = success;
       this.err1 = err1;
       this.err2 = err2;
+      this.err3 = err3;
     }
 
     /**
@@ -17197,6 +18784,9 @@ public class ClientMasterService {
       if (other.isSetErr2()) {
         this.err2 = new rso.at.InvalidOperation(other.err2);
       }
+      if (other.isSetErr3()) {
+        this.err3 = new rso.at.HostNotPermitted(other.err3);
+      }
     }
 
     public readFromFile2_result deepCopy() {
@@ -17208,6 +18798,7 @@ public class ClientMasterService {
       this.success = null;
       this.err1 = null;
       this.err2 = null;
+      this.err3 = null;
     }
 
     public rso.at.Transaction getSuccess() {
@@ -17282,6 +18873,30 @@ public class ClientMasterService {
       }
     }
 
+    public rso.at.HostNotPermitted getErr3() {
+      return this.err3;
+    }
+
+    public readFromFile2_result setErr3(rso.at.HostNotPermitted err3) {
+      this.err3 = err3;
+      return this;
+    }
+
+    public void unsetErr3() {
+      this.err3 = null;
+    }
+
+    /** Returns true if field err3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetErr3() {
+      return this.err3 != null;
+    }
+
+    public void setErr3IsSet(boolean value) {
+      if (!value) {
+        this.err3 = null;
+      }
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case SUCCESS:
@@ -17308,6 +18923,14 @@ public class ClientMasterService {
         }
         break;
 
+      case ERR3:
+        if (value == null) {
+          unsetErr3();
+        } else {
+          setErr3((rso.at.HostNotPermitted)value);
+        }
+        break;
+
       }
     }
 
@@ -17321,6 +18944,9 @@ public class ClientMasterService {
 
       case ERR2:
         return getErr2();
+
+      case ERR3:
+        return getErr3();
 
       }
       throw new IllegalStateException();
@@ -17339,6 +18965,8 @@ public class ClientMasterService {
         return isSetErr1();
       case ERR2:
         return isSetErr2();
+      case ERR3:
+        return isSetErr3();
       }
       throw new IllegalStateException();
     }
@@ -17380,6 +19008,15 @@ public class ClientMasterService {
         if (!(this_present_err2 && that_present_err2))
           return false;
         if (!this.err2.equals(that.err2))
+          return false;
+      }
+
+      boolean this_present_err3 = true && this.isSetErr3();
+      boolean that_present_err3 = true && that.isSetErr3();
+      if (this_present_err3 || that_present_err3) {
+        if (!(this_present_err3 && that_present_err3))
+          return false;
+        if (!this.err3.equals(that.err3))
           return false;
       }
 
@@ -17429,6 +19066,16 @@ public class ClientMasterService {
           return lastComparison;
         }
       }
+      lastComparison = Boolean.valueOf(isSetErr3()).compareTo(other.isSetErr3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetErr3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.err3, other.err3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -17470,6 +19117,14 @@ public class ClientMasterService {
         sb.append("null");
       } else {
         sb.append(this.err2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("err3:");
+      if (this.err3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.err3);
       }
       first = false;
       sb.append(")");
@@ -17545,6 +19200,15 @@ public class ClientMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 3: // ERR3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.err3 = new rso.at.HostNotPermitted();
+                struct.err3.read(iprot);
+                struct.setErr3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -17575,6 +19239,11 @@ public class ClientMasterService {
           struct.err2.write(oprot);
           oprot.writeFieldEnd();
         }
+        if (struct.err3 != null) {
+          oprot.writeFieldBegin(ERR3_FIELD_DESC);
+          struct.err3.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -17602,7 +19271,10 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           optionals.set(2);
         }
-        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetErr3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
         if (struct.isSetSuccess()) {
           struct.success.write(oprot);
         }
@@ -17612,12 +19284,15 @@ public class ClientMasterService {
         if (struct.isSetErr2()) {
           struct.err2.write(oprot);
         }
+        if (struct.isSetErr3()) {
+          struct.err3.write(oprot);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, readFromFile2_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(3);
+        BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.success = new rso.at.Transaction();
           struct.success.read(iprot);
@@ -17632,6 +19307,11 @@ public class ClientMasterService {
           struct.err2 = new rso.at.InvalidOperation();
           struct.err2.read(iprot);
           struct.setErr2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.err3 = new rso.at.HostNotPermitted();
+          struct.err3.read(iprot);
+          struct.setErr3IsSet(true);
         }
       }
     }

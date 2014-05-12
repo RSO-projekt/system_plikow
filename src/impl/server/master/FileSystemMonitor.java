@@ -1,6 +1,10 @@
 package impl.server.master;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -19,47 +23,107 @@ import rso.at.EntryNotFound;
 import rso.at.FileState;
 import rso.at.FileSystemSnapshot;
 import rso.at.FileType;
+import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
 import rso.at.MasterMasterService;
 import rso.at.MasterMasterService.Iface;
 
 public class FileSystemMonitor {
+	// Map containing all IDs of file system's entries.
 	private TreeMap<Long, FileEntryExtended> idMap;
+	// Map containing all children of parent with specified ID.
 	private TreeMap<Long, TreeSet<FileEntryExtended>> parentIdMap;
+	// Next available ID.
 	private Long nextId;
+	// Version of a file system. Every change increment this value by 1.
 	private Long fsVersion;
 	
+	// Internal strings for getParentPath() function.
 	private String pathParent;
 	private String pathName;
 	
+	// Current server ID
+	int serverID;
+	
+	// Current coordinator server ID
+	int coordServerID;
+	
+	public void setServerID(int serverID) {
+		this.serverID = this.coordServerID = serverID;
+	}
+	
+	enum Mode {
+		MASTER,
+		SLAVE
+	}
+	
+	// Current mode of a master
+	Mode mode;
+	
+	// List of all redundant master servers
 	private ArrayList<MasterConnection> masterList;
 	
+	// Function checks privileges of a server
+	private synchronized void checkPriviliges(boolean external) throws HostNotPermitted {
+		if (external && mode == Mode.SLAVE) {
+			throw new HostNotPermitted(serverID, coordServerID);
+		}
+	}
+	
+	// General logging function
+	public synchronized void log(String message) {
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		System.out.println("[" + df.format(new Date()) + "] " + message);
+	}
+	
+	// Display short info about an entry
 	private String showFileEntryExtended(FileEntryExtended entry) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("FileEntryExt: " +entry.entry.name +"\n");
-		sb.append("ID: " +entry.entry.id +"\n");
-		sb.append("parentID: " +entry.entry.parentID +"\n");
-		sb.append("version: " +entry.entry.version+"\n");
+		sb.append("[" + (entry.entry.type == FileType.DIRECTORY ? "DIR: \"" : "FILE: \"") + 
+				  entry.entry.name +"\", ");
+		sb.append("ID: " + entry.entry.id +", ");
+		sb.append("pID: " + entry.entry.parentID + ", ");
+		sb.append("ver: " + entry.entry.version + "]");
 		return sb.toString();
 	}
 	
+	// Class representing an AT connection. 
 	class Connection {
-		public Connection(String host, int port, String service) {
+		public Connection(String host, int port, int serverID, String service) {
 			transport = new TSocket(host, port, Configuration.sTimeout);
 			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
+			this.host = host;
+			this.port = port;
+			this.serverID = serverID;
 		}
 		
-		public void open() throws TTransportException {
-			transport.open();
+		public void reopen() throws TTransportException {
+			if (!transport.isOpen()) transport.open();
+		}
+		
+		public String getHostAddress() {
+			return host;
+		}
+		
+		public int getHostPort() {
+			return port;
+		}
+		
+		public int getServerID() {
+			return serverID;
 		}
 		
 		protected TTransport transport;
 		protected TMultiplexedProtocol protocol;
+		protected String host;
+		protected int port;
+		protected int serverID;
 	}
 	
+	// Master server connection.
 	class MasterConnection extends Connection {
-		public MasterConnection(String host, int port) {
-			super(host, port, "MasterMaster");
+		public MasterConnection(String host, int port, int priority) {
+			super(host, port, priority, "MasterMaster");
 			service = new MasterMasterService.Client(protocol);
 		}
 		public Iface getService() {
@@ -68,21 +132,13 @@ public class FileSystemMonitor {
 		private MasterMasterService.Iface service;
 	}
 	
-	public synchronized void addMasterConnection(String host, int port) {
-		MasterConnection conn = new MasterConnection(host, port);
+	// Add master connection to the list
+	public synchronized void addMasterConnection(String host, int port, int priority) {
+		MasterConnection conn = new MasterConnection(host, port, priority);
 		masterList.add(conn);
 	}
 	
-	public synchronized void openConnections() {
-		for (MasterConnection conn : masterList) {
-			try {
-				conn.open();
-			} catch (TTransportException e) {
-				System.out.println("Cannot open... HANDLE");
-			}
-		}
-	}
-	
+	// Private function to easily create new File Entry Extended object 
 	private FileEntryExtended createFileEntryExtended(FileType fileType, long time,
 													  long parentId, long size, String name)
 	{
@@ -91,6 +147,8 @@ public class FileSystemMonitor {
 		return new FileEntryExtended(fe, new ArrayList<Integer>(), FileState.IDLE);
 	}
 	
+	// Check if new entry's name is correct, it's parent exists and it doesn't
+	// have child with the same name.
 	private void checkParentAndName(FileEntry parent, String name) throws InvalidOperation {
 		if (name.contains("/")) {
 			throw new InvalidOperation(9, "You cannot put '/' in directory name");
@@ -117,6 +175,8 @@ public class FileSystemMonitor {
 		}
 	}
 	
+	// Splits path into two elements save to monitor's private fields:
+	// full path to a parent and a name of a new child.
 	private void getParentPath(String path) throws EntryNotFound {
 		if (path.length() <= 1) {
 			throw new EntryNotFound(7, "Empty path not expected");
@@ -135,9 +195,14 @@ public class FileSystemMonitor {
 		pathName = path.substring(lastSlash + 1, path.length());
 	}
 	
+	// Default constructor creates root folder.
 	public FileSystemMonitor() {
+		this.serverID = coordServerID = 0;
+		mode = Mode.SLAVE;
+		
 		nextId = new Long(0);
 		fsVersion = new Long(0);
+
 		masterList = new ArrayList<FileSystemMonitor.MasterConnection>();
 		idMap = new TreeMap<Long, FileEntryExtended>();
 		parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
@@ -149,7 +214,11 @@ public class FileSystemMonitor {
 		parentIdMap.put(0l, rootSet);
 	}
 	
-	public synchronized FileEntryExtended getEntry(String path) throws EntryNotFound {
+	// Return file's entry based on it's path.
+	public synchronized FileEntryExtended getEntry(boolean external, String path) 
+			throws EntryNotFound, HostNotPermitted {
+		checkPriviliges(external);
+		
 		if (path.isEmpty()) {
 			throw new EntryNotFound(0, "Empty path not expected");
 		}
@@ -176,10 +245,13 @@ public class FileSystemMonitor {
 		return fe.deepCopy();
 	}
 	
-	public synchronized List<FileEntry> lookup(String path, FileEntry parent) throws EntryNotFound, InvalidOperation {
+	// List all children of a parent
+	public synchronized List<FileEntry> lookup(boolean external, String path, FileEntry parent) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
+		
 		FileEntryExtended entry = null;
 		if (!path.isEmpty()) 
-			entry = getEntry(path);	
+			entry = getEntry(false, path);	
 		else if (parent != null)  
 			entry = idMap.get(parent.id);
 		if (entry == null)
@@ -198,13 +270,17 @@ public class FileSystemMonitor {
 		return childrenList;
 	}
 
-	public synchronized FileEntry makeDirectory(String path) throws EntryNotFound, InvalidOperation {
+	// Make new directory based on it's new path
+	public synchronized FileEntry makeDirectory(boolean external, String path) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		getParentPath(path);
-		FileEntryExtended parentDir = getEntry(pathParent);
-		return makeDirectory2(parentDir.entry, pathName);
+		FileEntryExtended parentDir = getEntry(false, pathParent);
+		return makeDirectory2(false, parentDir.entry, pathName);
 	}
 	
-	public synchronized FileEntry makeDirectory2(FileEntry parent, String name) throws EntryNotFound, InvalidOperation {
+	// Make new directory based on parent's descriptor
+	public synchronized FileEntry makeDirectory2(boolean external, FileEntry parent, String name) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		checkParentAndName(parent, name);
 		FileEntryExtended dir = createFileEntryExtended(FileType.DIRECTORY, 
 				                                        System.currentTimeMillis() / 1000,
@@ -217,24 +293,34 @@ public class FileSystemMonitor {
 		return dir.entry.deepCopy();
 	}
 	
+	// Send information about new entry to other, redundant servers.
 	public synchronized void broadcastCreateEntry(FileEntryExtended entry) {
+		String msg = "New entry: " + showFileEntryExtended(entry);
+		log(msg);
+		
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
-				conn.getService().updateCreateEntry(fsVersion, entry);
+				conn.reopen();
+				conn.getService().updateCreateEntry(serverID, fsVersion, entry);
 			} catch (TException e) {
-				System.out.println("Election..??");
+				log("Can't broadcast new entry to " + conn.getHostAddress() + 
+					":" + conn.getHostPort());
 			}
 		}
 	}
 	
-	public synchronized FileEntry makeFile(String path, long size) throws EntryNotFound, InvalidOperation {
+	// Create new file in the server.
+	public synchronized FileEntry makeFile(boolean external, String path, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		getParentPath(path);
-		FileEntryExtended parentEntry = getEntry(pathParent);
-		return makeFile2(parentEntry.entry, pathName, size);
+		FileEntryExtended parentEntry = getEntry(false, pathParent);
+		return makeFile2(false, parentEntry.entry, pathName, size);
 	}
 	
-	public synchronized FileEntry makeFile2(FileEntry parent, String name, long size) throws EntryNotFound, InvalidOperation {
+	// Create new file in the server by using descriptor.
+	public synchronized FileEntry makeFile2(boolean external, FileEntry parent, String name, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		checkParentAndName(parent, name);
 		FileEntryExtended file = createFileEntryExtended(FileType.FILE,
 														 System.currentTimeMillis() / 1000,
@@ -246,12 +332,16 @@ public class FileSystemMonitor {
 		return file.entry.deepCopy();
 	}
 	
-	public synchronized void removeEntry(String path) throws EntryNotFound, InvalidOperation {
-		FileEntryExtended removingEntry = getEntry(path);
-		removeEntry2(removingEntry.entry);
+	// Remove entry from file system
+	public synchronized void removeEntry(boolean external, String path) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
+		FileEntryExtended removingEntry = getEntry(false, path);
+		removeEntry2(false, removingEntry.entry);
 	}
 	
-	public synchronized void removeEntry2(FileEntry entry) throws EntryNotFound, InvalidOperation {
+	// Remove entry from file system by using descriptor
+	public synchronized void removeEntry2(boolean external, FileEntry entry) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		FileEntryExtended removingEntry = idMap.get(entry.id);
 		if (removingEntry == null) {
 			throw new EntryNotFound(13, "Entry for removal not found: " + entry.name);
@@ -277,25 +367,35 @@ public class FileSystemMonitor {
 		broadcastRemoveEntry(removingEntry);
 	}
 	
+	// Broadcast removal of an entry to other servers
 	public synchronized void broadcastRemoveEntry(FileEntryExtended entry) {
+		String msg = "Removed entry: " + showFileEntryExtended(entry);
+		log(msg);
+		
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
-				conn.getService().updateRemoveEntry(fsVersion, entry);
+				conn.reopen();
+				conn.getService().updateRemoveEntry(serverID, fsVersion, entry);
 			} catch (TException e) {
-				System.out.println("Election..??");
+				log("Can't broadcast removed entry to " + conn.getHostAddress() +
+					":" + conn.getHostPort());
 			}
 		}
 	}
 	
-	public synchronized FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound, InvalidOperation {
+	// Move entry in file system
+	public synchronized FileEntry moveEntry(boolean external, String fromPath, String toPath) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		getParentPath(toPath);
-		FileEntryExtended parent = getEntry(pathParent);
-		FileEntryExtended entry = getEntry(fromPath);
-		return moveEntry2(entry.entry, parent.entry, pathName);
+		FileEntryExtended parent = getEntry(false, pathParent);
+		FileEntryExtended entry = getEntry(false, fromPath);
+		return moveEntry2(false, entry.entry, parent.entry, pathName);
 	}
 	
-	public synchronized FileEntry moveEntry2(FileEntry entry, FileEntry parent, String name) throws EntryNotFound, InvalidOperation {
+	// Move entry in file system by using descriptor
+	public synchronized FileEntry moveEntry2(boolean external, FileEntry entry, FileEntry parent, String name) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
 		checkParentAndName(parent, name);
 		FileEntryExtended entryExtended = idMap.get(entry.id);
 		
@@ -329,94 +429,128 @@ public class FileSystemMonitor {
 		return entryExtended.entry.deepCopy();
 	}
 
+	// Broadcast all moved entries to other servers.
 	public synchronized void broadcastMoveEntry(FileEntryExtended oldEntry,
 												FileEntryExtended newEntry) {
+		String msg = "Moved entry: " + showFileEntryExtended(oldEntry) + " -> " +
+					 showFileEntryExtended(newEntry);
+		log(msg);
+		
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
-				conn.getService().updateMoveEntry(fsVersion, oldEntry, newEntry);
+				conn.reopen();
+				conn.getService().updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
 			} catch (TException e) {
-				System.out.println("Election..??");
+				log("Can't broadcast moved entry to " + conn.getHostAddress() + 
+					":" + conn.getHostPort());
 			}
 		}
 	}
 	
-	public synchronized void updateCreateEntry(long fsVersion, FileEntryExtended entry) {
-		if (fsVersion != this.fsVersion + 1) {
-			// TODO: Update all metadata
+	public synchronized void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
+		// If got message from lower priority server, start election.
+		if (serverID > this.serverID) {
+			startElection();
 			return;
 		}
 		
+		// If file system version is incorrect, we need to download whole snapshot
+		if (fsVersion != this.fsVersion + 1) {
+			recreateFileSystem();
+			return;
+		}
+		
+		// Update current file system
 		FileEntryExtended parent = idMap.get(entry.entry.parentID);
 		if (parent == null) return;
 		
 		if (entry.entry.type == FileType.DIRECTORY) {
 			try {
-				FileEntry newDir = makeDirectory2(parent.entry, entry.entry.name);
+				FileEntry newDir = makeDirectory2(false, parent.entry, entry.entry.name);
 				FileEntryExtended newDirExtended = idMap.get(newDir.id);
 				newDirExtended.entry = entry.entry.deepCopy();
 				newDirExtended.mirrors = new ArrayList<>(entry.mirrors);
 				newDirExtended.state = entry.state;
-			} catch (EntryNotFound | InvalidOperation e) {
-				// TODO Auto-generated catch block
+			} catch (EntryNotFound | InvalidOperation | HostNotPermitted e) {
+				log("Critical implementation error in updateCreateEntry");
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				FileEntry newFile = makeFile2(parent.entry, entry.entry.name, entry.entry.size);
+				FileEntry newFile = makeFile2(false, parent.entry, entry.entry.name, entry.entry.size);
 				FileEntryExtended newFileExtended = idMap.get(newFile.id);
 				newFileExtended.entry = entry.entry.deepCopy();
 				newFileExtended.mirrors = new ArrayList<>(entry.mirrors);
 				newFileExtended.state = entry.state;
-			} catch (EntryNotFound | InvalidOperation e) {
-				// TODO Auto-generated catch block
+			} catch (EntryNotFound | InvalidOperation | HostNotPermitted e) {
+				log("Critical implementation error in updateCreateEntry()");
 				e.printStackTrace();
 			}
 		}
 		this.fsVersion = fsVersion;
 	}
 	
-	public synchronized void updateRemoveEntry(long fsVersion, FileEntryExtended entry) {
-		if (fsVersion != this.fsVersion + 1) {
-			// TODO: Update all metadata
+	public synchronized void updateRemoveEntry(int serverID, long fsVersion, FileEntryExtended entry) {
+		// If got message from lower priority server, start election.
+		if (serverID > this.serverID) {
+			startElection();
 			return;
 		}
 		
+		// If file system version is incorrect, we need to download whole snapshot
+		if (fsVersion != this.fsVersion + 1) {
+			recreateFileSystem();
+			return;
+		}
+		
+		// Update current file system
 		try {
-			removeEntry2(entry.entry);
-		} catch (EntryNotFound | InvalidOperation e) {
-			// TODO Auto-generated catch block
+			removeEntry2(false, entry.entry);
+		} catch (EntryNotFound | InvalidOperation | HostNotPermitted e) {
+			log("Critical implementation error in updateRemoveEntry()");
 			e.printStackTrace();
 		}
 		
 		this.fsVersion = fsVersion;
 	}
 	
-	public synchronized void updateMoveEntry(long fsVersion, FileEntryExtended oldEntry, 
+	public synchronized void updateMoveEntry(int serverID, long fsVersion, FileEntryExtended oldEntry, 
 			                             FileEntryExtended newEntry) {
-		if (fsVersion != this.fsVersion + 1) {
-			// TODO: Update all metadata
+		// If got message from lower priority server, start election.
+		if (serverID > this.serverID) {
+			startElection();
 			return;
 		}
 		
+		// If file system version is incorrect, we need to download whole snapshot
+		if (fsVersion != this.fsVersion + 1) {
+			recreateFileSystem();
+			return;
+		}
+		
+		// Update current file system
 		FileEntryExtended parent = idMap.get(newEntry.entry.parentID);
 		if (parent == null) return;
 		
 		try {
-			FileEntry newEntry2 = moveEntry2(oldEntry.entry, parent.entry, newEntry.entry.name);
+			FileEntry newEntry2 = moveEntry2(false, oldEntry.entry, parent.entry, newEntry.entry.name);
 			FileEntryExtended newEntryExtended = idMap.get(newEntry2.id);
 			newEntryExtended.entry = newEntry.entry.deepCopy();
 			newEntryExtended.mirrors = new ArrayList<>(newEntry.mirrors);
 			newEntryExtended.state = newEntry.state;
-		} catch (EntryNotFound | InvalidOperation e) {
-			// TODO Auto-generated catch block
+		} catch (EntryNotFound | InvalidOperation | HostNotPermitted e) {
+			log("Critical implementation error in updateMoveEntry()");
 			e.printStackTrace();
 		}
 		
 		this.fsVersion = fsVersion;
 	}
 	
-	public FileSystemSnapshot makeRecreateFileSystem(){
+	public synchronized FileSystemSnapshot getFileSystemSnapshot(int serverID) throws HostNotPermitted {
+		if (serverID != this.serverID) {
+			throw new HostNotPermitted(this.serverID, this.coordServerID);
+		}
 		List<FileEntryExtended> entryList = new ArrayList<FileEntryExtended>();
 		for (Entry<Long, FileEntryExtended> entry : idMap.entrySet()) {
 			entryList.add(entry.getValue().deepCopy());
@@ -424,22 +558,111 @@ public class FileSystemMonitor {
 		return new FileSystemSnapshot(entryList, fsVersion);
 	}
 	
-	public void makeGetFileSystemFromSnapshot(FileSystemSnapshot snapshot){
-		this.idMap.clear(); 		// tu nie wiem czy czyszczenie na zewnatrz czy juz w tej funkcji od razu
-		this.parentIdMap.clear();	// j.w.
-		FileSystemSnapshot outerSnap = snapshot.deepCopy();		// nie wiem czy jak poiteruje jednoczesnie po snapshot.entries w dwoch miejscach
-		FileSystemSnapshot innerSnap = snapshot.deepCopy();		// na tym samym obiekcie to czy sie nie posypie, dlatego robie oddzielne kopie
-		for (FileEntryExtended listEntry : outerSnap.entries) {
-			idMap.put(listEntry.entry.id, listEntry.deepCopy());
-			if (listEntry.entry.type == FileType.DIRECTORY){		// jesli folder to od razu buduje mu drzewo dzieci i dopiero calosc wstawiam do parentIdMap
-				TreeSet<FileEntryExtended> tmpTreeToCopy = new TreeSet<FileEntryExtended>(); 
-				for (FileEntryExtended listEntryChildrens : innerSnap.entries){
-					if (listEntryChildrens.entry.parentID == listEntry.entry.id){
-						tmpTreeToCopy.add(listEntryChildrens);
+	public synchronized void recreateFileSystem() {
+		if (mode == Mode.MASTER) return;
+		if (coordServerID == serverID) return;
+		
+		// Find coordinator
+		FileSystemSnapshot snap = null;
+		for (MasterConnection conn : masterList) {
+			if (conn.getServerID() == coordServerID) {
+				try {
+					conn.reopen();
+					snap = conn.getService().getFileSystemSnapshot(serverID);
+				} catch (TException e) {
+					log("Can't recreate file system snapshot: connection lost");
+				}
+			}
+		}
+		
+		if (snap == null) return;
+		recreateFileSystemFromSnapshot(snap);
+	}
+	
+	public void recreateFileSystemFromSnapshot(FileSystemSnapshot snapshot) {
+		this.idMap.clear();
+		this.parentIdMap.clear();
+		Long maxID = new Long(0);
+		
+		for (Iterator<FileEntryExtended> it = snapshot.entries.iterator(); it.hasNext();) {
+			FileEntryExtended entry = it.next();
+			idMap.put(entry.entry.id, entry);
+			if (entry.entry.id > maxID) maxID = entry.entry.id;
+			if (entry.entry.type == FileType.DIRECTORY) {
+				TreeSet<FileEntryExtended> tmpTreeToCopy = new TreeSet<FileEntryExtended>();
+				for (Iterator<FileEntryExtended> it2 = snapshot.entries.iterator(); it2.hasNext();) {
+					FileEntryExtended child = it2.next();
+					if (child.entry.parentID == entry.entry.id){
+						tmpTreeToCopy.add(child);
 					}
 				}
-				parentIdMap.put(listEntry.entry.id, new TreeSet<FileEntryExtended>(tmpTreeToCopy));
+				parentIdMap.put(entry.entry.id, new TreeSet<FileEntryExtended>(tmpTreeToCopy));
 			}
+		}
+		this.nextId = maxID + 1;
+		this.fsVersion = snapshot.version;
+		log("Recreated file system from snapshot nr " + snapshot.version);
+	}
+	
+	public synchronized void startElection() {
+		// Let's assume we are coordinator.
+		mode = Mode.MASTER;
+		
+		// For each server with higher priority number.
+		for (MasterConnection conn : masterList) {
+			if (conn.getServerID() < serverID) {
+				try {
+					conn.reopen();
+					conn.getService().election(serverID);
+					
+					// We handled election form higher priority server.
+					// We should be a slave.
+					mode = Mode.SLAVE;
+					break;
+				} catch (TException e) {
+					// There is no connection to a higher priority server
+				}
+			}
+		}
+		
+		// Broadcast election to lower priority servers if master
+		if (mode == Mode.MASTER) {
+			log("Elected as a coordinator");
+			for (MasterConnection conn : masterList) {
+				if (conn.getServerID() > serverID) {
+					try {
+						conn.reopen();
+						conn.getService().elected(serverID);
+					} catch (TException e) {
+						log("Coudn't send elected to " + conn.getHostAddress() +
+							":" + conn.getHostPort());
+					}
+				}
+			}
+		} else {
+			log("Elected as a slave");
+		}
+		
+	}
+	
+	public synchronized void election(int serverID) {
+		log("Got election from server ID: " + serverID);
+		// If server with lower priority starts election do the same.
+		if (serverID > this.serverID) {
+			startElection();
+		}
+	}
+	
+	public synchronized void elected(int serverID) {
+		log("Got elected from server ID: " + serverID);
+		
+		// If server with lower priority elects itself, start election.
+		if (serverID > this.serverID) {
+			startElection();
+		} else {
+			// Update information about coordinator
+			this.coordServerID = serverID;
+			log("New coordinator is: "+ serverID);
 		}
 	}
 }

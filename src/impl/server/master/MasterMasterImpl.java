@@ -1,8 +1,5 @@
 package impl.server.master;
 
-import java.nio.ByteBuffer;
-import java.util.List;
-
 import org.apache.thrift.TException;
 
 import rso.at.*;
@@ -15,49 +12,37 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 
 	@Override
 	public void election(int serverID) throws TException {
-		// TODO Auto-generated method stub
-
+		monitor.election(serverID);
 	}
 
 	@Override
 	public void elected(int serverID) throws TException {
-		// TODO Auto-generated method stub
-
+		monitor.elected(serverID);
 	}
 
 	@Override
-	public void ok(int serverID) throws TException {
-		// TODO Auto-generated method stub
-
+	public void updateCreateEntry(int serverID, long fsVersion,
+			FileEntryExtended entry) throws TException {
+		monitor.updateCreateEntry(serverID, fsVersion, entry);
+		
 	}
 
 	@Override
-	public void updateCreateEntry(long fsVersion, FileEntryExtended entry)
+	public void updateRemoveEntry(int serverID, long fsVersion,
+			FileEntryExtended entry) throws TException {
+		monitor.updateRemoveEntry(serverID, fsVersion, entry);
+	}
+
+	@Override
+	public void updateMoveEntry(int serverID, long fsVersion,
+			FileEntryExtended oldEntry, FileEntryExtended newEntry)
 			throws TException {
-		monitor.updateCreateEntry(fsVersion, entry);
+		monitor.updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
 	}
 
 	@Override
-	public void updateRemoveEntry(long fsVersion, FileEntryExtended entry)
+	public FileSystemSnapshot getFileSystemSnapshot(int serverID)
 			throws TException {
-		monitor.updateRemoveEntry(fsVersion, entry);
+		return monitor.getFileSystemSnapshot(serverID);
 	}
-
-	@Override
-	public void updateMoveEntry(long fsVersion, FileEntryExtended oldEntry,
-			FileEntryExtended newEntry) throws TException {
-		monitor.updateMoveEntry(fsVersion, oldEntry, newEntry);
-	}
-
-	@Override
-	public FileSystemSnapshot recreateFileSystem() throws TException {
-		// TODO Funkcja zwracająca strukturę plików + numer wersji.
-		return monitor.makeRecreateFileSystem();
-	}
-	
-	//tu pewnie w interface trzeba dopisac naglowek metody zeby on tam mogl ja przeciazyc?
-	public void getFileSystemFromSnapshot(FileSystemSnapshot snapshot){
-		monitor.makeGetFileSystemFromSnapshot(snapshot);
-	}
-
 }

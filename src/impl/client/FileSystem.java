@@ -7,6 +7,7 @@ import org.apache.thrift.transport.TTransportException;
 
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
+import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
 
 /**
@@ -39,6 +40,7 @@ public interface FileSystem {
      */
     public FileEntry getFileEntry(String path) throws EntryNotFound,
                                                       InvalidOperation,
+                                                      HostNotPermitted,
                                                       TException;
     
     /**
@@ -49,12 +51,14 @@ public interface FileSystem {
      * @return List of FileEntries in specified folder by URL.
      */
     public List<FileEntry> lookup(String path) throws EntryNotFound,
-                                                           InvalidOperation,
-                                                           TException;
+                                                      InvalidOperation,
+                                                      HostNotPermitted,
+                                                      TException;
     
     public List<FileEntry> lookup(FileEntry dirEntry) throws EntryNotFound,
-                                                                  InvalidOperation,
-                                                                  TException;
+                                                             InvalidOperation,
+                                                             HostNotPermitted,
+                                                             TException;
     
     /**
      * Make directory under specified path. You can create several folders in
@@ -65,10 +69,12 @@ public interface FileSystem {
      */
     public FileEntry makeDirectory(String path) throws EntryNotFound,
                                                        InvalidOperation,
+                                                       HostNotPermitted,
                                                        TException;
     
     public FileEntry makeDirectory(FileEntry parentDir, String name) throws EntryNotFound,
                                                                             InvalidOperation,
+                                                                            HostNotPermitted,
                                                                             TException;
     
     /**
@@ -81,10 +87,12 @@ public interface FileSystem {
      */
     public FileEntry makeFile(String path, long size) throws EntryNotFound,
                                                              InvalidOperation,
+                                                             HostNotPermitted,
                                                              TException;
     
     public FileEntry makeFile(FileEntry parentDir, String name, long size) throws EntryNotFound,
                                                                                   InvalidOperation,
+                                                                                  HostNotPermitted,
                                                                                   TException;
     
     /**
@@ -93,10 +101,12 @@ public interface FileSystem {
      */
     public void removeEntry(String path) throws EntryNotFound,
                                                 InvalidOperation,
+                                                HostNotPermitted,
                                                 TException;
     
     public void removeEntry(FileEntry entry) throws EntryNotFound,
                                                     InvalidOperation,
+                                                    HostNotPermitted,
                                                     TException;
     
     /**
@@ -110,10 +120,12 @@ public interface FileSystem {
      */
     public FileEntry moveEntry(String fromPath, String toPath) throws EntryNotFound,
                                                                       InvalidOperation,
+                                                                      HostNotPermitted,
                                                                       TException;
     
     public FileEntry moveEntry(FileEntry entry, FileEntry parentDir, String name) throws EntryNotFound,
                                                                                          InvalidOperation,
+                                                                                         HostNotPermitted,
                                                                                          TException;
     
     /**
@@ -126,10 +138,12 @@ public interface FileSystem {
      */
     public void writeToFile(String filePath, long offset, byte[] bytes) throws EntryNotFound,
                                                                                InvalidOperation,
+                                                                               HostNotPermitted,
                                                                                TException;
     
     public void writeToFile(FileEntry file, long offset, byte[] bytes) throws EntryNotFound,
                                                                               InvalidOperation,
+                                                                              HostNotPermitted,
                                                                               TException;
     
     /**
@@ -142,9 +156,11 @@ public interface FileSystem {
      */
     public byte[] readFromFile(String filePath, long offset, long num) throws EntryNotFound,
                                                                               InvalidOperation,
+                                                                              HostNotPermitted,
                                                                               TException;
     
     public byte[] readFromFile(FileEntry file, long offset, long num) throws EntryNotFound,
                                                                              InvalidOperation,
+                                                                             HostNotPermitted,
                                                                              TException;
 }
