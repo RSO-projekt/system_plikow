@@ -1,6 +1,7 @@
 package impl.server.master;
 
 import java.net.Socket;
+import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,8 +92,7 @@ public class FileSystemMonitor {
 	// Class representing an AT connection. 
 	class Connection {
 		public Connection(String host, int port, int serverID, String service) {
-			transport = new TSocket(host, port, Configuration.sTimeout);
-			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
+			reopen();
 			this.host = host;
 			this.port = port;
 			this.serverID = serverID;
@@ -100,21 +100,15 @@ public class FileSystemMonitor {
 		}
 		
 		public void reopen() {
-			if (!transport.isOpen())
-				try {
-					transport.open();
-				} catch (TTransportException e) {
-					// It's unrecoverable state of a socket: close it and
-					// create a new one.
-					transport.close();
-					transport = new TSocket(host, port, Configuration.sTimeout);
-					protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
-					try {
-						transport.open();
-					} catch (TTransportException e1) {
-						// We won't handle it again now...
-					}
-				}
+			if (transport != null) transport.close();
+			transport = new TSocket(host, port, Configuration.sTimeout);
+			try {
+				transport.open();
+			} catch (TTransportException e) {
+				System.out.println("Should open...");
+				e.printStackTrace();
+			}
+			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
 		}
 		
 		public String getHostAddress() {
@@ -146,6 +140,7 @@ public class FileSystemMonitor {
 		
 		@Override
 		public void reopen() {
+			System.out.println("ZZZ");
 			super.reopen();
 			service = new MasterMasterService.Client(protocol);
 		}
@@ -326,12 +321,12 @@ public class FileSystemMonitor {
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
-				conn.reopen();
 				conn.getService().updateCreateEntry(serverID, fsVersion, entry);
 				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
 			} catch (TException e) {
 				log("Can't broadcast new entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
+				conn.reopen();
 				e.printStackTrace();
 			}
 		}
@@ -403,10 +398,10 @@ public class FileSystemMonitor {
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
-				conn.reopen();
 				conn.getService().updateRemoveEntry(serverID, fsVersion, entry);
 				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
 			} catch (TException e) {
+				conn.reopen();
 				log("Can't broadcast removed entry to " + conn.getHostAddress() +
 					":" + conn.getHostPort());
 				e.printStackTrace();
@@ -470,12 +465,12 @@ public class FileSystemMonitor {
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
 			try {
-				conn.reopen();
 				conn.getService().updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
 				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
 			} catch (TException e) {
 				log("Can't broadcast moved entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
+				conn.reopen();
 				e.printStackTrace();
 			}
 		}
@@ -607,11 +602,11 @@ public class FileSystemMonitor {
 		for (MasterConnection conn : masterList) {
 			if (conn.getServerID() == coordServerID) {
 				try {
-					conn.reopen();
 					snap = conn.getService().getFileSystemSnapshot(serverID);
 				} catch (TException e) {
 					log("Can't recreate file system snapshot: connection lost from " +
 				        conn.getHostAddress() + "(" + conn.getServerID() + ")");
+					conn.reopen();
 					e.printStackTrace();
 				}
 			}
@@ -655,7 +650,6 @@ public class FileSystemMonitor {
 		for (MasterConnection conn : masterList) {
 			if (conn.getServerID() < serverID) {
 				try {
-					conn.reopen();
 					conn.getService().election(serverID);
 					
 					// We handled election form higher priority server.
@@ -667,6 +661,7 @@ public class FileSystemMonitor {
 				} catch (TException e) {
 					log("Can't reach server " + conn.getHostAddress() +
 						"(" + conn.getServerID() + ")");
+					conn.reopen();
 					e.printStackTrace();
 				}
 			}
@@ -678,13 +673,13 @@ public class FileSystemMonitor {
 			for (MasterConnection conn : masterList) {
 				if (conn.getServerID() > serverID) {
 					try {
-						conn.reopen();
 						conn.getService().elected(serverID);
 						log("Send elected to: " + conn.getHostAddress() + 
 							"(" + conn.getServerID() + ")");
 					} catch (TException e) {
 						log("Coudn't send elected to " + conn.getHostAddress() +
 							"(" + conn.getServerID() + ")");
+						conn.reopen();
 						e.printStackTrace();
 					}
 				}
