@@ -605,6 +605,7 @@ public class FileSystemMonitor {
 			if (conn.getServerID() == copyServerID) {
 				try {
 					snap = conn.getService().getFileSystemSnapshot(serverID);
+					log("Got snapshot");
 				} catch (TException e) {
 					log("Can't recreate file system snapshot: connection lost from " +
 				        conn.getHostAddress() + "(" + conn.getServerID() + ")");
@@ -614,11 +615,15 @@ public class FileSystemMonitor {
 			}
 		}
 		
-		if (snap == null) return;
+		if (snap == null) {
+			log("unexpected" + copyServerID + " " + serverID);
+			return;
+		}
 		recreateFileSystemFromSnapshot(snap);
 	}
 	
 	public void recreateFileSystemFromSnapshot(FileSystemSnapshot snapshot) {
+		log("Start to recreate file system...");
 		this.idMap.clear();
 		this.parentIdMap.clear();
 		Long maxID = new Long(0);
