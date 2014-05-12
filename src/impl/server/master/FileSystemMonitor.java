@@ -1,7 +1,5 @@
 package impl.server.master;
 
-import java.net.Socket;
-import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -105,9 +103,7 @@ public class FileSystemMonitor {
 			try {
 				transport.open();
 			} catch (TTransportException e) {
-				System.out.println("Should open...");
-				e.printStackTrace();
-				System.out.println("Yeah");
+				// Ignore this error
 			}
 			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
 		}
@@ -141,7 +137,6 @@ public class FileSystemMonitor {
 		
 		@Override
 		public void reopen() {
-			System.out.println("ZZZ");
 			super.reopen();
 			service = new MasterMasterService.Client(protocol);
 		}
@@ -321,14 +316,20 @@ public class FileSystemMonitor {
 		
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
-			try {
-				conn.getService().updateCreateEntry(serverID, fsVersion, entry);
-				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
-			} catch (TException e) {
+			int retries = 0;
+			while(retries < 2) {
+				try {
+					conn.getService().updateCreateEntry(serverID, fsVersion, entry);
+					log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
+					break;
+				} catch (TException e) {
+					conn.reopen();
+					retries++;
+				}
+			}
+			if (retries == 2) {
 				log("Can't broadcast new entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
-				conn.reopen();
-				e.printStackTrace();
 			}
 		}
 	}
@@ -398,14 +399,20 @@ public class FileSystemMonitor {
 		
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
-			try {
-				conn.getService().updateRemoveEntry(serverID, fsVersion, entry);
-				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
-			} catch (TException e) {
-				conn.reopen();
+			int retries = 0;
+			while (retries < 2) {
+				try {
+					conn.getService().updateRemoveEntry(serverID, fsVersion, entry);
+					log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
+					break;
+				} catch (TException e) {
+					conn.reopen();
+					retries++;
+				}
+			}
+			if (retries == 2) {
 				log("Can't broadcast removed entry to " + conn.getHostAddress() +
 					":" + conn.getHostPort());
-				e.printStackTrace();
 			}
 		}
 	}
@@ -465,20 +472,25 @@ public class FileSystemMonitor {
 		
 		fsVersion++;
 		for (MasterConnection conn : masterList) {
-			try {
-				conn.getService().updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
-				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
-			} catch (TException e) {
+			int retries = 0;
+				while (retries < 2) {
+				try {
+					conn.getService().updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
+					log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
+					break;
+				} catch (TException e) {
+					conn.reopen();
+					retries++;
+				}
+			}
+			if (retries == 2) {
 				log("Can't broadcast moved entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
-				conn.reopen();
-				e.printStackTrace();
 			}
 		}
 	}
 	
 	public synchronized void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
-		log("Got updateCreateEntry()...");
 		// If got message from lower priority server, start election.
 		if (serverID > this.serverID) {
 			startElection();
@@ -524,7 +536,6 @@ public class FileSystemMonitor {
 	}
 	
 	public synchronized void updateRemoveEntry(int serverID, long fsVersion, FileEntryExtended entry) {
-		log("Got updateRemoveEntry()...");
 		// If got message from lower priority server, start election.
 		if (serverID > this.serverID) {
 			startElection();
@@ -552,7 +563,6 @@ public class FileSystemMonitor {
 	
 	public synchronized void updateMoveEntry(int serverID, long fsVersion, FileEntryExtended oldEntry, 
 			                             FileEntryExtended newEntry) {
-		log("Got updateMoveEntry()...");
 		// If got message from lower priority server, start election.
 		if (serverID > this.serverID) {
 			startElection();
@@ -598,34 +608,36 @@ public class FileSystemMonitor {
 	}
 	
 	public synchronized void recreateFileSystem(int copyServerID) {
-		log("Recreating file system from server ID: " + copyServerID);
+		if (copyServerID == this.serverID) return;
+		log("Recreating file system from server ID: " + copyServerID + "...");
 		
 		// Find copy server
 		FileSystemSnapshot snap = null;
 		for (MasterConnection conn : masterList) {
 			if (conn.getServerID() == copyServerID) {
-				try {
-					snap = conn.getService().getFileSystemSnapshot(serverID);
-					log("Got snapshot");
-					break;
-				} catch (TException e) {
-					log("Can't recreate file system snapshot: connection lost from " +
-				        conn.getHostAddress() + "(" + conn.getServerID() + ")");
-					conn.reopen();
-					e.printStackTrace();
+				int retries = 0;
+				while (retries < 2) {
+					try {
+						snap = conn.getService().getFileSystemSnapshot(serverID);
+						break;
+					} catch (TException e) {
+						conn.reopen();
+						retries++;
+					}
 				}
+				if (retries == 2) {
+					log("Can't recreate file system snapshot: connection lost from " +
+					    conn.getHostAddress() + "(" + conn.getServerID() + ")");
+				}
+				break;
 			}
 		}
 		
-		if (snap == null) {
-			log("unexpected" + copyServerID + " " + serverID);
-			return;
-		}
+		if (snap == null) return;
 		recreateFileSystemFromSnapshot(snap);
 	}
 	
 	public void recreateFileSystemFromSnapshot(FileSystemSnapshot snapshot) {
-		log("Start to recreate file system...");
 		this.idMap.clear();
 		this.parentIdMap.clear();
 		Long maxID = new Long(0);
@@ -658,21 +670,26 @@ public class FileSystemMonitor {
 		// For each server with higher priority number.
 		for (MasterConnection conn : masterList) {
 			if (conn.getServerID() < serverID) {
-				try {
-					conn.getService().election(serverID);
-					
-					// We handled election form higher priority server.
-					// We should be a slave.
-					mode = Mode.SLAVE;
-					log("Election handled from  " + conn.getHostAddress() +
-						"(" + conn.getServerID() + ")");
-					break;
-				} catch (TException e) {
-					log("Can't reach server " + conn.getHostAddress() +
-						"(" + conn.getServerID() + ")");
-					conn.reopen();
-					e.printStackTrace();
+				int retries = 0;
+				while (retries < 2) {
+					try {
+						conn.getService().election(serverID);
+						
+						// We handled election form higher priority server.
+						// We should be a slave.
+						mode = Mode.SLAVE;
+						log("Election handled from  " + conn.getHostAddress() +
+							"(" + conn.getServerID() + ")");
+						break;
+					} catch (TException e) {
+						conn.reopen();
+						retries++;
+					}
 				}
+				if (retries == 2) {
+					log("Can't reach server " + conn.getHostAddress() +
+							"(" + conn.getServerID() + ")");
+				} else break;
 			}
 		}
 		
@@ -683,22 +700,28 @@ public class FileSystemMonitor {
 			log("Elected as a coordinator");
 			for (MasterConnection conn : masterList) {
 				if (conn.getServerID() > serverID) {
-					try {
-						// Check if old server doesn't have newer version of
-						// a file system.
-						Long copyFsVersion = conn.getService().elected(serverID);
-						if (copyFsVersion > maxCopyFsVersion) {
-							maxCopyFsVersion = copyFsVersion;
-							copyServerID = conn.getServerID();
+					int retries = 0;
+					while (retries < 2) {
+						try {
+							// Check if old server doesn't have newer version of
+							// a file system.
+							Long copyFsVersion = conn.getService().elected(serverID);
+							if (copyFsVersion > maxCopyFsVersion) {
+								maxCopyFsVersion = copyFsVersion;
+								copyServerID = conn.getServerID();
+							}
+							
+							log("Send elected to: " + conn.getHostAddress() + 
+								"(" + conn.getServerID() + ")");
+							break;
+						} catch (TException e) {
+							conn.reopen();
+							retries++;
 						}
-						
-						log("Send elected to: " + conn.getHostAddress() + 
-							"(" + conn.getServerID() + ")");
-					} catch (TException e) {
+					}
+					if (retries == 2) {
 						log("Couldn't send elected to " + conn.getHostAddress() +
 							"(" + conn.getServerID() + ")");
-						conn.reopen();
-						e.printStackTrace();
 					}
 				}
 			}
