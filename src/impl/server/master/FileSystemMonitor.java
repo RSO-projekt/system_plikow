@@ -665,6 +665,7 @@ public class FileSystemMonitor {
 		} else {
 			// Update information about coordinator
 			this.coordServerID = serverID;
+			mode = Mode.SLAVE;
 			log("New coordinator is: "+ serverID);
 		}
 	}
