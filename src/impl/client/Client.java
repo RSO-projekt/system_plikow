@@ -15,6 +15,7 @@ import org.apache.thrift.transport.TTransportException;
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
 import rso.at.FileType;
+import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
 
 /**
@@ -168,9 +169,14 @@ public class Client {
 		} catch (InvalidOperation e) {
 			System.out.println(e.getMessage());
 			return 16;
+		} catch (HostNotPermitted e) {
+			// TODO: redirection
+			System.out.println("Server nr " + e.currentServerID + 
+					           " is not permitted to handle action.");
+			return 17;
 		} catch (TException e) {
 			System.out.println(e.getMessage());
-			return 17;
+			return 18;
 		}
 		return 0;
 	}

@@ -304,9 +304,11 @@ public class FileSystemMonitor {
 			try {
 				conn.reopen();
 				conn.getService().updateCreateEntry(serverID, fsVersion, entry);
+				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
 			} catch (TException e) {
 				log("Can't broadcast new entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -379,6 +381,7 @@ public class FileSystemMonitor {
 			try {
 				conn.reopen();
 				conn.getService().updateRemoveEntry(serverID, fsVersion, entry);
+				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
 			} catch (TException e) {
 				log("Can't broadcast removed entry to " + conn.getHostAddress() +
 					":" + conn.getHostPort());
@@ -444,6 +447,7 @@ public class FileSystemMonitor {
 			try {
 				conn.reopen();
 				conn.getService().updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
+				log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
 			} catch (TException e) {
 				log("Can't broadcast moved entry to " + conn.getHostAddress() + 
 					":" + conn.getHostPort());
@@ -580,7 +584,8 @@ public class FileSystemMonitor {
 					conn.reopen();
 					snap = conn.getService().getFileSystemSnapshot(serverID);
 				} catch (TException e) {
-					log("Can't recreate file system snapshot: connection lost");
+					log("Can't recreate file system snapshot: connection lost from " +
+				        conn.getHostAddress() + "(" + conn.getServerID() + ")");
 				}
 			}
 		}
@@ -615,6 +620,7 @@ public class FileSystemMonitor {
 	}
 	
 	public synchronized void startElection() {
+		log("Election started");
 		// Let's assume we are coordinator.
 		mode = Mode.MASTER;
 		
@@ -628,9 +634,12 @@ public class FileSystemMonitor {
 					// We handled election form higher priority server.
 					// We should be a slave.
 					mode = Mode.SLAVE;
+					log("Election handled from  " + conn.getHostAddress() +
+						"(" + conn.getServerID() + ")");
 					break;
 				} catch (TException e) {
-					// There is no connection to a higher priority server
+					log("Can't reach server " + conn.getHostAddress() +
+						"(" + conn.getServerID() + ")");
 				}
 			}
 		}
@@ -643,9 +652,11 @@ public class FileSystemMonitor {
 					try {
 						conn.reopen();
 						conn.getService().elected(serverID);
+						log("Send elected to: " + conn.getHostAddress() + 
+							"(" + conn.getServerID() + ")");
 					} catch (TException e) {
 						log("Coudn't send elected to " + conn.getHostAddress() +
-							":" + conn.getHostPort());
+							"(" + conn.getServerID() + ")");
 					}
 				}
 			}
