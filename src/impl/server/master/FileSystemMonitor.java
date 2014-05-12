@@ -492,6 +492,8 @@ public class FileSystemMonitor {
 			}
 		}
 		this.fsVersion = fsVersion;
+		log("Got create update " + showFileEntryExtended(entry) + 
+			" from server ID: " + serverID);
 	}
 	
 	public synchronized void updateRemoveEntry(int serverID, long fsVersion, FileEntryExtended entry) {
@@ -516,6 +518,8 @@ public class FileSystemMonitor {
 		}
 		
 		this.fsVersion = fsVersion;
+		log("Got remove update " + showFileEntryExtended(entry) + 
+			" from server ID: " + serverID);
 	}
 	
 	public synchronized void updateMoveEntry(int serverID, long fsVersion, FileEntryExtended oldEntry, 
@@ -548,6 +552,9 @@ public class FileSystemMonitor {
 		}
 		
 		this.fsVersion = fsVersion;
+		log("Got move update " + showFileEntryExtended(oldEntry) +
+			" -> " + showFileEntryExtended(newEntry) +
+			" from server ID: " + serverID);
 	}
 	
 	public synchronized FileSystemSnapshot getFileSystemSnapshot(int serverID) throws HostNotPermitted {
