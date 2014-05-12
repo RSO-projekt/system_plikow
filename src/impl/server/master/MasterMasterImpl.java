@@ -11,13 +11,13 @@ public class MasterMasterImpl implements MasterMasterService.Iface{
 	}
 
 	@Override
-	public void election(int serverID) throws TException {
-		monitor.election(serverID);
+	public long election(int serverID) throws TException {
+		return monitor.election(serverID);
 	}
 
 	@Override
-	public void elected(int serverID) throws TException {
-		monitor.elected(serverID);
+	public long elected(int serverID) throws TException {
+		return monitor.elected(serverID);
 	}
 
 	@Override

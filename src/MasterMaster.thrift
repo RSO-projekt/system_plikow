@@ -30,9 +30,10 @@ service MasterMasterService
 
     // Message is sent on server initialization and when connection to a
     // coordinator is lost. Election message is only send to server with higher
-    // priority.
-    void election(1: i32 serverID),
+    // priority. Returns current file system version.
+    i64 election(1: i32 serverID),
 
     // Message is sent by a server when no one is responding after an election.
-    void elected(1: i32 serverID),
+    // Returns current filesystem version.
+    i64 elected(1: i32 serverID),
 }

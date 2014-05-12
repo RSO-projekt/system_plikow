@@ -477,6 +477,7 @@ public class FileSystemMonitor {
 	}
 	
 	public synchronized void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
+		log("Got updateCreateEntry()...");
 		// If got message from lower priority server, start election.
 		if (serverID > this.serverID) {
 			startElection();
@@ -485,7 +486,7 @@ public class FileSystemMonitor {
 		
 		// If file system version is incorrect, we need to download whole snapshot
 		if (fsVersion != this.fsVersion + 1) {
-			recreateFileSystem();
+			recreateFileSystem(coordServerID);
 			return;
 		}
 		
@@ -522,6 +523,7 @@ public class FileSystemMonitor {
 	}
 	
 	public synchronized void updateRemoveEntry(int serverID, long fsVersion, FileEntryExtended entry) {
+		log("Got updateRemoveEntry()...");
 		// If got message from lower priority server, start election.
 		if (serverID > this.serverID) {
 			startElection();
@@ -530,7 +532,7 @@ public class FileSystemMonitor {
 		
 		// If file system version is incorrect, we need to download whole snapshot
 		if (fsVersion != this.fsVersion + 1) {
-			recreateFileSystem();
+			recreateFileSystem(coordServerID);
 			return;
 		}
 		
@@ -549,6 +551,7 @@ public class FileSystemMonitor {
 	
 	public synchronized void updateMoveEntry(int serverID, long fsVersion, FileEntryExtended oldEntry, 
 			                             FileEntryExtended newEntry) {
+		log("Got updateMoveEntry()...");
 		// If got message from lower priority server, start election.
 		if (serverID > this.serverID) {
 			startElection();
@@ -557,7 +560,7 @@ public class FileSystemMonitor {
 		
 		// If file system version is incorrect, we need to download whole snapshot
 		if (fsVersion != this.fsVersion + 1) {
-			recreateFileSystem();
+			recreateFileSystem(coordServerID);
 			return;
 		}
 		
@@ -593,14 +596,12 @@ public class FileSystemMonitor {
 		return new FileSystemSnapshot(entryList, fsVersion);
 	}
 	
-	public synchronized void recreateFileSystem() {
-		if (mode == Mode.MASTER) return;
-		if (coordServerID == serverID) return;
+	public synchronized void recreateFileSystem(int copyServerID) {
 		
-		// Find coordinator
+		// Find copy server
 		FileSystemSnapshot snap = null;
 		for (MasterConnection conn : masterList) {
-			if (conn.getServerID() == coordServerID) {
+			if (conn.getServerID() == copyServerID) {
 				try {
 					snap = conn.getService().getFileSystemSnapshot(serverID);
 				} catch (TException e) {
@@ -668,12 +669,21 @@ public class FileSystemMonitor {
 		}
 		
 		// Broadcast election to lower priority servers if master
+		Long maxCopyFsVersion = new Long(0);
+		int copyServerID = 0;
 		if (mode == Mode.MASTER) {
 			log("Elected as a coordinator");
 			for (MasterConnection conn : masterList) {
 				if (conn.getServerID() > serverID) {
 					try {
-						conn.getService().elected(serverID);
+						// Check if old server doesn't have newer version of
+						// a file system.
+						Long copyFsVersion = conn.getService().elected(serverID);
+						if (copyFsVersion > maxCopyFsVersion) {
+							maxCopyFsVersion = copyFsVersion;
+							copyServerID = conn.getServerID();
+						}
+						
 						log("Send elected to: " + conn.getHostAddress() + 
 							"(" + conn.getServerID() + ")");
 					} catch (TException e) {
@@ -684,21 +694,25 @@ public class FileSystemMonitor {
 					}
 				}
 			}
+			if (maxCopyFsVersion > fsVersion) {
+				recreateFileSystem(copyServerID);
+			}
 		} else {
 			log("Elected as a slave");
 		}
 		
 	}
 	
-	public synchronized void election(int serverID) {
+	public synchronized Long election(int serverID) {
 		log("Got election from server ID: " + serverID);
 		// If server with lower priority starts election do the same.
 		if (serverID > this.serverID) {
 			startElection();
 		}
+		return fsVersion;
 	}
 	
-	public synchronized void elected(int serverID) {
+	public synchronized Long elected(int serverID) {
 		log("Got elected from server ID: " + serverID);
 		
 		// If server with lower priority elects itself, start election.
@@ -710,6 +724,8 @@ public class FileSystemMonitor {
 			mode = Mode.SLAVE;
 			log("New coordinator is: "+ serverID);
 		}
+		
+		return fsVersion;
 	}
 }
 
