@@ -295,6 +295,7 @@ public class FileSystemMonitor {
 	
 	// Send information about new entry to other, redundant servers.
 	public synchronized void broadcastCreateEntry(FileEntryExtended entry) {
+		if (mode == Mode.SLAVE) return;
 		String msg = "New entry: " + showFileEntryExtended(entry);
 		log(msg);
 		
@@ -369,6 +370,7 @@ public class FileSystemMonitor {
 	
 	// Broadcast removal of an entry to other servers
 	public synchronized void broadcastRemoveEntry(FileEntryExtended entry) {
+		if (mode == Mode.SLAVE) return;
 		String msg = "Removed entry: " + showFileEntryExtended(entry);
 		log(msg);
 		
@@ -432,6 +434,7 @@ public class FileSystemMonitor {
 	// Broadcast all moved entries to other servers.
 	public synchronized void broadcastMoveEntry(FileEntryExtended oldEntry,
 												FileEntryExtended newEntry) {
+		if (mode == Mode.SLAVE) return;
 		String msg = "Moved entry: " + showFileEntryExtended(oldEntry) + " -> " +
 					 showFileEntryExtended(newEntry);
 		log(msg);
