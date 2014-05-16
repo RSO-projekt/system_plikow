@@ -11,11 +11,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TMultiplexedProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 
 import rso.at.FileEntry;
 import rso.at.FileEntryExtended;
@@ -25,8 +20,6 @@ import rso.at.FileSystemSnapshot;
 import rso.at.FileType;
 import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
-import rso.at.MasterMasterService;
-import rso.at.MasterMasterService.Iface;
 
 public class FileSystemMonitor {
 	// Map containing all IDs of file system's entries.
@@ -85,66 +78,6 @@ public class FileSystemMonitor {
 		sb.append("pID: " + entry.entry.parentID + ", ");
 		sb.append("ver: " + entry.entry.version + "]");
 		return sb.toString();
-	}
-	
-	// Class representing an AT connection. 
-	class Connection {
-		public Connection(String host, int port, int serverID, String service) {
-			this.host = host;
-			this.port = port;
-			this.serverID = serverID;
-			this.service = service;
-			reopen();
-		}
-		
-		public void reopen() {
-			if (transport != null) transport.close();
-			transport = new TSocket(host, port, Configuration.sTimeout);
-			try {
-				transport.open();
-			} catch (TTransportException e) {
-				// Ignore this error
-			}
-			protocol = new TMultiplexedProtocol(new TBinaryProtocol(transport), service);
-		}
-		
-		public String getHostAddress() {
-			return host;
-		}
-		
-		public int getHostPort() {
-			return port;
-		}
-		
-		public int getServerID() {
-			return serverID;
-		}
-		
-		protected TTransport transport;
-		protected TMultiplexedProtocol protocol;
-		protected String host;
-		protected int port;
-		protected int serverID;
-		String service;
-	}
-	
-	// Master server connection.
-	class MasterConnection extends Connection {
-		public MasterConnection(String host, int port, int priority) {
-			super(host, port, priority, "MasterMaster");
-			service = new MasterMasterService.Client(protocol);
-		}
-		
-		@Override
-		public void reopen() {
-			super.reopen();
-			service = new MasterMasterService.Client(protocol);
-		}
-
-		public Iface getService() {
-			return service;
-		}
-		private MasterMasterService.Iface service;
 	}
 	
 	// Add master connection to the list
@@ -218,7 +151,7 @@ public class FileSystemMonitor {
 		nextId = new Long(0);
 		fsVersion = new Long(0);
 
-		masterList = new ArrayList<FileSystemMonitor.MasterConnection>();
+		masterList = new ArrayList<MasterConnection>();
 		idMap = new TreeMap<Long, FileEntryExtended>();
 		parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
 		FileEntryExtended root = createFileEntryExtended(FileType.DIRECTORY, 
