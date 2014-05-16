@@ -425,7 +425,7 @@ public class FileSystemMonitor {
 	
 	public synchronized void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
 		// If got message from lower priority server, start election.
-		if (serverID > this.serverID) {
+		if (serverID < this.serverID) {
 			startElection();
 			return;
 		}
@@ -470,7 +470,7 @@ public class FileSystemMonitor {
 	
 	public synchronized void updateRemoveEntry(int serverID, long fsVersion, FileEntryExtended entry) {
 		// If got message from lower priority server, start election.
-		if (serverID > this.serverID) {
+		if (serverID < this.serverID) {
 			startElection();
 			return;
 		}
@@ -497,7 +497,7 @@ public class FileSystemMonitor {
 	public synchronized void updateMoveEntry(int serverID, long fsVersion, FileEntryExtended oldEntry, 
 			                             FileEntryExtended newEntry) {
 		// If got message from lower priority server, start election.
-		if (serverID > this.serverID) {
+		if (serverID < this.serverID) {
 			startElection();
 			return;
 		}
@@ -670,7 +670,7 @@ public class FileSystemMonitor {
 	public synchronized Long election(int serverID) {
 		log("Got election from server ID: " + serverID);
 		// If server with lower priority starts election do the same.
-		if (serverID > this.serverID) {
+		if (serverID < this.serverID) {
 			startElection();
 		}
 		return fsVersion;
@@ -680,7 +680,7 @@ public class FileSystemMonitor {
 		log("Got elected from server ID: " + serverID);
 		
 		// If server with lower priority elects itself, start election.
-		if (serverID > this.serverID) {
+		if (serverID < this.serverID) {
 			startElection();
 		} else {
 			// Update information about coordinator

@@ -89,6 +89,7 @@ public class MasterMasterService {
     public void updateCreateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
     {
       send_updateCreateEntry(serverID, fsVersion, entry);
+      recv_updateCreateEntry();
     }
 
     public void send_updateCreateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
@@ -100,9 +101,17 @@ public class MasterMasterService {
       sendBase("updateCreateEntry", args);
     }
 
+    public void recv_updateCreateEntry() throws org.apache.thrift.TException
+    {
+      updateCreateEntry_result result = new updateCreateEntry_result();
+      receiveBase(result, "updateCreateEntry");
+      return;
+    }
+
     public void updateRemoveEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
     {
       send_updateRemoveEntry(serverID, fsVersion, entry);
+      recv_updateRemoveEntry();
     }
 
     public void send_updateRemoveEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
@@ -114,9 +123,17 @@ public class MasterMasterService {
       sendBase("updateRemoveEntry", args);
     }
 
+    public void recv_updateRemoveEntry() throws org.apache.thrift.TException
+    {
+      updateRemoveEntry_result result = new updateRemoveEntry_result();
+      receiveBase(result, "updateRemoveEntry");
+      return;
+    }
+
     public void updateMoveEntry(int serverID, long fsVersion, rso.at.FileEntryExtended oldEntry, rso.at.FileEntryExtended newEntry) throws org.apache.thrift.TException
     {
       send_updateMoveEntry(serverID, fsVersion, oldEntry, newEntry);
+      recv_updateMoveEntry();
     }
 
     public void send_updateMoveEntry(int serverID, long fsVersion, rso.at.FileEntryExtended oldEntry, rso.at.FileEntryExtended newEntry) throws org.apache.thrift.TException
@@ -127,6 +144,13 @@ public class MasterMasterService {
       args.setOldEntry(oldEntry);
       args.setNewEntry(newEntry);
       sendBase("updateMoveEntry", args);
+    }
+
+    public void recv_updateMoveEntry() throws org.apache.thrift.TException
+    {
+      updateMoveEntry_result result = new updateMoveEntry_result();
+      receiveBase(result, "updateMoveEntry");
+      return;
     }
 
     public rso.at.FileSystemSnapshot getFileSystemSnapshot(int serverID) throws rso.at.HostNotPermitted, org.apache.thrift.TException
@@ -231,7 +255,7 @@ public class MasterMasterService {
       private long fsVersion;
       private rso.at.FileEntryExtended entry;
       public updateCreateEntry_call(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, true);
+        super(client, protocolFactory, transport, resultHandler, false);
         this.serverID = serverID;
         this.fsVersion = fsVersion;
         this.entry = entry;
@@ -253,6 +277,7 @@ public class MasterMasterService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        (new Client(prot)).recv_updateCreateEntry();
       }
     }
 
@@ -268,7 +293,7 @@ public class MasterMasterService {
       private long fsVersion;
       private rso.at.FileEntryExtended entry;
       public updateRemoveEntry_call(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, true);
+        super(client, protocolFactory, transport, resultHandler, false);
         this.serverID = serverID;
         this.fsVersion = fsVersion;
         this.entry = entry;
@@ -290,6 +315,7 @@ public class MasterMasterService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        (new Client(prot)).recv_updateRemoveEntry();
       }
     }
 
@@ -306,7 +332,7 @@ public class MasterMasterService {
       private rso.at.FileEntryExtended oldEntry;
       private rso.at.FileEntryExtended newEntry;
       public updateMoveEntry_call(int serverID, long fsVersion, rso.at.FileEntryExtended oldEntry, rso.at.FileEntryExtended newEntry, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, true);
+        super(client, protocolFactory, transport, resultHandler, false);
         this.serverID = serverID;
         this.fsVersion = fsVersion;
         this.oldEntry = oldEntry;
@@ -330,6 +356,7 @@ public class MasterMasterService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        (new Client(prot)).recv_updateMoveEntry();
       }
     }
 
@@ -461,12 +488,13 @@ public class MasterMasterService {
       }
 
       protected boolean isOneway() {
-        return true;
+        return false;
       }
 
-      public org.apache.thrift.TBase getResult(I iface, updateCreateEntry_args args) throws org.apache.thrift.TException {
+      public updateCreateEntry_result getResult(I iface, updateCreateEntry_args args) throws org.apache.thrift.TException {
+        updateCreateEntry_result result = new updateCreateEntry_result();
         iface.updateCreateEntry(args.serverID, args.fsVersion, args.entry);
-        return null;
+        return result;
       }
     }
 
@@ -480,12 +508,13 @@ public class MasterMasterService {
       }
 
       protected boolean isOneway() {
-        return true;
+        return false;
       }
 
-      public org.apache.thrift.TBase getResult(I iface, updateRemoveEntry_args args) throws org.apache.thrift.TException {
+      public updateRemoveEntry_result getResult(I iface, updateRemoveEntry_args args) throws org.apache.thrift.TException {
+        updateRemoveEntry_result result = new updateRemoveEntry_result();
         iface.updateRemoveEntry(args.serverID, args.fsVersion, args.entry);
-        return null;
+        return result;
       }
     }
 
@@ -499,12 +528,13 @@ public class MasterMasterService {
       }
 
       protected boolean isOneway() {
-        return true;
+        return false;
       }
 
-      public org.apache.thrift.TBase getResult(I iface, updateMoveEntry_args args) throws org.apache.thrift.TException {
+      public updateMoveEntry_result getResult(I iface, updateMoveEntry_args args) throws org.apache.thrift.TException {
+        updateMoveEntry_result result = new updateMoveEntry_result();
         iface.updateMoveEntry(args.serverID, args.fsVersion, args.oldEntry, args.newEntry);
-        return null;
+        return result;
       }
     }
 
@@ -609,14 +639,36 @@ public class MasterMasterService {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
+            updateCreateEntry_result result = new updateCreateEntry_result();
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
           }
           public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            updateCreateEntry_result result = new updateCreateEntry_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
           }
         };
       }
 
       protected boolean isOneway() {
-        return true;
+        return false;
       }
 
       public void start(I iface, updateCreateEntry_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
@@ -637,14 +689,36 @@ public class MasterMasterService {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
+            updateRemoveEntry_result result = new updateRemoveEntry_result();
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
           }
           public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            updateRemoveEntry_result result = new updateRemoveEntry_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
           }
         };
       }
 
       protected boolean isOneway() {
-        return true;
+        return false;
       }
 
       public void start(I iface, updateRemoveEntry_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
@@ -665,14 +739,36 @@ public class MasterMasterService {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
+            updateMoveEntry_result result = new updateMoveEntry_result();
+            try {
+              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+              return;
+            } catch (Exception e) {
+              LOGGER.error("Exception writing to internal frame buffer", e);
+            }
+            fb.close();
           }
           public void onError(Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TBase msg;
+            updateMoveEntry_result result = new updateMoveEntry_result();
+            {
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+              return;
+            } catch (Exception ex) {
+              LOGGER.error("Exception writing to internal frame buffer", ex);
+            }
+            fb.close();
           }
         };
       }
 
       protected boolean isOneway() {
-        return true;
+        return false;
       }
 
       public void start(I iface, updateMoveEntry_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
@@ -1394,6 +1490,252 @@ public class MasterMasterService {
 
   }
 
+  public static class updateCreateEntry_result implements org.apache.thrift.TBase<updateCreateEntry_result, updateCreateEntry_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateCreateEntry_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateCreateEntry_result");
+
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new updateCreateEntry_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new updateCreateEntry_resultTupleSchemeFactory());
+    }
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+;
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateCreateEntry_result.class, metaDataMap);
+    }
+
+    public updateCreateEntry_result() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public updateCreateEntry_result(updateCreateEntry_result other) {
+    }
+
+    public updateCreateEntry_result deepCopy() {
+      return new updateCreateEntry_result(this);
+    }
+
+    @Override
+    public void clear() {
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof updateCreateEntry_result)
+        return this.equals((updateCreateEntry_result)that);
+      return false;
+    }
+
+    public boolean equals(updateCreateEntry_result that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(updateCreateEntry_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("updateCreateEntry_result(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class updateCreateEntry_resultStandardSchemeFactory implements SchemeFactory {
+      public updateCreateEntry_resultStandardScheme getScheme() {
+        return new updateCreateEntry_resultStandardScheme();
+      }
+    }
+
+    private static class updateCreateEntry_resultStandardScheme extends StandardScheme<updateCreateEntry_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, updateCreateEntry_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, updateCreateEntry_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class updateCreateEntry_resultTupleSchemeFactory implements SchemeFactory {
+      public updateCreateEntry_resultTupleScheme getScheme() {
+        return new updateCreateEntry_resultTupleScheme();
+      }
+    }
+
+    private static class updateCreateEntry_resultTupleScheme extends TupleScheme<updateCreateEntry_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, updateCreateEntry_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, updateCreateEntry_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+      }
+    }
+
+  }
+
   public static class updateRemoveEntry_args implements org.apache.thrift.TBase<updateRemoveEntry_args, updateRemoveEntry_args._Fields>, java.io.Serializable, Cloneable, Comparable<updateRemoveEntry_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateRemoveEntry_args");
 
@@ -1940,6 +2282,252 @@ public class MasterMasterService {
           struct.entry.read(iprot);
           struct.setEntryIsSet(true);
         }
+      }
+    }
+
+  }
+
+  public static class updateRemoveEntry_result implements org.apache.thrift.TBase<updateRemoveEntry_result, updateRemoveEntry_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateRemoveEntry_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateRemoveEntry_result");
+
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new updateRemoveEntry_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new updateRemoveEntry_resultTupleSchemeFactory());
+    }
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+;
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateRemoveEntry_result.class, metaDataMap);
+    }
+
+    public updateRemoveEntry_result() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public updateRemoveEntry_result(updateRemoveEntry_result other) {
+    }
+
+    public updateRemoveEntry_result deepCopy() {
+      return new updateRemoveEntry_result(this);
+    }
+
+    @Override
+    public void clear() {
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof updateRemoveEntry_result)
+        return this.equals((updateRemoveEntry_result)that);
+      return false;
+    }
+
+    public boolean equals(updateRemoveEntry_result that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(updateRemoveEntry_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("updateRemoveEntry_result(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class updateRemoveEntry_resultStandardSchemeFactory implements SchemeFactory {
+      public updateRemoveEntry_resultStandardScheme getScheme() {
+        return new updateRemoveEntry_resultStandardScheme();
+      }
+    }
+
+    private static class updateRemoveEntry_resultStandardScheme extends StandardScheme<updateRemoveEntry_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, updateRemoveEntry_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, updateRemoveEntry_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class updateRemoveEntry_resultTupleSchemeFactory implements SchemeFactory {
+      public updateRemoveEntry_resultTupleScheme getScheme() {
+        return new updateRemoveEntry_resultTupleScheme();
+      }
+    }
+
+    private static class updateRemoveEntry_resultTupleScheme extends TupleScheme<updateRemoveEntry_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, updateRemoveEntry_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, updateRemoveEntry_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 
@@ -2596,6 +3184,252 @@ public class MasterMasterService {
           struct.newEntry.read(iprot);
           struct.setNewEntryIsSet(true);
         }
+      }
+    }
+
+  }
+
+  public static class updateMoveEntry_result implements org.apache.thrift.TBase<updateMoveEntry_result, updateMoveEntry_result._Fields>, java.io.Serializable, Cloneable, Comparable<updateMoveEntry_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateMoveEntry_result");
+
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new updateMoveEntry_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new updateMoveEntry_resultTupleSchemeFactory());
+    }
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+;
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateMoveEntry_result.class, metaDataMap);
+    }
+
+    public updateMoveEntry_result() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public updateMoveEntry_result(updateMoveEntry_result other) {
+    }
+
+    public updateMoveEntry_result deepCopy() {
+      return new updateMoveEntry_result(this);
+    }
+
+    @Override
+    public void clear() {
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof updateMoveEntry_result)
+        return this.equals((updateMoveEntry_result)that);
+      return false;
+    }
+
+    public boolean equals(updateMoveEntry_result that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(updateMoveEntry_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+      }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("updateMoveEntry_result(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class updateMoveEntry_resultStandardSchemeFactory implements SchemeFactory {
+      public updateMoveEntry_resultStandardScheme getScheme() {
+        return new updateMoveEntry_resultStandardScheme();
+      }
+    }
+
+    private static class updateMoveEntry_resultStandardScheme extends StandardScheme<updateMoveEntry_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, updateMoveEntry_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, updateMoveEntry_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class updateMoveEntry_resultTupleSchemeFactory implements SchemeFactory {
+      public updateMoveEntry_resultTupleScheme getScheme() {
+        return new updateMoveEntry_resultTupleScheme();
+      }
+    }
+
+    private static class updateMoveEntry_resultTupleScheme extends TupleScheme<updateMoveEntry_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, updateMoveEntry_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, updateMoveEntry_result struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 

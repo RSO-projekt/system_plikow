@@ -113,7 +113,7 @@ public class ServerMain {
 		for (String ip : Configuration.sMainServerIPs) {
 			serverID++;
 			if (!myIPs.contains(ip)) {
-				monitor.addMasterConnection(ip, Configuration.externalPort, serverID);
+				monitor.addMasterConnection(ip, Configuration.internalPort, serverID);
 			} else {
 				if (foundLocalIP) {
 					throw new InvalidOperation(100, "Multiple local IP's in configuration file are not allowed");

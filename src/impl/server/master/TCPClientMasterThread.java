@@ -21,7 +21,7 @@ public class TCPClientMasterThread extends Thread {
 		processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl(monitor)));
 		server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransportInternal).
 				processor(processor));
-		monitor.log("Starting server TCP on port " + Configuration.externalPort + 
+		monitor.log("Starting TCP server on port " + Configuration.externalPort + 
 				    " with priority " + serverID + "...");
 	}
 	
