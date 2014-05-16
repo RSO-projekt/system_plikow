@@ -65,7 +65,7 @@ public class FileSystemMonitor {
 	
 	// General logging function
 	public synchronized void log(String message) {
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		System.out.println("[" + df.format(new Date()) + "] " + message);
 	}
 	
@@ -551,7 +551,7 @@ public class FileSystemMonitor {
 				int retries = 0;
 				while (retries < 2) {
 					try {
-						snap = conn.getService().getFileSystemSnapshot(serverID);
+						snap = conn.getService().getFileSystemSnapshot(copyServerID);
 						break;
 					} catch (TException e) {
 						conn.reopen();
@@ -583,7 +583,7 @@ public class FileSystemMonitor {
 				TreeSet<FileEntryExtended> tmpTreeToCopy = new TreeSet<FileEntryExtended>();
 				for (Iterator<FileEntryExtended> it2 = snapshot.entries.iterator(); it2.hasNext();) {
 					FileEntryExtended child = it2.next();
-					if (child.entry.parentID == entry.entry.id){
+					if (child.entry.id != 0 && child.entry.parentID == entry.entry.id){
 						tmpTreeToCopy.add(child);
 					}
 				}
@@ -601,13 +601,18 @@ public class FileSystemMonitor {
 		mode = Mode.MASTER;
 		
 		// For each server with higher priority number.
+		Long maxCopyFsVersion = new Long(0);
+		int copyServerID = 0;
 		for (MasterConnection conn : masterList) {
 			if (conn.getServerID() < serverID) {
 				int retries = 0;
 				while (retries < 2) {
 					try {
-						conn.getService().election(serverID);
-						
+						Long copyFsVersion = conn.getService().election(serverID);
+						if (copyFsVersion > maxCopyFsVersion) {
+							maxCopyFsVersion = copyFsVersion;
+							copyServerID = conn.getServerID();
+						}
 						// We handled election form higher priority server.
 						// We should be a slave.
 						mode = Mode.SLAVE;
@@ -627,8 +632,6 @@ public class FileSystemMonitor {
 		}
 		
 		// Broadcast election to lower priority servers if master
-		Long maxCopyFsVersion = new Long(0);
-		int copyServerID = 0;
 		if (mode == Mode.MASTER) {
 			log("Elected as a coordinator");
 			for (MasterConnection conn : masterList) {
@@ -658,21 +661,20 @@ public class FileSystemMonitor {
 					}
 				}
 			}
-			if (maxCopyFsVersion > fsVersion) {
-				recreateFileSystem(copyServerID);
-			}
 		} else {
 			log("Elected as a slave");
 		}
-		
+		if (maxCopyFsVersion > fsVersion) {
+			recreateFileSystem(copyServerID);
+		}
 	}
 	
 	public synchronized Long election(int serverID) {
 		log("Got election from server ID: " + serverID);
 		// If server with lower priority starts election do the same.
-		if (serverID > this.serverID) {
-			startElection();
-		}
+//		if (serverID > this.serverID) {
+//			startElection();
+//		}
 		return fsVersion;
 	}
 	
