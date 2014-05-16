@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Configuration {
 	public static int sRedundancy = 3;
 	public static int sMinRedundancy = 2;
-	public static int sPort = 1205;
+	public static int externalPort = 1205;
+	public static int internalPort = 1206;
 	public static ArrayList<String> sMainServerIPs;
 	public static ArrayList<String> sDataServerIPs;
 	public static int sTimeout = 1000;
