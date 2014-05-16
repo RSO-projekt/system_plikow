@@ -43,17 +43,11 @@ public class ServerMain {
 		}
 		Configuration.sMinRedundancy = Integer.parseInt(minRedundancy);
 		
-		String extPort = prop.getProperty("external-port");
-		if (extPort == null) {
-			throw new InvalidOperation(202, "\"external-port\" (int) key expected in configuration file");
+		String port = prop.getProperty("port");
+		if (port == null) {
+			throw new InvalidOperation(202, "\"port\" (int) key expected in configuration file");
 		}
-		Configuration.externalPort = Integer.parseInt(extPort);
-		
-		String intPort = prop.getProperty("internal-port");
-		if (intPort == null) {
-			throw new InvalidOperation(202, "\"internal-port\" (int) key expected in configuration file");
-		}
-		Configuration.internalPort = Integer.parseInt(intPort);
+		Configuration.sPort = Integer.parseInt(port);
 		
 		String timeout = prop.getProperty("timeout");
 		if (timeout == null) {
@@ -89,8 +83,8 @@ public class ServerMain {
 	private void start() throws EntryNotFound, InvalidOperation, 
 	                            TTransportException, SocketException {
 		// Prepare socket for connection
-//		TServerSocket serverTranexternalPort = new TServerSocket(Configuration.externalPort);
-//		TMultiplexedProcessor processor = new TMultiplexedProcessor();
+		TServerSocket serverTranexternalPort = new TServerSocket(Configuration.sPort);
+		TMultiplexedProcessor processor = new TMultiplexedProcessor();
 		
 		// Find all available IPs and save them in map.
 		TreeSet<String> myIPs = new TreeSet<String>();
@@ -113,7 +107,7 @@ public class ServerMain {
 		for (String ip : Configuration.sMainServerIPs) {
 			serverID++;
 			if (!myIPs.contains(ip)) {
-				monitor.addMasterConnection(ip, Configuration.internalPort, serverID);
+				monitor.addMasterConnection(ip, Configuration.sPort, serverID);
 			} else {
 				if (foundLocalIP) {
 					throw new InvalidOperation(100, "Multiple local IP's in configuration file are not allowed");
@@ -131,26 +125,26 @@ public class ServerMain {
 		}
 		
 		// Register services
-//		processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl(monitor)));
-//		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
+		processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl(monitor)));
+		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
 		
 		// Create threaded server
-//		TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTranexternalPort).
-//				processor(processor));
-//		monitor.log("Starting server on port " + Configuration.externalPort + 
-//				    " with priority " + myServerID + "...");
-//		
-//		// Start election on startup
-//		monitor.startElection();
-//		
-//		// Start serving
-//		server.serve();
+		TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTranexternalPort).
+				processor(processor));
+		monitor.log("Starting server on port " + Configuration.sPort + 
+				    " with priority " + myServerID + "...");
 		
-		TCPClientMasterThread tcpClientConn = new TCPClientMasterThread(monitor, myServerID);
-		tcpClientConn.start();
+		// Start election on startup
+		monitor.startElection();
 		
-		UDPMasterMasterThread udpMasterConn = new UDPMasterMasterThread(monitor, myServerID);
-		udpMasterConn.start();
+		// Start serving
+		server.serve();
+		
+//		TCPClientMasterThread tcpClientConn = new TCPClientMasterThread(monitor, myServerID);
+//		tcpClientConn.start();
+//		
+//		UDPMasterMasterThread udpMasterConn = new UDPMasterMasterThread(monitor, myServerID);
+//		udpMasterConn.start();
 	}
 
 	public static void main(String[] args) {
