@@ -27,7 +27,7 @@ public class FileSystemImpl implements FileSystem {
 	private static final String MASTER_SERVER_HOST = "master-server";
 	private static final String MASTER_SERVER_NUM = "master-server-num";
 	private static final String TIMEOUT = "timeout";
-	private static final String PORT = "port";
+	private static final String PORT = "external-port";
 	private final static String PATH_TO_CONFIG_FILE = "properties.conf";
 	private ClientMasterService.Iface service;
 	private TTransport transport;
