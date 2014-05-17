@@ -1,5 +1,6 @@
 package impl.server.master;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,7 +83,13 @@ public class FileSystemMonitor {
 	
 	// Add master connection to the list
 	public synchronized void addMasterConnection(String host, int port, int priority) {
-		MasterConnection conn = new MasterConnection(host, port, priority);
+		MasterConnection conn = null;
+		try {
+			conn = new MasterConnection(host, port, priority);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		masterList.add(conn);
 	}
 	

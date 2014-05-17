@@ -1,5 +1,7 @@
 package impl.server.master;
 
+import java.io.IOException;
+
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.transport.TFramedTransport;
@@ -9,7 +11,7 @@ import org.apache.thrift.transport.TTransportException;
 
 // Class representing an AT connection. 
 class Connection {
-	public Connection(String host, int port, int serverID, String service) {
+	public Connection(String host, int port, int serverID, String service) throws IOException {
 		this.host = host;
 		this.port = port;
 		this.serverID = serverID;
@@ -17,7 +19,7 @@ class Connection {
 		reopen();
 	}
 	
-	public void reopen() {
+	public void reopen() throws IOException {
 		if (transport != null) transport.close();
 		transport = new TFramedTransport(new TSocket(host, port, Configuration.sTimeout));
 		try {

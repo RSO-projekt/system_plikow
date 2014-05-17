@@ -1,33 +1,26 @@
 package impl.server.master;
 
 import org.apache.thrift.TMultiplexedProcessor;
+import org.apache.thrift.server.TNonblockingServer;
+import org.apache.thrift.server.TNonblockingServer.Args;
 import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TSimpleServer;
-import org.apache.thrift.transport.TFramedTransport;
-import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TNonblockingServerSocket;
+import org.apache.thrift.transport.TNonblockingServerTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.apache.thrift.transport.TTransportFactory;
-
-import rso.at.MasterMasterService;
 
 class UDPMasterMasterThread extends Thread {
 	private FileSystemMonitor monitor;
 	private int serverID;
-	private TSimpleServer server;
+	private TServer server;
 	
 	public UDPMasterMasterThread(FileSystemMonitor monitor, int serverID) throws TTransportException{
 		this.monitor = monitor;
 		this.serverID = serverID;
-		TServerSocket serverTransportExternal = new TServerSocket(Configuration.internalPort);
-		TTransportFactory factory = new TFramedTransport.Factory();
-		
+		TNonblockingServerTransport serverTransport = new TNonblockingServerSocket(Configuration.internalPort);
+		Args args = new TNonblockingServer.Args(serverTransport);
 		TMultiplexedProcessor processor = new TMultiplexedProcessor();
-		TServer.Args args = new TServer.Args(serverTransportExternal);
 		args.processor(processor);
-		args.transportFactory(factory);
-		
-		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
-		server = new TSimpleServer(args);
+		server = new TNonblockingServer(args);
 		monitor.log("Starting UDP server on port " + Configuration.internalPort + 
 				    " with priority " + this.serverID + "...");
 	}
