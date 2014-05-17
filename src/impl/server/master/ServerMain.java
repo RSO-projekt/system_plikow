@@ -74,6 +74,7 @@ public class ServerMain {
 			String mainServerIP = prop.getProperty(key);
 			if (mainServerIP != null) {
 				Configuration.sMainServerIPs.add(mainServerIP);	
+				Configuration.sMainServerPorts.add(1300+i);
 			}
 		}
 		num = Integer.parseInt(prop.getProperty("data-server-num"));
@@ -110,10 +111,12 @@ public class ServerMain {
 		boolean foundLocalIP = false;
 		int serverID = 0;
 		int myServerID = 0;
-		for (String ip : Configuration.sMainServerIPs) {
+		for (int i = 0; i < Configuration.sMainServerIPs.size(); ++i) {
+			String ip = Configuration.sMainServerIPs.get(i);
+			Integer port = Configuration.sMainServerPorts.get(i);
 			serverID++;
 			if (!myIPs.contains(ip)) {
-				monitor.addMasterConnection(ip, Configuration.internalPort, serverID);
+				monitor.addMasterConnection(ip, port, serverID);
 			} else {
 				if (foundLocalIP) {
 					throw new InvalidOperation(100, "Multiple local IP's in configuration file are not allowed");

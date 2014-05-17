@@ -8,10 +8,12 @@ public class Configuration {
 	public static int externalPort = 1205;
 	public static int internalPort = 1206;
 	public static ArrayList<String> sMainServerIPs;
+	public static ArrayList<Integer> sMainServerPorts;
 	public static ArrayList<String> sDataServerIPs;
 	public static int sTimeout = 1000;
 	static{
 		sMainServerIPs = new ArrayList<String>();
+		sMainServerPorts = new ArrayList<Integer>();
 		sMainServerIPs.add("192.168.11.11");
 		sMainServerIPs.add("192.168.11.12");
 		sDataServerIPs = new ArrayList<String>();
