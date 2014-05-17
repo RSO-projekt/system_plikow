@@ -18,7 +18,8 @@ class UDPMasterMasterThread extends Thread {
 	public UDPMasterMasterThread(FileSystemMonitor monitor, int serverID) throws TTransportException{
 		this.monitor = monitor;
 		this.serverID = serverID;
-		TServerSocket serverTransportExternal = new TServerSocket(Configuration.internalPort);
+		int port = 1300 + serverID - 1;
+		TServerSocket serverTransportExternal = new TServerSocket(port);
 		TTransportFactory factory = new TFramedTransport.Factory();
 		
 		TMultiplexedProcessor processor = new TMultiplexedProcessor();
@@ -28,7 +29,7 @@ class UDPMasterMasterThread extends Thread {
 		
 		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
 		server = new TSimpleServer(args);
-		monitor.log("Starting UDP server on port " + Configuration.internalPort + 
+		monitor.log("Starting UDP server on port " + port + 
 				    " with priority " + this.serverID + "...");
 	}
 	
