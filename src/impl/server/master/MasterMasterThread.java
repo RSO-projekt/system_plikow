@@ -1,8 +1,6 @@
 package impl.server.master;
 
 import org.apache.thrift.TMultiplexedProcessor;
-import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.server.TThreadPoolServer.Args;
 import org.apache.thrift.transport.TFramedTransport;
@@ -12,14 +10,12 @@ import org.apache.thrift.transport.TTransportFactory;
 
 import rso.at.MasterMasterService;
 
-class UDPMasterMasterThread extends Thread {
+class MasterMasterThread extends Thread {
 	private FileSystemMonitor monitor;
-	private int serverID;
 	private TThreadPoolServer server;
 	
-	public UDPMasterMasterThread(FileSystemMonitor monitor, int serverID) throws TTransportException{
+	public MasterMasterThread(FileSystemMonitor monitor, int serverID) throws TTransportException{
 		this.monitor = monitor;
-		this.serverID = serverID;
 		TServerSocket serverTransportExternal = new TServerSocket(Configuration.internalPort);
 		TTransportFactory factory = new TFramedTransport.Factory();
 		
@@ -28,10 +24,10 @@ class UDPMasterMasterThread extends Thread {
 		args.processor(processor);
 		args.transportFactory(factory);
 		
-		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
+		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(this.monitor)));
 		server = new TThreadPoolServer(args);
-		monitor.log("Starting UDP server on port " + Configuration.internalPort + 
-				    " with priority " + this.serverID + "...");
+		this.monitor.log("Starting Master-Master Server on port " + Configuration.internalPort + 
+				    " with priority " + serverID + "...");
 	}
 	
 	public void run(){

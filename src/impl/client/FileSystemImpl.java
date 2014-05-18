@@ -26,7 +26,7 @@ public class FileSystemImpl implements FileSystem {
 
 	private static final String MASTER_SERVER_HOST = "master-server";
 	private static final String MASTER_SERVER_NUM = "master-server-num";
-	private static final String TIMEOUT = "timeout";
+	private static final String CLIENT_TIMEOUT = "client-timeout";
 	private static final String PORT = "external-port";
 	private final static String PATH_TO_CONFIG_FILE = "properties.conf";
 	private ClientMasterService.Iface service;
@@ -43,9 +43,9 @@ public class FileSystemImpl implements FileSystem {
 		if (portString == null) {
 			throw new InvalidOperation(202, "\"port\" (int) key expected in configuration file");
 		}
-		String timeoutString = prop.getProperty(TIMEOUT);
-		if (timeoutString == null) {
-			throw new InvalidOperation(202, "\"timeout\" (int) key expected in configuration file");
+		String clientTimeoutString = prop.getProperty(CLIENT_TIMEOUT);
+		if (clientTimeoutString == null) {
+			throw new InvalidOperation(202, "\"client-timeout\" (int) key expected in configuration file");
 		}
 		try {
 			port = new Integer(portString);
@@ -53,9 +53,9 @@ public class FileSystemImpl implements FileSystem {
 			throw new NumberFormatException("Error: Invalid port number: " + portString);
 		}
 		try {
-			timeout = new Integer(timeoutString);
+			timeout = new Integer(clientTimeoutString);
 		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Error: Invalid timeout number: " + timeoutString);
+			throw new NumberFormatException("Error: Invalid timeout number: " + clientTimeoutString);
 		}
 	}
 	

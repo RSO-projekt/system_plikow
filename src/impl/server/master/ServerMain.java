@@ -11,16 +11,10 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TreeSet;
 
-import org.apache.thrift.TMultiplexedProcessor;
-import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TThreadPoolServer;
-import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
-import rso.at.ClientMasterService;
 import rso.at.EntryNotFound;
 import rso.at.InvalidOperation;
-import rso.at.MasterMasterService;
 
 public class ServerMain {
 
@@ -55,11 +49,11 @@ public class ServerMain {
 		}
 		Configuration.internalPort = Integer.parseInt(intPort);
 		
-		String timeout = prop.getProperty("timeout");
-		if (timeout == null) {
-			throw new InvalidOperation(202, "\"timeout\" (int) key expected in configuration file");
+		String serverTimeout = prop.getProperty("server-timeout");
+		if (serverTimeout == null) {
+			throw new InvalidOperation(202, "\"server-timeout\" (int) key expected in configuration file");
 		}
-		Configuration.sTimeout = Integer.parseInt(timeout);
+		Configuration.serverTimeout = Integer.parseInt(serverTimeout);
 		
 		String masterServerNum = prop.getProperty("master-server-num");
 		if (masterServerNum == null) {
@@ -88,10 +82,6 @@ public class ServerMain {
 	
 	private void start() throws EntryNotFound, InvalidOperation, 
 	                            TTransportException, SocketException {
-		// Prepare socket for connection
-//		TServerSocket serverTranexternalPort = new TServerSocket(Configuration.externalPort);
-//		TMultiplexedProcessor processor = new TMultiplexedProcessor();
-		
 		// Find all available IPs and save them in map.
 		TreeSet<String> myIPs = new TreeSet<String>();
 		Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
@@ -130,26 +120,10 @@ public class ServerMain {
 			throw new InvalidOperation(101, "Cannot find local IP number in configuration file");
 		}
 		
-		// Register services
-//		processor.registerProcessor("ClientMaster", new ClientMasterService.Processor<ClientMasterImpl>(new ClientMasterImpl(monitor)));
-//		processor.registerProcessor("MasterMaster", new MasterMasterService.Processor<MasterMasterImpl>(new MasterMasterImpl(monitor)));
-		
-		// Create threaded server
-//		TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTranexternalPort).
-//				processor(processor));
-//		monitor.log("Starting server on port " + Configuration.externalPort + 
-//				    " with priority " + myServerID + "...");
-//		
-//		// Start election on startup
-//		monitor.startElection();
-//		
-//		// Start serving
-//		server.serve();
-		
-		TCPClientMasterThread tcpClientConn = new TCPClientMasterThread(monitor, myServerID);
+		ClientMasterThread tcpClientConn = new ClientMasterThread(monitor, myServerID);
 		tcpClientConn.start();
 		
-		UDPMasterMasterThread udpMasterConn = new UDPMasterMasterThread(monitor, myServerID);
+		MasterMasterThread udpMasterConn = new MasterMasterThread(monitor, myServerID);
 		udpMasterConn.start();
 	}
 
@@ -163,7 +137,7 @@ public class ServerMain {
 		} catch (InvalidOperation e) {
 			System.out.println("Error(" + e.code + "): " + e.message);
 		} catch (TTransportException e) {
-			System.out.println("Error(TTranexternalPort):");
+			System.out.println("Error(TTransportException):");
 			e.printStackTrace();
 		} catch (SocketException e) {
 			System.out.println("Error(Socket):");

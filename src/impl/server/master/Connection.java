@@ -19,7 +19,7 @@ class Connection {
 	
 	public void reopen() {
 		if (transport != null) transport.close();
-		transport = new TFramedTransport(new TSocket(host, port, Configuration.sTimeout));
+		transport = new TFramedTransport(new TSocket(host, port, Configuration.serverTimeout));
 		try {
 			transport.open();
 		} catch (TTransportException e) {
