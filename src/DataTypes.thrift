@@ -56,8 +56,21 @@ enum TransactionType
 struct Transaction
 {
     1: TransactionType type,
-    2: string token,
-    3: i32 dataServer
+    2: i32 token,
+    3: i32 serverID
+}
+
+// Information about a file chunk.
+struct ChunkInfo
+{
+    1: i32 number,
+    2: i32 maxNumber,
+    3: i32 size
+}
+struct FileChunk
+{
+    1: binary data,
+    2: ChunkInfo info
 }
 
 // Exception for non existing entries
