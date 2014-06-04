@@ -101,6 +101,7 @@ public class ServerDataMain {
 		boolean foundLocalIP = false;
 		int serverID = 0;
 		int myServerID = 0;
+		String myIP = new String();
 		for (String ip : Configuration.sDataServerIPs) {
 			serverID++;
 			if (!myIPs.contains(ip)) {
@@ -110,6 +111,7 @@ public class ServerDataMain {
 				if (foundLocalIP) {
 					throw new InvalidOperation(100, "Multiple local IP's in configuration file are not allowed");
 				} else {
+				    myIP = ip;
 					foundLocalIP = true;
 					myServerID = serverID;
 					//TODO 
@@ -122,6 +124,7 @@ public class ServerDataMain {
 			throw new InvalidOperation(101, "Cannot find local IP number in configuration file");
 		}
 		
+		System.out.println("Starting data server on " + myIP);
 		MasterDataThread tcpDataConn = new MasterDataThread(myServerID);
 		tcpDataConn.start();
 		
