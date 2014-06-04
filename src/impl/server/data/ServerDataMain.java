@@ -1,7 +1,5 @@
 package impl.server.data;
 
-
-
 import impl.server.master.Configuration;
 
 import java.io.FileReader;
