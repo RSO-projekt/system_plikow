@@ -1,9 +1,13 @@
 package impl.client;
 
+import impl.server.master.Configuration;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -15,8 +19,11 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
+import rso.at.ChunkInfo;
+import rso.at.ClientDataService;
 import rso.at.ClientMasterService;
 import rso.at.EntryNotFound;
+import rso.at.FileChunk;
 import rso.at.FileEntry;
 import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
@@ -30,6 +37,7 @@ public class FileSystemImpl implements FileSystem {
 	private static final String PORT = "external-port";
 	private final static String PATH_TO_CONFIG_FILE = "properties.conf";
 	private ClientMasterService.Iface service;
+	private ClientDataService.Iface clientDataService;
 	private TTransport transport;
 	private Properties prop;
 	private Integer port;
@@ -74,7 +82,7 @@ public class FileSystemImpl implements FileSystem {
 					service = new ClientMasterService.Client(multiplexed);
 					System.out.println(" OK.");
 				} catch (TTransportException e) {
-					System.out.println(" Failed.");
+					System.out.println(" Failed to connection with Master Server.");
 					++i;
 				}
 			} else {
@@ -84,6 +92,24 @@ public class FileSystemImpl implements FileSystem {
 		}
 		if (service == null)
 			throw new TTransportException();
+	}
+	
+	public void connectToDataServer(int dataServerID) throws TTransportException, InvalidOperation{
+		String dataServerIP = prop.getProperty("data-server"+dataServerID);
+		if (dataServerIP == null){
+			throw new InvalidOperation(500, "Wrong IP number of data server");
+		}
+		try {
+			System.out.print("Connecting with data host: " + dataServerIP + "...");
+			TTransport dataTransport = new TSocket(dataServerIP, port, timeout);
+			dataTransport.open();
+			TProtocol dataProtocol = new TBinaryProtocol(dataTransport);
+			TMultiplexedProtocol multiplexed = new TMultiplexedProtocol(dataProtocol, "ClientData");
+			clientDataService = new ClientDataService.Client(multiplexed);
+			System.out.println(" OK.");
+		} catch (TTransportException e) {
+			System.out.println(" Failed to connect with Data Server "+dataServerID);
+		}
 	}
 	
 	private void createTransport(String host, int port, int timeout)
@@ -167,27 +193,61 @@ public class FileSystemImpl implements FileSystem {
 	@Override
 	public void writeToFile(String filePath, long offset, byte[] bytes)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-		// service.writeToFile(filePath, offset, bytes); //TODO
+		Transaction transaction = service.writeToFile(filePath, offset, bytes.length);
+		sendChunks(transaction, bytes);
+		
 	}
 
 	@Override
 	public void writeToFile(FileEntry file, long offset, byte[] bytes)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-		// service.writeToFile(file, offset, bytes); //TODO
+		Transaction transaction = service.writeToFile2(file, offset, bytes.length);
+		sendChunks(transaction, bytes);
+		
+	}
+	
+	private void sendChunks(Transaction transaction, byte[] bytes) throws TTransportException, InvalidOperation, HostNotPermitted, TException{
+		connectToDataServer(transaction.serverID);
+		int chunkSize = 1000;
+		int maxChunkCount = (int) Math.ceil((double)bytes.length/chunkSize);
+		for (int i=0; i<maxChunkCount; i++){
+			int actualSize = Math.min(bytes.length - (i*chunkSize), chunkSize);
+			ByteBuffer buffer = ByteBuffer.wrap(bytes, i*chunkSize, actualSize);
+			FileChunk fileChunk = new FileChunk(buffer, new ChunkInfo(i, maxChunkCount, actualSize));
+			ChunkInfo chunkInfo = clientDataService.sendNextFileChunk(transaction, fileChunk);
+			System.out.println("Sent: "+(i+1)+"/"+maxChunkCount+" packages");
+			// SPRAWDZIC CZY TAM ADI DOBRZE OGARNAL NADAWANIE TEGO NUMBER
+			if (chunkInfo.number != i){
+				throw new InvalidOperation(501, "Bad part sent");
+			}
+		}
 	}
 
 	@Override
 	public byte[] readFromFile(String filePath, long offset, long num)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
 		Transaction transaction = service.readFromFile(filePath, offset, num);
-		return null; // TODO
+		return readChunks(transaction, num);
 	}
 
 	@Override
 	public byte[] readFromFile(FileEntry file, long offset, long num)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
 		Transaction transaction = service.readFromFile2(file, offset, num);
-		return null; // TODO
+		return readChunks(transaction, num);
+	}
+	
+	private byte[] readChunks(Transaction transaction, long num) throws InvalidOperation, HostNotPermitted, TException{
+		ByteBuffer byteList = ByteBuffer.allocate((int) num);
+		FileChunk tmpFileChunk;
+		ChunkInfo chunkInfo = new ChunkInfo(0, 0, 1000);
+		do{
+			tmpFileChunk = clientDataService.getNextFileChunk(transaction, chunkInfo);
+			byteList.put(tmpFileChunk.data);
+			chunkInfo = tmpFileChunk.info;
+			System.out.println("Read "+chunkInfo.number +"/"+chunkInfo.maxNumber +" packages");
+		} while(tmpFileChunk.info.number < tmpFileChunk.info.maxNumber);
+		return byteList.array();
 	}
 
 }

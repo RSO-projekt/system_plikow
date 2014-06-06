@@ -218,8 +218,16 @@ public class Client {
 	private void writeFile(FileSystem fs, String to, String from)
 			throws IOException, EntryNotFound, InvalidOperation, TException {
 		File file = new File(from);
-		byte[] bytes = Files.readAllBytes(file.toPath());
-		fs.writeToFile(to, 0, bytes);
+		if(!file.exists() || !file.isFile()){
+			throw new IOException("Chosen file has not filetype or doesnt exist");
+		}
+		try {
+			FileEntry entry = fs.makeFile(to, file.length());
+			byte[] bytes = Files.readAllBytes(file.toPath());
+			fs.writeToFile(entry, 0, bytes);
+		} catch (Exception e) {
+			throw new InvalidOperation(400, "Cannot create new file or update existing");
+		}
 	}
 
 	private static String help(){
