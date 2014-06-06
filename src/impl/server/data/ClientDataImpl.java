@@ -20,9 +20,9 @@ public class ClientDataImpl implements ClientDataService.Iface{
 
 	@Override
 	public ChunkInfo sendNextFileChunk(Transaction transaction,
-			ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted,
+			FileChunk fileChunk) throws InvalidOperation, HostNotPermitted,
 			TException {
-		return FileData.getInstance().sendNextFileChunk(transaction,chunkInfo);
+		return FileData.getInstance().sendNextFileChunk(transaction,fileChunk);
 	}
 
 }

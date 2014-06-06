@@ -38,7 +38,7 @@ public class ClientDataService {
 
     public rso.at.FileChunk getNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo) throws rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
-    public rso.at.ChunkInfo sendNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo) throws rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
+    public rso.at.ChunkInfo sendNextFileChunk(rso.at.Transaction transaction, rso.at.FileChunk fileChunk) throws rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException;
 
   }
 
@@ -46,7 +46,7 @@ public class ClientDataService {
 
     public void getNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void sendNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void sendNextFileChunk(rso.at.Transaction transaction, rso.at.FileChunk fileChunk, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -100,17 +100,17 @@ public class ClientDataService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getNextFileChunk failed: unknown result");
     }
 
-    public rso.at.ChunkInfo sendNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo) throws rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
+    public rso.at.ChunkInfo sendNextFileChunk(rso.at.Transaction transaction, rso.at.FileChunk fileChunk) throws rso.at.InvalidOperation, rso.at.HostNotPermitted, org.apache.thrift.TException
     {
-      send_sendNextFileChunk(transaction, chunkInfo);
+      send_sendNextFileChunk(transaction, fileChunk);
       return recv_sendNextFileChunk();
     }
 
-    public void send_sendNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo) throws org.apache.thrift.TException
+    public void send_sendNextFileChunk(rso.at.Transaction transaction, rso.at.FileChunk fileChunk) throws org.apache.thrift.TException
     {
       sendNextFileChunk_args args = new sendNextFileChunk_args();
       args.setTransaction(transaction);
-      args.setChunkInfo(chunkInfo);
+      args.setFileChunk(fileChunk);
       sendBase("sendNextFileChunk", args);
     }
 
@@ -183,27 +183,27 @@ public class ClientDataService {
       }
     }
 
-    public void sendNextFileChunk(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void sendNextFileChunk(rso.at.Transaction transaction, rso.at.FileChunk fileChunk, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      sendNextFileChunk_call method_call = new sendNextFileChunk_call(transaction, chunkInfo, resultHandler, this, ___protocolFactory, ___transport);
+      sendNextFileChunk_call method_call = new sendNextFileChunk_call(transaction, fileChunk, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class sendNextFileChunk_call extends org.apache.thrift.async.TAsyncMethodCall {
       private rso.at.Transaction transaction;
-      private rso.at.ChunkInfo chunkInfo;
-      public sendNextFileChunk_call(rso.at.Transaction transaction, rso.at.ChunkInfo chunkInfo, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private rso.at.FileChunk fileChunk;
+      public sendNextFileChunk_call(rso.at.Transaction transaction, rso.at.FileChunk fileChunk, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.transaction = transaction;
-        this.chunkInfo = chunkInfo;
+        this.fileChunk = fileChunk;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendNextFileChunk", org.apache.thrift.protocol.TMessageType.CALL, 0));
         sendNextFileChunk_args args = new sendNextFileChunk_args();
         args.setTransaction(transaction);
-        args.setChunkInfo(chunkInfo);
+        args.setFileChunk(fileChunk);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -278,7 +278,7 @@ public class ClientDataService {
       public sendNextFileChunk_result getResult(I iface, sendNextFileChunk_args args) throws org.apache.thrift.TException {
         sendNextFileChunk_result result = new sendNextFileChunk_result();
         try {
-          result.success = iface.sendNextFileChunk(args.transaction, args.chunkInfo);
+          result.success = iface.sendNextFileChunk(args.transaction, args.fileChunk);
         } catch (rso.at.InvalidOperation err1) {
           result.err1 = err1;
         } catch (rso.at.HostNotPermitted err2) {
@@ -426,7 +426,7 @@ public class ClientDataService {
       }
 
       public void start(I iface, sendNextFileChunk_args args, org.apache.thrift.async.AsyncMethodCallback<rso.at.ChunkInfo> resultHandler) throws TException {
-        iface.sendNextFileChunk(args.transaction, args.chunkInfo,resultHandler);
+        iface.sendNextFileChunk(args.transaction, args.fileChunk,resultHandler);
       }
     }
 
@@ -1463,7 +1463,7 @@ public class ClientDataService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendNextFileChunk_args");
 
     private static final org.apache.thrift.protocol.TField TRANSACTION_FIELD_DESC = new org.apache.thrift.protocol.TField("transaction", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField CHUNK_INFO_FIELD_DESC = new org.apache.thrift.protocol.TField("chunkInfo", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField FILE_CHUNK_FIELD_DESC = new org.apache.thrift.protocol.TField("fileChunk", org.apache.thrift.protocol.TType.STRUCT, (short)2);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1472,12 +1472,12 @@ public class ClientDataService {
     }
 
     public rso.at.Transaction transaction; // required
-    public rso.at.ChunkInfo chunkInfo; // required
+    public rso.at.FileChunk fileChunk; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       TRANSACTION((short)1, "transaction"),
-      CHUNK_INFO((short)2, "chunkInfo");
+      FILE_CHUNK((short)2, "fileChunk");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1494,8 +1494,8 @@ public class ClientDataService {
         switch(fieldId) {
           case 1: // TRANSACTION
             return TRANSACTION;
-          case 2: // CHUNK_INFO
-            return CHUNK_INFO;
+          case 2: // FILE_CHUNK
+            return FILE_CHUNK;
           default:
             return null;
         }
@@ -1541,8 +1541,8 @@ public class ClientDataService {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TRANSACTION, new org.apache.thrift.meta_data.FieldMetaData("transaction", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.Transaction.class)));
-      tmpMap.put(_Fields.CHUNK_INFO, new org.apache.thrift.meta_data.FieldMetaData("chunkInfo", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.ChunkInfo.class)));
+      tmpMap.put(_Fields.FILE_CHUNK, new org.apache.thrift.meta_data.FieldMetaData("fileChunk", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.FileChunk.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendNextFileChunk_args.class, metaDataMap);
     }
@@ -1552,11 +1552,11 @@ public class ClientDataService {
 
     public sendNextFileChunk_args(
       rso.at.Transaction transaction,
-      rso.at.ChunkInfo chunkInfo)
+      rso.at.FileChunk fileChunk)
     {
       this();
       this.transaction = transaction;
-      this.chunkInfo = chunkInfo;
+      this.fileChunk = fileChunk;
     }
 
     /**
@@ -1566,8 +1566,8 @@ public class ClientDataService {
       if (other.isSetTransaction()) {
         this.transaction = new rso.at.Transaction(other.transaction);
       }
-      if (other.isSetChunkInfo()) {
-        this.chunkInfo = new rso.at.ChunkInfo(other.chunkInfo);
+      if (other.isSetFileChunk()) {
+        this.fileChunk = new rso.at.FileChunk(other.fileChunk);
       }
     }
 
@@ -1578,7 +1578,7 @@ public class ClientDataService {
     @Override
     public void clear() {
       this.transaction = null;
-      this.chunkInfo = null;
+      this.fileChunk = null;
     }
 
     public rso.at.Transaction getTransaction() {
@@ -1605,27 +1605,27 @@ public class ClientDataService {
       }
     }
 
-    public rso.at.ChunkInfo getChunkInfo() {
-      return this.chunkInfo;
+    public rso.at.FileChunk getFileChunk() {
+      return this.fileChunk;
     }
 
-    public sendNextFileChunk_args setChunkInfo(rso.at.ChunkInfo chunkInfo) {
-      this.chunkInfo = chunkInfo;
+    public sendNextFileChunk_args setFileChunk(rso.at.FileChunk fileChunk) {
+      this.fileChunk = fileChunk;
       return this;
     }
 
-    public void unsetChunkInfo() {
-      this.chunkInfo = null;
+    public void unsetFileChunk() {
+      this.fileChunk = null;
     }
 
-    /** Returns true if field chunkInfo is set (has been assigned a value) and false otherwise */
-    public boolean isSetChunkInfo() {
-      return this.chunkInfo != null;
+    /** Returns true if field fileChunk is set (has been assigned a value) and false otherwise */
+    public boolean isSetFileChunk() {
+      return this.fileChunk != null;
     }
 
-    public void setChunkInfoIsSet(boolean value) {
+    public void setFileChunkIsSet(boolean value) {
       if (!value) {
-        this.chunkInfo = null;
+        this.fileChunk = null;
       }
     }
 
@@ -1639,11 +1639,11 @@ public class ClientDataService {
         }
         break;
 
-      case CHUNK_INFO:
+      case FILE_CHUNK:
         if (value == null) {
-          unsetChunkInfo();
+          unsetFileChunk();
         } else {
-          setChunkInfo((rso.at.ChunkInfo)value);
+          setFileChunk((rso.at.FileChunk)value);
         }
         break;
 
@@ -1655,8 +1655,8 @@ public class ClientDataService {
       case TRANSACTION:
         return getTransaction();
 
-      case CHUNK_INFO:
-        return getChunkInfo();
+      case FILE_CHUNK:
+        return getFileChunk();
 
       }
       throw new IllegalStateException();
@@ -1671,8 +1671,8 @@ public class ClientDataService {
       switch (field) {
       case TRANSACTION:
         return isSetTransaction();
-      case CHUNK_INFO:
-        return isSetChunkInfo();
+      case FILE_CHUNK:
+        return isSetFileChunk();
       }
       throw new IllegalStateException();
     }
@@ -1699,12 +1699,12 @@ public class ClientDataService {
           return false;
       }
 
-      boolean this_present_chunkInfo = true && this.isSetChunkInfo();
-      boolean that_present_chunkInfo = true && that.isSetChunkInfo();
-      if (this_present_chunkInfo || that_present_chunkInfo) {
-        if (!(this_present_chunkInfo && that_present_chunkInfo))
+      boolean this_present_fileChunk = true && this.isSetFileChunk();
+      boolean that_present_fileChunk = true && that.isSetFileChunk();
+      if (this_present_fileChunk || that_present_fileChunk) {
+        if (!(this_present_fileChunk && that_present_fileChunk))
           return false;
-        if (!this.chunkInfo.equals(that.chunkInfo))
+        if (!this.fileChunk.equals(that.fileChunk))
           return false;
       }
 
@@ -1734,12 +1734,12 @@ public class ClientDataService {
           return lastComparison;
         }
       }
-      lastComparison = Boolean.valueOf(isSetChunkInfo()).compareTo(other.isSetChunkInfo());
+      lastComparison = Boolean.valueOf(isSetFileChunk()).compareTo(other.isSetFileChunk());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetChunkInfo()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.chunkInfo, other.chunkInfo);
+      if (isSetFileChunk()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.fileChunk, other.fileChunk);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1772,11 +1772,11 @@ public class ClientDataService {
       }
       first = false;
       if (!first) sb.append(", ");
-      sb.append("chunkInfo:");
-      if (this.chunkInfo == null) {
+      sb.append("fileChunk:");
+      if (this.fileChunk == null) {
         sb.append("null");
       } else {
-        sb.append(this.chunkInfo);
+        sb.append(this.fileChunk);
       }
       first = false;
       sb.append(")");
@@ -1789,8 +1789,8 @@ public class ClientDataService {
       if (transaction != null) {
         transaction.validate();
       }
-      if (chunkInfo != null) {
-        chunkInfo.validate();
+      if (fileChunk != null) {
+        fileChunk.validate();
       }
     }
 
@@ -1837,11 +1837,11 @@ public class ClientDataService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // CHUNK_INFO
+            case 2: // FILE_CHUNK
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.chunkInfo = new rso.at.ChunkInfo();
-                struct.chunkInfo.read(iprot);
-                struct.setChunkInfoIsSet(true);
+                struct.fileChunk = new rso.at.FileChunk();
+                struct.fileChunk.read(iprot);
+                struct.setFileChunkIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -1866,9 +1866,9 @@ public class ClientDataService {
           struct.transaction.write(oprot);
           oprot.writeFieldEnd();
         }
-        if (struct.chunkInfo != null) {
-          oprot.writeFieldBegin(CHUNK_INFO_FIELD_DESC);
-          struct.chunkInfo.write(oprot);
+        if (struct.fileChunk != null) {
+          oprot.writeFieldBegin(FILE_CHUNK_FIELD_DESC);
+          struct.fileChunk.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -1892,15 +1892,15 @@ public class ClientDataService {
         if (struct.isSetTransaction()) {
           optionals.set(0);
         }
-        if (struct.isSetChunkInfo()) {
+        if (struct.isSetFileChunk()) {
           optionals.set(1);
         }
         oprot.writeBitSet(optionals, 2);
         if (struct.isSetTransaction()) {
           struct.transaction.write(oprot);
         }
-        if (struct.isSetChunkInfo()) {
-          struct.chunkInfo.write(oprot);
+        if (struct.isSetFileChunk()) {
+          struct.fileChunk.write(oprot);
         }
       }
 
@@ -1914,9 +1914,9 @@ public class ClientDataService {
           struct.setTransactionIsSet(true);
         }
         if (incoming.get(1)) {
-          struct.chunkInfo = new rso.at.ChunkInfo();
-          struct.chunkInfo.read(iprot);
-          struct.setChunkInfoIsSet(true);
+          struct.fileChunk = new rso.at.FileChunk();
+          struct.fileChunk.read(iprot);
+          struct.setFileChunkIsSet(true);
         }
       }
     }

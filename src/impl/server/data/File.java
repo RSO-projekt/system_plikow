@@ -12,25 +12,27 @@ import rso.at.Transaction;
 import rso.at.TransactionType;
 
 public class File {
-	
+
 	/**Move it to proper class
 	 * 
 	 */
 	private final static int sTimeout = 10;
-	
+
 	private final static int sMaxFileChunkSize = 1000;
-	
+
 	private long mFileID;
-	
+
 	private byte[] mFileData;
-	
+
+	private List<FileChunk> mFileChanges;
+
 	private long mFileSize;
 	/**
 	 * Date - datestamp
 	 * Transaction - transaction
 	 */
 	private List<Pair< Date,Transaction> > mFileTransactions;
-	
+
 	public File(long fileID){
 		this(fileID, 0);
 	}
@@ -39,6 +41,7 @@ public class File {
 		mFileSize = newFileSize;
 		mFileID = fileID;
 		mFileTransactions = new ArrayList<Pair< Date,Transaction> >();
+		mFileChanges = new ArrayList<FileChunk>();
 		if(mFileSize != 0){
 			//TODO byc moze poprawic - zeby nie zutowac na int
 			mFileData = new byte[(int)mFileSize];
@@ -49,7 +52,7 @@ public class File {
 		return mFileID;
 	}
 
-	
+
 	/**
 	 * Deletes transactions that have their timeout breached
 	 */
@@ -64,7 +67,7 @@ public class File {
 			}
 		}
 	}
-	
+
 	/**Adds transaction to list, and checks previous transactions
 	 * @param transaction
 	 * @return
@@ -88,13 +91,13 @@ public class File {
 					throw new InvalidOperation(302, "File is being read");
 				}
 			}
-			
+
 			mFileTransactions.add(new Pair<Date, Transaction>(new Date(), transaction));
 		}
-		
+
 		return false;
 	}
-	
+
 	/**Returns ByteBuffer with piece of file - also modifies chunk info 
 	 * @param chunkInfo
 	 * @return
@@ -104,8 +107,31 @@ public class File {
 			chunkInfo.maxNumber = (int)Math.ceil((double)mFileData.length/(double)sMaxFileChunkSize);
 		}
 		chunkInfo.size = (chunkInfo.number*chunkInfo.size + sMaxFileChunkSize > mFileData.length ?
-			mFileData.length - chunkInfo.number*chunkInfo.size : sMaxFileChunkSize);
+				mFileData.length - chunkInfo.number*chunkInfo.size : sMaxFileChunkSize);
 		chunkInfo.number++;
 		return ByteBuffer.wrap(mFileData, chunkInfo.number * chunkInfo.size , chunkInfo.size);
+	}
+
+	public synchronized void addChange(FileChunk fileChunk2) {
+		mFileChanges.add(fileChunk2);
+	}
+
+	/**Apply changes added by addChange function
+	 * @throws InvalidOperation 
+	 */
+	public synchronized void applyChanges() throws InvalidOperation {
+		try{
+			for(FileChunk fileChunk: mFileChanges){
+				ChunkInfo chunkInfo = fileChunk.info;
+				int offset = chunkInfo.number*chunkInfo.size;
+				for(int i =0; i < chunkInfo.size;i++){
+					mFileData[offset+i] = fileChunk.data.get(i); 
+				}
+			}
+		}catch(ArrayIndexOutOfBoundsException e){
+			throw new InvalidOperation(303,"Invalid operation on file ! Change out of bounds.");
+		}finally{
+			mFileChanges.clear();
+		}
 	}
 }

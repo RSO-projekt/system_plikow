@@ -15,5 +15,4 @@ public class Configuration {
 		sMainServerIPs = new ArrayList<String>();
 		sDataServerIPs = new ArrayList<String>();
 	}
-	
 }

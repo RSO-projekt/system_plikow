@@ -125,9 +125,11 @@ public class ServerDataMain {
 		}
 		
 		System.out.println("Starting data server on " + myIP);
-		MasterDataThread tcpDataConn = new MasterDataThread(myServerID);
-		tcpDataConn.start();
+		MasterDataThread masterDataConn = new MasterDataThread(myServerID);
+		masterDataConn.start();
 		
+		ClientDataThread clientDataConn = new ClientDataThread(myServerID);
+		clientDataConn.start();
 	}
 
 	public static void main(String[] args) {

@@ -14,20 +14,20 @@ import rso.at.Transaction;
  */
 public class FileData {
 	static FileData instance;
-	
+
 	private List<File> mFileList;
-	
+
 	private FileData(){
 		mFileList = new ArrayList<File>();
 	}
-	
+
 	static public FileData getInstance(){
 		if(instance == null){
 			instance = new FileData();
 		}
 		return instance;
 	} 
-	
+
 	/**Check if transaction is proper and do not collide with other transactions
 	 * @param fileID
 	 * @return
@@ -50,7 +50,7 @@ public class FileData {
 
 	public void createFile(long fileID, long newFileSize) {
 		mFileList.add(new File(fileID,newFileSize));
-		
+
 	}
 
 	/**Sends file chunk of adjacent transaction
@@ -65,7 +65,7 @@ public class FileData {
 		for(File f: mFileList){
 			if(f.getFileID() == transaction.fileID){
 				FileChunk fileChunk= new FileChunk();
-				
+
 				//chunkInfo is beeing modified here
 				fileChunk.data = f.getFileChunk(chunkInfo);
 				fileChunk.info = chunkInfo;
@@ -75,17 +75,30 @@ public class FileData {
 		throw new InvalidOperation(301, "File not found");
 	}
 
+	/**Receives changes for files - filechunk is not modified here
+	 * it must be modified by client
+	 * @param transaction
+	 * @param fileChunk2
+	 * @return
+	 * @throws InvalidOperation 
+	 */
 	public ChunkInfo sendNextFileChunk(Transaction transaction,
-			ChunkInfo chunkInfo) {
-		
+			FileChunk fileChunk2) throws InvalidOperation {
+
 		for(File f: mFileList){
 			if(f.getFileID() == transaction.fileID){
-				FileChunk fileChunk= new FileChunk();
-				
-				//chunkInfo is beeing modified here
-				fileChunk.data = f.getFileChunk(chunkInfo);
-				fileChunk.info = chunkInfo;
-				return fileChunk;
+				ChunkInfo chunkInfo= fileChunk2.info;
+				f.addChange(fileChunk2);
+				return chunkInfo;
+			}
+		}
+		throw new InvalidOperation(301, "File not found");
+	}
+
+	public void applyChanges(long fileID) throws InvalidOperation {
+		for(File f: mFileList){
+			if(f.getFileID() == fileID){
+				f.applyChanges();
 			}
 		}
 		throw new InvalidOperation(301, "File not found");
