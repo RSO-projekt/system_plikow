@@ -28,7 +28,7 @@ service ClientDataService
     //
     // Returned value is an download status of a file chunk.
     DataTypes.ChunkInfo sendNextFileChunk(1: DataTypes.Transaction transaction,
-                                          2: DataTypes.ChunkInfo chunkInfo)
+                                          2: DataTypes.FileChunk fileChunk)
         throws(1: DataTypes.InvalidOperation err1,
                2: DataTypes.HostNotPermitted err2),
 }
