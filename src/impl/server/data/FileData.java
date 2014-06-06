@@ -53,8 +53,41 @@ public class FileData {
 		
 	}
 
-	public FileChunk getNextFileChunk(Transaction transaction, ChunkInfo chunkInfo) {
-		
+	/**Sends file chunk of adjacent transaction
+	 * At start of file downloading set number in ChunkInfo with -1
+	 * @param transaction
+	 * @param chunkInfo
+	 * @return
+	 * @throws InvalidOperation 
+	 */
+	public FileChunk getNextFileChunk(Transaction transaction, ChunkInfo chunkInfo) throws InvalidOperation {
+		File file;
+		for(File f: mFileList){
+			if(f.getFileID() == transaction.fileID){
+				FileChunk fileChunk= new FileChunk();
+				
+				//chunkInfo is beeing modified here
+				fileChunk.data = f.getFileChunk(chunkInfo);
+				fileChunk.info = chunkInfo;
+				return fileChunk;
+			}
+		}
+		throw new InvalidOperation(301, "File not found");
 	}
-	
+
+	public ChunkInfo sendNextFileChunk(Transaction transaction,
+			ChunkInfo chunkInfo) {
+		
+		for(File f: mFileList){
+			if(f.getFileID() == transaction.fileID){
+				FileChunk fileChunk= new FileChunk();
+				
+				//chunkInfo is beeing modified here
+				fileChunk.data = f.getFileChunk(chunkInfo);
+				fileChunk.info = chunkInfo;
+				return fileChunk;
+			}
+		}
+		throw new InvalidOperation(301, "File not found");
+	}
 }

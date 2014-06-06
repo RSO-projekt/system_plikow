@@ -22,8 +22,7 @@ public class ClientDataImpl implements ClientDataService.Iface{
 	public ChunkInfo sendNextFileChunk(Transaction transaction,
 			ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted,
 			TException {
-		// TODO Auto-generated method stub
-		return null;
+		return FileData.getInstance().sendNextFileChunk(transaction,chunkInfo);
 	}
 
 }

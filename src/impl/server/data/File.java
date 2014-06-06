@@ -1,9 +1,12 @@
 package impl.server.data;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import rso.at.ChunkInfo;
+import rso.at.FileChunk;
 import rso.at.InvalidOperation;
 import rso.at.Transaction;
 import rso.at.TransactionType;
@@ -13,7 +16,9 @@ public class File {
 	/**Move it to proper class
 	 * 
 	 */
-	private final int mTimeout = 10;
+	private final static int sTimeout = 10;
+	
+	private final static int sMaxFileChunkSize = 1000;
 	
 	private long mFileID;
 	
@@ -52,7 +57,7 @@ public class File {
 		int pos = 0;
 		//check if transactions have its timeout breached
 		while(pos < mFileTransactions.size()){
-			if(mFileTransactions.get(pos).first.getTime() < (new Date().getTime() - mTimeout*1000)){
+			if(mFileTransactions.get(pos).first.getTime() < (new Date().getTime() - sTimeout*1000)){
 				mFileTransactions.remove(pos);
 			}else{
 				pos++;
@@ -88,5 +93,19 @@ public class File {
 		}
 		
 		return false;
+	}
+	
+	/**Returns ByteBuffer with piece of file - also modifies chunk info 
+	 * @param chunkInfo
+	 * @return
+	 */
+	public ByteBuffer getFileChunk(ChunkInfo chunkInfo){
+		if(chunkInfo.number == -1){
+			chunkInfo.maxNumber = (int)Math.ceil((double)mFileData.length/(double)sMaxFileChunkSize);
+		}
+		chunkInfo.size = (chunkInfo.number*chunkInfo.size + sMaxFileChunkSize > mFileData.length ?
+			mFileData.length - chunkInfo.number*chunkInfo.size : sMaxFileChunkSize);
+		chunkInfo.number++;
+		return ByteBuffer.wrap(mFileData, chunkInfo.number * chunkInfo.size , chunkInfo.size);
 	}
 }
