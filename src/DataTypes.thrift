@@ -57,7 +57,8 @@ struct Transaction
 {
     1: TransactionType type,
     2: i32 token,
-    3: i32 serverID
+    3: i32 serverID,
+    4: i64 fileID
 }
 
 // Information about a file chunk.
