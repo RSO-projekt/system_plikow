@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -193,7 +192,8 @@ public class FileSystemImpl implements FileSystem {
 	@Override
 	public void writeToFile(String filePath, long offset, byte[] bytes)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-		Transaction transaction = service.writeToFile(filePath, offset, bytes.length);
+	    FileEntry entry = service.getFileEntry(filePath);
+		Transaction transaction = service.writeToFile2(entry, offset, bytes.length);
 		sendChunks(transaction, bytes);
 		
 	}
