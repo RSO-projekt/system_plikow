@@ -34,14 +34,23 @@ service ClientMasterService
                2: DataTypes.InvalidOperation err2,
                3: DataTypes.HostNotPermitted err3),
 
-    // Make an empty file with specified size or change size of current file
-    // if it exists
-    DataTypes.FileEntry makeFile(1: string path, 2: i64 size) 
+    // Make an empty file
+    DataTypes.FileEntry makeFile(1: string path) 
         throws(1: DataTypes.EntryNotFound err1, 
                2: DataTypes.InvalidOperation err2,
                3: DataTypes.HostNotPermitted err3),
-    DataTypes.FileEntry makeFile2(1: DataTypes.FileEntry parent, 2: string name, 3: i64 size) 
+    DataTypes.FileEntry makeFile2(1: DataTypes.FileEntry parent, 2: string name) 
         throws(1: DataTypes.EntryNotFound err1, 
+               2: DataTypes.InvalidOperation err2,
+               3: DataTypes.HostNotPermitted err3),
+               
+    // Allocate file
+    DataTypes.FileEntry allocateFile(1: string path, 2: i64 size)
+   		throws(1: DataTypes.EntryNotFound err1, 
+               2: DataTypes.InvalidOperation err2,
+               3: DataTypes.HostNotPermitted err3),
+    DataTypes.FileEntry allocateFile2(1: DataTypes.FileEntry file, 2: i64 size)
+   		throws(1: DataTypes.EntryNotFound err1, 
                2: DataTypes.InvalidOperation err2,
                3: DataTypes.HostNotPermitted err3),
 
