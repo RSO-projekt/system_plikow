@@ -163,4 +163,9 @@ public interface FileSystem {
                                                                              InvalidOperation,
                                                                              HostNotPermitted,
                                                                              TException;
+
+    public FileEntry allocateFile(String to, long size) throws EntryNotFound,
+    InvalidOperation,
+    HostNotPermitted,
+    TException;
 }

@@ -4,6 +4,7 @@ import impl.Configuration;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -157,15 +158,32 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 	@Override
 	public FileEntry allocateFile(String path, long size) throws EntryNotFound,
 			InvalidOperation, HostNotPermitted, TException {
-		// TODO Auto-generated method stub
-		return null;
+		FileEntry file = monitor.getEntry(true, path).entry;
+		return allocateFile2(file, size);
 	}
 
 	@Override
 	public FileEntry allocateFile2(FileEntry file, long size)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted,
 			TException {
-		// TODO Auto-generated method stub
-		return null;
+		FileEntryExtended entryCopy = monitor.checkIfEntryIsWriteReady(file);
+		MasterDataService.Iface masterDataService;
+		boolean modified = false;
+		for (Integer dataServerID : entryCopy.mirrors) {
+			System.out.println("mirrors: "+dataServerID);
+			masterDataService = connectMasterToData(dataServerID.intValue());
+			if (masterDataService != null){
+				System.out.println("przed");
+				masterDataService.allocateFile(file.id, size);
+				System.out.println("po");
+				modified = true;
+				break;
+			}
+		}
+		if (!modified){
+			throw new InvalidOperation(28, "Cannot connect to data server");
+		}
+		monitor.setFileSize(file, size);
+		return file;
 	}
 }

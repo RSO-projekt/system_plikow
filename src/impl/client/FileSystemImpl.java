@@ -156,13 +156,13 @@ public class FileSystemImpl implements FileSystem {
 	@Override
 	public FileEntry makeFile(String path, long size) throws EntryNotFound,
 			InvalidOperation, HostNotPermitted, TException {
-		return service.makeFile(path, size);
+		return service.makeFile(path);
 	}
 
 	@Override
 	public FileEntry makeFile(FileEntry parentDir, String name, long size)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-		return service.makeFile2(parentDir, name, size);
+		return service.makeFile2(parentDir, name);
 	}
 
 	@Override
@@ -248,6 +248,13 @@ public class FileSystemImpl implements FileSystem {
 			System.out.println("Read "+chunkInfo.number +"/"+chunkInfo.maxNumber +" packages");
 		} while(tmpFileChunk.info.number < tmpFileChunk.info.maxNumber);
 		return byteList.array();
+	}
+
+	@Override
+	public FileEntry allocateFile(String to, long size) throws EntryNotFound,
+			InvalidOperation, HostNotPermitted, TException {
+		
+		return service.allocateFile(to, size);
 	}
 
 }

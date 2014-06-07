@@ -95,7 +95,9 @@ public class FileSystemMonitor {
 	{
 		FileEntry fe = new FileEntry(fileType, time, nextId, parentId, 0, size, name);
 		++nextId;
-		return new FileEntryExtended(fe, new ArrayList<Integer>(), FileState.IDLE);
+		ArrayList<Integer> mirrors = new ArrayList<Integer>();
+		mirrors.add(0);
+		return new FileEntryExtended(fe, mirrors, FileState.IDLE);
 	}
 	
 	// Check if new entry's name is correct, it's parent exists and it doesn't
@@ -744,6 +746,12 @@ public class FileSystemMonitor {
 		} else if (extendedEntry.state == FileState.READ){
 			extendedEntry.state = FileState.PREMODIFIED;
 		}
+	}
+	
+	public synchronized void setFileSize(FileEntry file, long size) {
+		FileEntryExtended extendedEntry = idMap.get(file.id);
+		extendedEntry.entry.size = size;
+		broadcastMoveEntry(extendedEntry, extendedEntry);
 	}
 }
 
