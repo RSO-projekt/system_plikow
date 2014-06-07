@@ -41,6 +41,9 @@ public class FileSystemMonitor {
 	// Current coordinator server ID
 	int coordServerID;
 	
+	//Transaction token
+	private int transactionToken;
+	
 	public void setServerID(int serverID) {
 		this.serverID = this.coordServerID = serverID;
 	}
@@ -160,6 +163,7 @@ public class FileSystemMonitor {
 		idMap.put(0l, root);
 		TreeSet<FileEntryExtended> rootSet = new TreeSet<>();
 		parentIdMap.put(0l, rootSet);
+		transactionToken = 0;
 	}
 	
 	// Return file's entry based on it's path.
@@ -692,6 +696,42 @@ public class FileSystemMonitor {
 		}
 		
 		return fsVersion;
+	}
+	
+	public synchronized FileEntryExtended checkIfEntryIsWriteReady(FileEntry entry) throws EntryNotFound, InvalidOperation{
+		FileEntryExtended extendedEntry = idMap.get(entry.id);
+		if (extendedEntry == null || extendedEntry.entry.type != FileType.FILE) {
+			throw new EntryNotFound(13, "Entry not found or is not a file: " + entry.name);
+		}
+		if (extendedEntry.entry.version != entry.version){
+			throw new InvalidOperation(14, "Version of file is not actual");
+		}
+		if (extendedEntry.state == FileState.MODIFIED || extendedEntry.state == FileState.PREMODIFIED){
+			throw new InvalidOperation(15, "Cannot modify file - someone else is modyfing actually");
+		}
+		return extendedEntry.deepCopy();
+	}
+
+	public synchronized int getNextTransactionToken() {
+		return transactionToken++;
+	}
+	
+	public synchronized void setFileStateToWrite(FileEntry entry) throws EntryNotFound, InvalidOperation{
+		FileEntryExtended extendedEntry = idMap.get(entry.id);
+		if (extendedEntry == null || extendedEntry.entry.type != FileType.FILE) {
+			throw new EntryNotFound(13, "Entry not found or is not a file: " + entry.name);
+		}
+		if (extendedEntry.entry.version != entry.version){
+			throw new InvalidOperation(14, "Version of file is not actual");
+		}
+		if (extendedEntry.state == FileState.MODIFIED || extendedEntry.state == FileState.PREMODIFIED){
+			throw new InvalidOperation(15, "Cannot modify file - someone else is modyfing actually");
+		}
+		if (extendedEntry.state == FileState.IDLE){
+			extendedEntry.state = FileState.MODIFIED;
+		} else if (extendedEntry.state == FileState.READ){
+			extendedEntry.state = FileState.PREMODIFIED;
+		}
 	}
 }
 
