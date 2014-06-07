@@ -1,13 +1,10 @@
 package impl.client;
 
-import impl.server.master.Configuration;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
