@@ -1,4 +1,6 @@
 package impl.server.master;
+import impl.Configuration;
+
 import java.util.List;
 import java.util.Properties;
 
@@ -60,15 +62,15 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 	}
 
 	@Override
-	public FileEntry makeFile(String path, long size) throws EntryNotFound,
+	public FileEntry makeFile(String path) throws EntryNotFound,
 			InvalidOperation, TException {
-		return monitor.makeFile(true, path, size);
+		return monitor.makeFile(true, path);
 	}
 
 	@Override
-	public FileEntry makeFile2(FileEntry parent, String name, long size)
+	public FileEntry makeFile2(FileEntry parent, String name)
 			throws EntryNotFound, InvalidOperation, TException {
-		return monitor.makeFile2(true, parent, name, size);
+		return monitor.makeFile2(true, parent, name);
 	}
 
 	@Override
@@ -150,5 +152,20 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 			System.out.println(" Failed to connect with Data Server "+dataServerID);
 		}
 		return masterDataService;
+	}
+
+	@Override
+	public FileEntry allocateFile(String path, long size) throws EntryNotFound,
+			InvalidOperation, HostNotPermitted, TException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FileEntry allocateFile2(FileEntry file, long size)
+			throws EntryNotFound, InvalidOperation, HostNotPermitted,
+			TException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

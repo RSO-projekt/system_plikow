@@ -272,25 +272,37 @@ public class FileSystemMonitor {
 	}
 	
 	// Create new file in the server.
-	public synchronized FileEntry makeFile(boolean external, String path, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+	public synchronized FileEntry makeFile(boolean external, String path) throws EntryNotFound, InvalidOperation, HostNotPermitted {
 		checkPriviliges(external);
 		getParentPath(path);
 		FileEntryExtended parentEntry = getEntry(false, pathParent);
-		return makeFile2(false, parentEntry.entry, pathName, size);
+		return makeFile2(false, parentEntry.entry, pathName);
 	}
 	
 	// Create new file in the server by using descriptor.
-	public synchronized FileEntry makeFile2(boolean external, FileEntry parent, String name, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+	public synchronized FileEntry makeFile2(boolean external, FileEntry parent, String name) throws EntryNotFound, InvalidOperation, HostNotPermitted {
 		checkPriviliges(external);
 		checkParentAndName(parent, name);
 		FileEntryExtended file = createFileEntryExtended(FileType.FILE,
 														 System.currentTimeMillis() / 1000,
-														 parent.id, size, name);
+														 parent.id, 0, name);
 		
 		idMap.put(file.entry.id, file);
 		parentIdMap.get(parent.id).add(file);
 		broadcastCreateEntry(file);
 		return file.entry.deepCopy();
+	}
+	
+	public synchronized FileEntry allocateFile(boolean external, String path, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
+		
+		return null;
+	}
+	
+	// Create new file in the server by using descriptor.
+	public synchronized FileEntry allocateFile2(boolean external, FileEntry entry, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
+		checkPriviliges(external);
+		return null;
 	}
 	
 	// Remove entry from file system
@@ -457,7 +469,7 @@ public class FileSystemMonitor {
 			}
 		} else {
 			try {
-				FileEntry newFile = makeFile2(false, parent.entry, entry.entry.name, entry.entry.size);
+				FileEntry newFile = makeFile2(false, parent.entry, entry.entry.name);
 				FileEntryExtended newFileExtended = idMap.get(newFile.id);
 				newFileExtended.entry = entry.entry.deepCopy();
 				newFileExtended.mirrors = new ArrayList<>(entry.mirrors);
