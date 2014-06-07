@@ -1,8 +1,6 @@
 package impl.server.data;
 
-import impl.server.master.Configuration;
-import impl.server.master.FileSystemMonitor;
-import impl.server.master.MasterMasterImpl;
+import impl.Configuration;
 
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.server.TThreadPoolServer;

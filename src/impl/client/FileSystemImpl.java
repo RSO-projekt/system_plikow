@@ -1,6 +1,6 @@
 package impl.client;
 
-import impl.server.master.Configuration;
+import impl.Configuration;
 
 import java.io.File;
 import java.io.FileNotFoundException;

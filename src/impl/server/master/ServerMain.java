@@ -1,5 +1,7 @@
 package impl.server.master;
 
+import impl.Configuration;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.Inet4Address;

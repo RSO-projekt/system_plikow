@@ -1,5 +1,7 @@
 package impl.server.master;
 
+import impl.Configuration;
+
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;

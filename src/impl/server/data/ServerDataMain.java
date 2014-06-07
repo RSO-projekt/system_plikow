@@ -1,6 +1,6 @@
 package impl.server.data;
 
-import impl.server.master.Configuration;
+import impl.Configuration;
 
 import java.io.FileReader;
 import java.io.IOException;

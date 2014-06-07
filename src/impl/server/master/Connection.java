@@ -1,5 +1,7 @@
 package impl.server.master;
 
+import impl.Configuration;
+
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.transport.TFramedTransport;
