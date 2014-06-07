@@ -86,13 +86,6 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 	}
 
 	@Override
-	public Transaction writeToFile(String path, long offset, long num)
-			throws EntryNotFound, InvalidOperation, TException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Transaction writeToFile2(FileEntry file, long offset, long num)
 			throws EntryNotFound, InvalidOperation, TException {
 		// TODO Auto-generated method stub

@@ -68,10 +68,6 @@ service ClientMasterService
     // Write to a file. We are not transmitting bytes yet. This function is
     // only called to create a transaction. It will be completed on connection
     // between Data Server and a client.
-    DataTypes.Transaction writeToFile(1: string path, 2: i64 offset, 3: i64 num) 
-        throws(1: DataTypes.EntryNotFound err1, 
-               2: DataTypes.InvalidOperation err2,
-               3: DataTypes.HostNotPermitted err3),
     DataTypes.Transaction writeToFile2(1: DataTypes.FileEntry file, 2: i64 offset, 3: i64 num) 
         throws(1: DataTypes.EntryNotFound err1, 
                2: DataTypes.InvalidOperation err2,

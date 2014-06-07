@@ -193,7 +193,8 @@ public class FileSystemImpl implements FileSystem {
 	@Override
 	public void writeToFile(String filePath, long offset, byte[] bytes)
 			throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-		Transaction transaction = service.writeToFile(filePath, offset, bytes.length);
+	    FileEntry entry = service.getFileEntry(filePath);
+		Transaction transaction = service.writeToFile2(entry, offset, bytes.length);
 		sendChunks(transaction, bytes);
 		
 	}
