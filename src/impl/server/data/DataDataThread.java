@@ -6,21 +6,21 @@ import org.apache.thrift.server.TThreadPoolServer.Args;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
-import rso.at.ClientDataService;
+import rso.at.DataDataService;
 
-public class ClientDataThread extends Thread {
+public class DataDataThread extends Thread {
     private TThreadPoolServer server;
 
-    public ClientDataThread(TServerSocket serverTransport, int serverID) throws TTransportException {
-        ClientDataService.Processor<ClientDataImpl> processor = 
-                new ClientDataService.Processor<ClientDataImpl>(new ClientDataImpl());
+    public DataDataThread(TServerSocket serverTransport, int serverID) throws TTransportException {
+        DataDataService.Processor<DataDataImpl> processor = 
+                new DataDataService.Processor<DataDataImpl>(new DataDataImpl());
 
         TThreadPoolServer.Args args = new Args(serverTransport);
         args.processor(processor);
         args.protocolFactory(new TBinaryProtocol.Factory());
         
         server = new TThreadPoolServer(args);
-        System.out.println("Starting client-data server on port " + serverTransport.getServerSocket().getLocalPort() + 
+        System.out.println("Starting data-data server on port " + serverTransport.getServerSocket().getLocalPort() + 
                            " with id " + serverID + "...");
     }
 

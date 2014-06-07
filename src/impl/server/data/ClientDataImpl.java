@@ -9,20 +9,18 @@ import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
 import rso.at.Transaction;
 
-public class ClientDataImpl implements ClientDataService.Iface{
+public class ClientDataImpl implements ClientDataService.Iface {
 
-	@Override
-	public FileChunk getNextFileChunk(Transaction transaction,
-			ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted,
-			TException {
-		return FileData.getInstance().getNextFileChunk(transaction,chunkInfo);
-	}
+    @Override
+    public FileChunk getNextFileChunk(Transaction transaction,
+            ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted, TException {
+        return FileData.getInstance().getNextFileChunk(transaction, chunkInfo);
+    }
 
-	@Override
-	public ChunkInfo sendNextFileChunk(Transaction transaction,
-			FileChunk fileChunk) throws InvalidOperation, HostNotPermitted,
-			TException {
-		return FileData.getInstance().sendNextFileChunk(transaction,fileChunk);
-	}
+    @Override
+    public ChunkInfo sendNextFileChunk(Transaction transaction,
+            FileChunk fileChunk) throws InvalidOperation, HostNotPermitted, TException {
+        return FileData.getInstance().sendNextFileChunk(transaction, fileChunk);
+    }
 
 }
