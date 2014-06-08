@@ -46,15 +46,15 @@ fi
 check $result
 
 echo -n "7: Test make file                       "
-result=$(java -jar client.jar mkfile /testFile.txt 10 | grep "Done." | wc -l)
+result=$(java -jar client.jar mkfile /testFile.txt | grep "Done." | wc -l)
 check $result
 
-echo -n "8: Test lookup (test file exists)       "
-result=$(java -jar client.jar ls / | grep "FILE.*testFile.txt" | wc -l)
+echo -n "8: Test lookup (test directory exists)  "
+result=$(java -jar client.jar ls / | grep "DIR  0\stestDir" | wc -l)
 check $result
 
-echo -n "9: Test lookup (test file have size)    "
-result=$(java -jar client.jar ls / | grep "FILE.*10 testFile.txt" | wc -l)
+echo -n "9: Test lookup (test file exists)       "
+result=$(java -jar client.jar ls / | grep "FILE 0\stestFile.txt" | wc -l)
 check $result
 
 echo -n "10: Test move                           "
