@@ -798,7 +798,7 @@ public class FileSystemMonitor {
         setFileStateToWrite(extended.entry);
         log("Created transaction with token " + transaction.token + ", type: " + transaction.type +
             ", from: " + transaction.masterServerID + ", to: " + transaction.dataServerID);
-        return null;
+        return transaction;
     }
     
     public synchronized void removeFinishedTransaction(Transaction transaction, boolean isSuccessful) 

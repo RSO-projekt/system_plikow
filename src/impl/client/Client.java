@@ -234,14 +234,10 @@ public class Client {
             throw new IOException(
                     "Chosen file has not filetype or doesnt exist");
         }
-        try {
-            FileEntry entry = fs.allocateFile(to, file.length());
-            byte[] bytes = Files.readAllBytes(file.toPath());
-            fs.writeToFile(entry, 0, bytes);
-        } catch (Exception e) {
-            throw new InvalidOperation(400,
-                    "Cannot create new file or update existing");
-        }
+
+        FileEntry entry = fs.allocateFile(to, file.length());
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        fs.writeToFile(entry, 0, bytes);
     }
 
     private static String help() {
