@@ -728,10 +728,24 @@ public class FileSystemMonitor {
             throw new EntryNotFound(13, "Entry not found or is not a file: " + entry.name);
         }
         if (extendedEntry.entry.version != entry.version) {
-            throw new InvalidOperation(14, "Version of file is not actual");
+            throw new InvalidOperation(14, "Version of file is not correct");
         }
         if (extendedEntry.state == FileState.MODIFIED || extendedEntry.state == FileState.PREMODIFIED) {
             throw new InvalidOperation(15, "Cannot modify file - someone else is modyfing actually");
+        }
+        return extendedEntry.deepCopy();
+    }
+    
+    public synchronized FileEntryExtended checkIfEntryIsAllocateReady(FileEntry entry) throws EntryNotFound, InvalidOperation {
+        FileEntryExtended extendedEntry = idMap.get(entry.id);
+        if (extendedEntry == null || extendedEntry.entry.type != FileType.FILE) {
+            throw new EntryNotFound(13, "Entry not found or is not a file: " + entry.name);
+        }
+        if (extendedEntry.entry.version != entry.version) {
+            throw new InvalidOperation(14, "Version of file is not correct");
+        }
+        if (extendedEntry.state != FileState.IDLE) {
+            throw new InvalidOperation(15, "Someone is using a file");
         }
         return extendedEntry.deepCopy();
     }

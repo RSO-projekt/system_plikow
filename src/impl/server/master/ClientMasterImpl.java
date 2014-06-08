@@ -153,17 +153,14 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
     @Override
     public FileEntry allocateFile2(FileEntry file, long size) 
             throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-        FileEntryExtended entryCopy = monitor.checkIfEntryIsWriteReady(file);
+        FileEntryExtended entryCopy = monitor.checkIfEntryIsAllocateReady(file);
         MasterDataService.Iface masterDataService;
         boolean modified = false;
         for (Integer dataServerID : entryCopy.mirrors) {
-            System.out.println("mirrors: " + dataServerID);
             masterDataService = connectMasterToData(dataServerID.intValue());
             
             if (masterDataService != null) {
-                System.out.println("przed");
                 masterDataService.allocateFile(file.id, size);
-                System.out.println("po");
                 modified = true;
                 break;
             }
