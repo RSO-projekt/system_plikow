@@ -476,7 +476,15 @@ public class FileSystemMonitor {
         }
         
         // Replace a file
-        idMap.put(entry.entry.id, entry.deepCopy());
+        idMap.put(entry.entry.id, entry);
+        TreeSet<FileEntryExtended> children = parentIdMap.get(entry.entry.parentID);
+        for (FileEntryExtended e : children) {
+            if (e.entry.id == entry.entry.id) {
+                children.remove(e);
+            }
+        }
+        children.add(entry);
+        
         this.fsVersion = fsVersion;
         log("Got update " + showFileEntryExtended(entry) + " from server ID: " + serverID);
     }
