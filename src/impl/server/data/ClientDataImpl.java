@@ -1,7 +1,7 @@
 package impl.server.data;
 
 import org.apache.thrift.TException;
-
+import impl.*;
 import rso.at.ChunkInfo;
 import rso.at.ClientDataService;
 import rso.at.FileChunk;
@@ -15,8 +15,8 @@ public class ClientDataImpl implements ClientDataService.Iface {
         FileData.getInstance().registerTransactionEndListener(new TransactionEndListener(){
 
             @Override
-            public void transactionEnded(boolean isEnded) {
-                
+            public void transactionEnded(Transaction transaction, boolean isEnded) {
+                DataMasterConnection conn = new DataMasterConnection(transaction.)
             }
             
         });
