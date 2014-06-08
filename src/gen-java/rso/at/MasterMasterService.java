@@ -36,6 +36,8 @@ public class MasterMasterService {
 
   public interface Iface {
 
+    public void updateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException;
+
     public void updateCreateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException;
 
     public void updateRemoveEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException;
@@ -51,6 +53,8 @@ public class MasterMasterService {
   }
 
   public interface AsyncIface {
+
+    public void updateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void updateCreateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -84,6 +88,20 @@ public class MasterMasterService {
 
     public Client(org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TProtocol oprot) {
       super(iprot, oprot);
+    }
+
+    public void updateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
+    {
+      send_updateEntry(serverID, fsVersion, entry);
+    }
+
+    public void send_updateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
+    {
+      updateEntry_args args = new updateEntry_args();
+      args.setServerID(serverID);
+      args.setFsVersion(fsVersion);
+      args.setEntry(entry);
+      sendBase("updateEntry", args);
     }
 
     public void updateCreateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry) throws org.apache.thrift.TException
@@ -217,6 +235,43 @@ public class MasterMasterService {
 
     public AsyncClient(org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.async.TAsyncClientManager clientManager, org.apache.thrift.transport.TNonblockingTransport transport) {
       super(protocolFactory, clientManager, transport);
+    }
+
+    public void updateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      updateEntry_call method_call = new updateEntry_call(serverID, fsVersion, entry, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class updateEntry_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private int serverID;
+      private long fsVersion;
+      private rso.at.FileEntryExtended entry;
+      public updateEntry_call(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, true);
+        this.serverID = serverID;
+        this.fsVersion = fsVersion;
+        this.entry = entry;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("updateEntry", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        updateEntry_args args = new updateEntry_args();
+        args.setServerID(serverID);
+        args.setFsVersion(fsVersion);
+        args.setEntry(entry);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public void getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+      }
     }
 
     public void updateCreateEntry(int serverID, long fsVersion, rso.at.FileEntryExtended entry, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
@@ -442,6 +497,7 @@ public class MasterMasterService {
     }
 
     private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
+      processMap.put("updateEntry", new updateEntry());
       processMap.put("updateCreateEntry", new updateCreateEntry());
       processMap.put("updateRemoveEntry", new updateRemoveEntry());
       processMap.put("updateMoveEntry", new updateMoveEntry());
@@ -449,6 +505,25 @@ public class MasterMasterService {
       processMap.put("election", new election());
       processMap.put("elected", new elected());
       return processMap;
+    }
+
+    public static class updateEntry<I extends Iface> extends org.apache.thrift.ProcessFunction<I, updateEntry_args> {
+      public updateEntry() {
+        super("updateEntry");
+      }
+
+      public updateEntry_args getEmptyArgsInstance() {
+        return new updateEntry_args();
+      }
+
+      protected boolean isOneway() {
+        return true;
+      }
+
+      public org.apache.thrift.TBase getResult(I iface, updateEntry_args args) throws org.apache.thrift.TException {
+        iface.updateEntry(args.serverID, args.fsVersion, args.entry);
+        return null;
+      }
     }
 
     public static class updateCreateEntry<I extends Iface> extends org.apache.thrift.ProcessFunction<I, updateCreateEntry_args> {
@@ -587,6 +662,7 @@ public class MasterMasterService {
     }
 
     private static <I extends AsyncIface> Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
+      processMap.put("updateEntry", new updateEntry());
       processMap.put("updateCreateEntry", new updateCreateEntry());
       processMap.put("updateRemoveEntry", new updateRemoveEntry());
       processMap.put("updateMoveEntry", new updateMoveEntry());
@@ -594,6 +670,34 @@ public class MasterMasterService {
       processMap.put("election", new election());
       processMap.put("elected", new elected());
       return processMap;
+    }
+
+    public static class updateEntry<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateEntry_args, Void> {
+      public updateEntry() {
+        super("updateEntry");
+      }
+
+      public updateEntry_args getEmptyArgsInstance() {
+        return new updateEntry_args();
+      }
+
+      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new AsyncMethodCallback<Void>() { 
+          public void onComplete(Void o) {
+          }
+          public void onError(Exception e) {
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return true;
+      }
+
+      public void start(I iface, updateEntry_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+        iface.updateEntry(args.serverID, args.fsVersion, args.entry,resultHandler);
+      }
     }
 
     public static class updateCreateEntry<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, updateCreateEntry_args, Void> {
@@ -838,6 +942,557 @@ public class MasterMasterService {
 
       public void start(I iface, elected_args args, org.apache.thrift.async.AsyncMethodCallback<Long> resultHandler) throws TException {
         iface.elected(args.serverID,resultHandler);
+      }
+    }
+
+  }
+
+  public static class updateEntry_args implements org.apache.thrift.TBase<updateEntry_args, updateEntry_args._Fields>, java.io.Serializable, Cloneable, Comparable<updateEntry_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("updateEntry_args");
+
+    private static final org.apache.thrift.protocol.TField SERVER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("serverID", org.apache.thrift.protocol.TType.I32, (short)1);
+    private static final org.apache.thrift.protocol.TField FS_VERSION_FIELD_DESC = new org.apache.thrift.protocol.TField("fsVersion", org.apache.thrift.protocol.TType.I64, (short)2);
+    private static final org.apache.thrift.protocol.TField ENTRY_FIELD_DESC = new org.apache.thrift.protocol.TField("entry", org.apache.thrift.protocol.TType.STRUCT, (short)3);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new updateEntry_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new updateEntry_argsTupleSchemeFactory());
+    }
+
+    public int serverID; // required
+    public long fsVersion; // required
+    public rso.at.FileEntryExtended entry; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SERVER_ID((short)1, "serverID"),
+      FS_VERSION((short)2, "fsVersion"),
+      ENTRY((short)3, "entry");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // SERVER_ID
+            return SERVER_ID;
+          case 2: // FS_VERSION
+            return FS_VERSION;
+          case 3: // ENTRY
+            return ENTRY;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SERVERID_ISSET_ID = 0;
+    private static final int __FSVERSION_ISSET_ID = 1;
+    private byte __isset_bitfield = 0;
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SERVER_ID, new org.apache.thrift.meta_data.FieldMetaData("serverID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+      tmpMap.put(_Fields.FS_VERSION, new org.apache.thrift.meta_data.FieldMetaData("fsVersion", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.ENTRY, new org.apache.thrift.meta_data.FieldMetaData("entry", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.FileEntryExtended.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(updateEntry_args.class, metaDataMap);
+    }
+
+    public updateEntry_args() {
+    }
+
+    public updateEntry_args(
+      int serverID,
+      long fsVersion,
+      rso.at.FileEntryExtended entry)
+    {
+      this();
+      this.serverID = serverID;
+      setServerIDIsSet(true);
+      this.fsVersion = fsVersion;
+      setFsVersionIsSet(true);
+      this.entry = entry;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public updateEntry_args(updateEntry_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.serverID = other.serverID;
+      this.fsVersion = other.fsVersion;
+      if (other.isSetEntry()) {
+        this.entry = new rso.at.FileEntryExtended(other.entry);
+      }
+    }
+
+    public updateEntry_args deepCopy() {
+      return new updateEntry_args(this);
+    }
+
+    @Override
+    public void clear() {
+      setServerIDIsSet(false);
+      this.serverID = 0;
+      setFsVersionIsSet(false);
+      this.fsVersion = 0;
+      this.entry = null;
+    }
+
+    public int getServerID() {
+      return this.serverID;
+    }
+
+    public updateEntry_args setServerID(int serverID) {
+      this.serverID = serverID;
+      setServerIDIsSet(true);
+      return this;
+    }
+
+    public void unsetServerID() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SERVERID_ISSET_ID);
+    }
+
+    /** Returns true if field serverID is set (has been assigned a value) and false otherwise */
+    public boolean isSetServerID() {
+      return EncodingUtils.testBit(__isset_bitfield, __SERVERID_ISSET_ID);
+    }
+
+    public void setServerIDIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SERVERID_ISSET_ID, value);
+    }
+
+    public long getFsVersion() {
+      return this.fsVersion;
+    }
+
+    public updateEntry_args setFsVersion(long fsVersion) {
+      this.fsVersion = fsVersion;
+      setFsVersionIsSet(true);
+      return this;
+    }
+
+    public void unsetFsVersion() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __FSVERSION_ISSET_ID);
+    }
+
+    /** Returns true if field fsVersion is set (has been assigned a value) and false otherwise */
+    public boolean isSetFsVersion() {
+      return EncodingUtils.testBit(__isset_bitfield, __FSVERSION_ISSET_ID);
+    }
+
+    public void setFsVersionIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __FSVERSION_ISSET_ID, value);
+    }
+
+    public rso.at.FileEntryExtended getEntry() {
+      return this.entry;
+    }
+
+    public updateEntry_args setEntry(rso.at.FileEntryExtended entry) {
+      this.entry = entry;
+      return this;
+    }
+
+    public void unsetEntry() {
+      this.entry = null;
+    }
+
+    /** Returns true if field entry is set (has been assigned a value) and false otherwise */
+    public boolean isSetEntry() {
+      return this.entry != null;
+    }
+
+    public void setEntryIsSet(boolean value) {
+      if (!value) {
+        this.entry = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SERVER_ID:
+        if (value == null) {
+          unsetServerID();
+        } else {
+          setServerID((Integer)value);
+        }
+        break;
+
+      case FS_VERSION:
+        if (value == null) {
+          unsetFsVersion();
+        } else {
+          setFsVersion((Long)value);
+        }
+        break;
+
+      case ENTRY:
+        if (value == null) {
+          unsetEntry();
+        } else {
+          setEntry((rso.at.FileEntryExtended)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SERVER_ID:
+        return Integer.valueOf(getServerID());
+
+      case FS_VERSION:
+        return Long.valueOf(getFsVersion());
+
+      case ENTRY:
+        return getEntry();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SERVER_ID:
+        return isSetServerID();
+      case FS_VERSION:
+        return isSetFsVersion();
+      case ENTRY:
+        return isSetEntry();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof updateEntry_args)
+        return this.equals((updateEntry_args)that);
+      return false;
+    }
+
+    public boolean equals(updateEntry_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_serverID = true;
+      boolean that_present_serverID = true;
+      if (this_present_serverID || that_present_serverID) {
+        if (!(this_present_serverID && that_present_serverID))
+          return false;
+        if (this.serverID != that.serverID)
+          return false;
+      }
+
+      boolean this_present_fsVersion = true;
+      boolean that_present_fsVersion = true;
+      if (this_present_fsVersion || that_present_fsVersion) {
+        if (!(this_present_fsVersion && that_present_fsVersion))
+          return false;
+        if (this.fsVersion != that.fsVersion)
+          return false;
+      }
+
+      boolean this_present_entry = true && this.isSetEntry();
+      boolean that_present_entry = true && that.isSetEntry();
+      if (this_present_entry || that_present_entry) {
+        if (!(this_present_entry && that_present_entry))
+          return false;
+        if (!this.entry.equals(that.entry))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(updateEntry_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetServerID()).compareTo(other.isSetServerID());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetServerID()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.serverID, other.serverID);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetFsVersion()).compareTo(other.isSetFsVersion());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetFsVersion()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.fsVersion, other.fsVersion);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEntry()).compareTo(other.isSetEntry());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEntry()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.entry, other.entry);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("updateEntry_args(");
+      boolean first = true;
+
+      sb.append("serverID:");
+      sb.append(this.serverID);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("fsVersion:");
+      sb.append(this.fsVersion);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("entry:");
+      if (this.entry == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.entry);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (entry != null) {
+        entry.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class updateEntry_argsStandardSchemeFactory implements SchemeFactory {
+      public updateEntry_argsStandardScheme getScheme() {
+        return new updateEntry_argsStandardScheme();
+      }
+    }
+
+    private static class updateEntry_argsStandardScheme extends StandardScheme<updateEntry_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, updateEntry_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // SERVER_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+                struct.serverID = iprot.readI32();
+                struct.setServerIDIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // FS_VERSION
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.fsVersion = iprot.readI64();
+                struct.setFsVersionIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // ENTRY
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.entry = new rso.at.FileEntryExtended();
+                struct.entry.read(iprot);
+                struct.setEntryIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, updateEntry_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(SERVER_ID_FIELD_DESC);
+        oprot.writeI32(struct.serverID);
+        oprot.writeFieldEnd();
+        oprot.writeFieldBegin(FS_VERSION_FIELD_DESC);
+        oprot.writeI64(struct.fsVersion);
+        oprot.writeFieldEnd();
+        if (struct.entry != null) {
+          oprot.writeFieldBegin(ENTRY_FIELD_DESC);
+          struct.entry.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class updateEntry_argsTupleSchemeFactory implements SchemeFactory {
+      public updateEntry_argsTupleScheme getScheme() {
+        return new updateEntry_argsTupleScheme();
+      }
+    }
+
+    private static class updateEntry_argsTupleScheme extends TupleScheme<updateEntry_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, updateEntry_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetServerID()) {
+          optionals.set(0);
+        }
+        if (struct.isSetFsVersion()) {
+          optionals.set(1);
+        }
+        if (struct.isSetEntry()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetServerID()) {
+          oprot.writeI32(struct.serverID);
+        }
+        if (struct.isSetFsVersion()) {
+          oprot.writeI64(struct.fsVersion);
+        }
+        if (struct.isSetEntry()) {
+          struct.entry.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, updateEntry_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(3);
+        if (incoming.get(0)) {
+          struct.serverID = iprot.readI32();
+          struct.setServerIDIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.fsVersion = iprot.readI64();
+          struct.setFsVersionIsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.entry = new rso.at.FileEntryExtended();
+          struct.entry.read(iprot);
+          struct.setEntryIsSet(true);
+        }
       }
     }
 

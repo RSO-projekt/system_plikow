@@ -24,6 +24,13 @@ public class MasterMasterImpl implements MasterMasterService.Iface {
     }
 
     @Override
+    public void updateEntry(int serverID, long fsVersion,
+            FileEntryExtended entry) throws TException {
+        monitor.updateEntry(serverID, fsVersion, entry);
+        
+    }
+    
+    @Override
     public void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) 
             throws TException {
         monitor.updateCreateEntry(serverID, fsVersion, entry);

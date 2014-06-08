@@ -9,6 +9,9 @@ namespace * rso.at
 service MasterMasterService
 {
     //----- SYNCHRONIZATION FUNCTIONS ------------------------------------------
+    oneway void updateEntry(1: i32 serverID, 
+                            2: i64 fsVersion, 
+                            3: DataTypes.FileEntryExtended entry),
     oneway void updateCreateEntry(1: i32 serverID, 
                                   2: i64 fsVersion, 
                                   3: DataTypes.FileEntryExtended entry),

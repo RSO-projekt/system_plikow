@@ -460,6 +460,51 @@ public class FileSystemMonitor {
         }
     }
 
+    public synchronized void updateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
+        // If got message from lower priority server, start election.
+        if (serverID > this.serverID) {
+            startElection();
+            return;
+        }
+        
+        // If file system version is incorrect, we need to download whole
+        // snapshot
+        if (fsVersion != this.fsVersion + 1) {
+            recreateFileSystem(coordServerID);
+            return;
+        }
+        
+        // Replace a file
+        idMap.put(entry.entry.id, entry);
+        log("Got update " + showFileEntryExtended(entry) + " from server ID: " + serverID);
+    }
+    
+    // Broadcast all updated entries to other servers.
+    public synchronized void broadcastUpdateEntry(FileEntryExtended entry) {
+        if (mode == Mode.SLAVE)
+            return;
+        String msg = "Updated entry: " + showFileEntryExtended(entry);
+        log(msg);
+
+        fsVersion++;
+        for (MasterMasterConnection conn : masterList) {
+            int retries = 0;
+            while (retries < 2) {
+                try {
+                    conn.getService().updateEntry(serverID, fsVersion, entry);
+                    log("Broadcasted to " + conn.getHostAddress() + ":" + conn.getHostPort());
+                    break;
+                } catch (TException e) {
+                    conn.reopen();
+                    retries++;
+                }
+            }
+            if (retries == 2) {
+                log("Can't broadcast updated entry to " + conn.getHostAddress() + ":" + conn.getHostPort());
+            }
+        }
+    }
+    
     public synchronized void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
         // If got message from lower priority server, start election.
         if (serverID > this.serverID) {
@@ -823,7 +868,7 @@ public class FileSystemMonitor {
             if (conn.wasCreated()) {
                 conn.getService().applyChanges(transaction.fileID);
                 file.entry.version++;
-                broadcastMoveEntry(file, file);
+                broadcastUpdateEntry(file);
             }
         }
         
