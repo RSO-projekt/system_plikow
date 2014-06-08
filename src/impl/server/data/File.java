@@ -122,6 +122,7 @@ public class File {
 
         chunkInfo.maxNumber = (int) Math.ceil((double) transaction.size / chunkInfo.size);
 
+        long currentOffset = transaction.offset + chunkInfo.number * chunkInfo.size;
         int length = (int)Math.min(transaction.size - chunkInfo.number*chunkInfo.size,chunkInfo.size);
         chunkInfo.number++;
         
@@ -133,7 +134,7 @@ public class File {
             }
         }
        
-        return ByteBuffer.wrap(mFileData, (int)transaction.offset, length);
+        return ByteBuffer.wrap(mFileData, (int)currentOffset, length);
     }
 
     private void applyNewTimeoutToTranasaction(Transaction transaction) {
