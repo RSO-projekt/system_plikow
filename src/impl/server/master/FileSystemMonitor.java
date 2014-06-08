@@ -732,7 +732,7 @@ public class FileSystemMonitor {
         return fsVersion;
     }
 
-    public synchronized FileEntryExtended checkIfEntryIsWriteReady(FileEntry entry) throws EntryNotFound, InvalidOperation {
+    public synchronized FileEntryExtended checkIfEntryIsWriteReadReady(FileEntry entry) throws EntryNotFound, InvalidOperation {
         FileEntryExtended extendedEntry = idMap.get(entry.id);
         if (extendedEntry == null || extendedEntry.entry.type != FileType.FILE) {
             throw new EntryNotFound(13, "Entry not found or is not a file: " + entry.name);
@@ -764,24 +764,6 @@ public class FileSystemMonitor {
         return transactionToken++;
     }
 
-    public synchronized void setFileStateToWrite(FileEntry entry) throws EntryNotFound, InvalidOperation {
-        FileEntryExtended extendedEntry = idMap.get(entry.id);
-        if (extendedEntry == null || extendedEntry.entry.type != FileType.FILE) {
-            throw new EntryNotFound(13, "Entry not found or is not a file: " + entry.name);
-        }
-        if (extendedEntry.entry.version != entry.version) {
-            throw new InvalidOperation(14, "Version of file is not actual");
-        }
-        if (extendedEntry.state == FileState.MODIFIED || extendedEntry.state == FileState.PREMODIFIED) {
-            throw new InvalidOperation(15, "Cannot modify file - someone else is modyfing actually");
-        }
-        if (extendedEntry.state == FileState.IDLE) {
-            extendedEntry.state = FileState.MODIFIED;
-        } else if (extendedEntry.state == FileState.READ) {
-            extendedEntry.state = FileState.PREMODIFIED;
-        }
-    }
-
     public synchronized void setFileSize(FileEntry file, long size) {
         FileEntryExtended extendedEntry = idMap.get(file.id);
         extendedEntry.entry.size = size;
@@ -789,13 +771,23 @@ public class FileSystemMonitor {
     }
 
     public synchronized Transaction getNewTransaction(FileEntry file, int serverID,  TransactionType type, long offset, long num) throws EntryNotFound, InvalidOperation {
-        FileEntryExtended extended = checkIfEntryIsWriteReady(file);
-        Transaction transaction = new Transaction(type, getNextTransactionToken(), serverID, this.serverID, extended.entry.id);
-        if (fileTransactions.get(extended.entry.id) == null) {
-            fileTransactions.put(extended.entry.id, new ArrayList<Transaction>());
+        FileEntryExtended extendedEntry = checkIfEntryIsWriteReadReady(file);
+        Transaction transaction = new Transaction(type, getNextTransactionToken(), serverID, this.serverID, extendedEntry.entry.id);
+        if (fileTransactions.get(extendedEntry.entry.id) == null) {
+            fileTransactions.put(extendedEntry.entry.id, new ArrayList<Transaction>());
         }
-        fileTransactions.get(extended.entry.id).add(transaction);
-        setFileStateToWrite(extended.entry);
+        fileTransactions.get(extendedEntry.entry.id).add(transaction);
+        if (type.equals(TransactionType.WRITE)){
+            if (extendedEntry.state == FileState.IDLE) {
+                extendedEntry.state = FileState.MODIFIED;
+            } else if (extendedEntry.state == FileState.READ) {
+                extendedEntry.state = FileState.PREMODIFIED;
+            }
+        } else if (type.equals(TransactionType.READ)){
+            if (extendedEntry.state == FileState.IDLE) {
+                extendedEntry.state = FileState.READ;
+            }
+        }
         log("Created transaction with token " + transaction.token + ", type: " + transaction.type +
             ", from: " + transaction.masterServerID + ", to: " + transaction.dataServerID);
         return transaction;

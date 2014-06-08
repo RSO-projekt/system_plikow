@@ -95,7 +95,7 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
     @Override
     public Transaction writeToFile2(FileEntry file, long offset, long num) 
             throws EntryNotFound, InvalidOperation, TException {
-        FileEntryExtended entryCopy = monitor.checkIfEntryIsWriteReady(file);
+        FileEntryExtended entryCopy = monitor.checkIfEntryIsWriteReadReady(file);
         MasterDataService.Iface masterDataService;
         Transaction transaction = null;
         for (Integer dataServerID : entryCopy.mirrors) {
@@ -115,15 +115,28 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
     @Override
     public Transaction readFromFile(String path, long offset, long num) 
             throws EntryNotFound, InvalidOperation, TException {
-        // TODO Auto-generated method stub
-        return null;
+        FileEntry entry = monitor.getEntry(true, path).entry;
+        return readFromFile2(entry, offset, num);
     }
 
     @Override
     public Transaction readFromFile2(FileEntry entry, long offset, long num) 
             throws EntryNotFound, InvalidOperation, TException {
-        // TODO Auto-generated method stub
-        return null;
+        FileEntryExtended entryCopy = monitor.checkIfEntryIsWriteReadReady(entry);
+        MasterDataService.Iface masterDataService;
+        Transaction transaction = null;
+        for (Integer dataServerID : entryCopy.mirrors) {
+            masterDataService = connectMasterToData(dataServerID.intValue());
+            if (masterDataService != null) {
+                transaction = monitor.getNewTransaction(entry, dataServerID.intValue(), 
+                                                        TransactionType.READ, offset, num);
+                break;
+            }
+        }
+        if (transaction == null) {
+            throw new InvalidOperation(20, "Cannot connect to data server");
+        }
+        return transaction;
     }
 
     private MasterDataService.Iface connectMasterToData(int dataServerID) 
