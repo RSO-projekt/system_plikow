@@ -159,6 +159,11 @@ public class Client {
                 break;
             case "writeAll":
                 if (args.length == 3) {
+                    try {
+                        fs.getFileEntry(args[1]);
+                    } catch (EntryNotFound e) {
+                        fs.makeFile(args[1]);
+                    }
                     writeFile(fs, args[1], args[2]);
                 } else {
                     throw new InvalidOperation(16,

@@ -69,10 +69,14 @@ echo -n "12: Test remove file                    "
 result=$(java -jar client.jar rm /testDir/testFile.txt | grep "Done." | wc -l)
 check $result
 
-echo -n "13: Test remove directory               "
+echo -n "13: Test remove uploaded file           "
+result=$(java -jar client.jar rm /uploadFile.txt | grep "Done." | wc -l)
+check $result
+
+echo -n "14: Test remove directory               "
 result=$(java -jar client.jar rm /testDir | grep "Done." | wc -l)
 check $result
 
-echo -n "14: Test lookup (empty dir)             "
+echo -n "15: Test lookup (empty dir)             "
 result=$(java -jar client.jar ls / | grep "Chosen folder is empty" | wc -l)
 check $result
