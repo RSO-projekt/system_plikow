@@ -24,6 +24,7 @@ public class Connection {
             transport.open();
         } catch (TTransportException e) {
             // Ignore this error
+            //e.printStackTrace();
             created = false;
         }
         protocol = new TBinaryProtocol(transport);

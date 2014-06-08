@@ -170,6 +170,7 @@ public class FileSystemImpl implements FileSystem {
             throws EntryNotFound, InvalidOperation, HostNotPermitted,
             TException {
         Transaction transaction = clientMasterService.readFromFile(filePath, offset, num);
+        System.out.println("YO");
         return readChunks(transaction, num);
     }
 
@@ -178,6 +179,7 @@ public class FileSystemImpl implements FileSystem {
             throws EntryNotFound, InvalidOperation, HostNotPermitted,
             TException {
         Transaction transaction = clientMasterService.readFromFile2(file, offset, num);
+        System.out.println("YO");
         return readChunks(transaction, num);
     }
 

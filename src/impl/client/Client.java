@@ -132,7 +132,7 @@ public class Client {
                     long offset = new Long(args[2]);
                     long num = new Long(args[3]);
                     byte[] bytes = fs.readFromFile(args[1], offset, num);
-                    System.out.println(bytes);
+                    System.out.println(new String(bytes, "UTF-8"));
                 } else {
                     throw new InvalidOperation(16,
                             "Wrong number of arguments in \"readPart\" call");
