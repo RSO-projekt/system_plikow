@@ -812,7 +812,7 @@ public class FileSystemMonitor {
     public synchronized void setFileSize(FileEntry file, long size) {
         FileEntryExtended extendedEntry = idMap.get(file.id);
         extendedEntry.entry.size = size;
-        broadcastMoveEntry(extendedEntry, extendedEntry);
+        broadcastUpdateEntry(extendedEntry);
     }
 
     public synchronized Transaction getNewTransaction(FileEntry file, int serverID,  TransactionType type, long offset, long num) throws EntryNotFound, InvalidOperation {
