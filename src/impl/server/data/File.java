@@ -155,7 +155,8 @@ public class File {
     public synchronized boolean addChange(Transaction transaction, FileChunk fileChunk2) {
         applyNewTimeoutToTranasaction(transaction);
         mFileChanges.add(fileChunk2);
-        if(fileChunk2.info.maxNumber == fileChunk2.info.number){
+        System.out.println( fileChunk2.info.number + " " + fileChunk2.info.maxNumber);
+        if(fileChunk2.info.maxNumber-1 == fileChunk2.info.number){
             return true;
         }
         return false;

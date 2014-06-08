@@ -106,10 +106,12 @@ public class FileData {
         for (File f : mFileList) {
             if (f.getFileID() == transaction.fileID) {
                 ChunkInfo chunkInfo = fileChunk2.info;
+                
                 if(f.addChange(transaction,fileChunk2)){
                     try {
                         mTransactionEndListener.transactionEnded(transaction,true);
                     } catch (TException e) {
+                        e.printStackTrace();
                         throw new InvalidOperation(310, "Could not send info about transaction completion");
                     }
                 }
@@ -123,6 +125,7 @@ public class FileData {
         for (File f : mFileList) {
             if (f.getFileID() == fileID) {
                 f.applyChanges();
+                return;
             }
         }
         throw new InvalidOperation(301, "File not found");
