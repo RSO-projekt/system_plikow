@@ -49,34 +49,42 @@ echo -n "7: Test make file                       "
 result=$(java -jar client.jar mkfile /testFile.txt | grep "Done." | wc -l)
 check $result
 
-echo -n "8: Test lookup (test directory exists)  "
+echo -n "8: Test modification                    "
+result=$(java -jar client.jar writePart /uploadFile.txt 3 "new bigger file" | grep "Done." | wc -l)
+check $result
+
+echo -n "9: Test read                            "
+result=$(java -jar client.jar readPart /uploadFile.txt 0 13 | grep "My new bigger" | wc -l)
+check $result
+
+echo -n "10: Test lookup (test directory exists) "
 result=$(java -jar client.jar ls / | grep "DIR  0\stestDir" | wc -l)
 check $result
 
-echo -n "9: Test lookup (test file exists)       "
+echo -n "11: Test lookup (test file exists)      "
 result=$(java -jar client.jar ls / | grep "FILE 0\stestFile.txt" | wc -l)
 check $result
 
-echo -n "10: Test move                           "
+echo -n "12: Test move                           "
 result=$(java -jar client.jar mv /testFile.txt /testDir/testFile.txt | grep "Done." | wc -l)
 check $result
 
-echo -n "11: Test remove not empty dir           "
+echo -n "13: Test try remove not empty dir       "
 result=$(java -jar client.jar rm /testDir | grep "You cannot remove unempty directory" | wc -l)
 check $result
 
-echo -n "12: Test remove file                    "
+echo -n "14: Test remove file                    "
 result=$(java -jar client.jar rm /testDir/testFile.txt | grep "Done." | wc -l)
 check $result
 
-echo -n "13: Test remove uploaded file           "
+echo -n "15: Test remove uploaded file           "
 result=$(java -jar client.jar rm /uploadFile.txt | grep "Done." | wc -l)
 check $result
 
-echo -n "14: Test remove directory               "
+echo -n "16: Test remove directory               "
 result=$(java -jar client.jar rm /testDir | grep "Done." | wc -l)
 check $result
 
-echo -n "15: Test lookup (empty dir)             "
+echo -n "17: Test lookup (empty dir)             "
 result=$(java -jar client.jar ls / | grep "Chosen folder is empty" | wc -l)
 check $result
