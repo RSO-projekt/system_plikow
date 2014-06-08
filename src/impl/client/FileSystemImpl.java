@@ -125,6 +125,8 @@ public class FileSystemImpl implements FileSystem {
             throws EntryNotFound, InvalidOperation, HostNotPermitted,
             TException {
         FileEntry entry = clientMasterService.getFileEntry(filePath);
+        if (entry.size < offset + bytes.length)
+            clientMasterService.allocateFile2(entry, offset + bytes.length);
         Transaction transaction = clientMasterService.writeToFile2(entry, offset, bytes.length);
         sendChunks(transaction, bytes);
 
