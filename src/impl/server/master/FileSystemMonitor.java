@@ -481,6 +481,7 @@ public class FileSystemMonitor {
         for (FileEntryExtended e : children) {
             if (e.entry.id == entry.entry.id) {
                 children.remove(e);
+                break;
             }
         }
         children.add(entry);

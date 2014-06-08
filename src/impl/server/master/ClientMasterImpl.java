@@ -200,6 +200,6 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
         }
         monitor.setFileSize(file, size);
         file.size = size;
-        return file;
+        return file.deepCopy();
     }
 }
