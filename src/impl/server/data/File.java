@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.thrift.TException;
+
 import rso.at.ChunkInfo;
 import rso.at.FileChunk;
 import rso.at.InvalidOperation;
@@ -62,12 +64,29 @@ public class File {
         // check if transactions have its timeout breached
         while (pos < mFileTransactions.size()) {
             if (mFileTransactions.get(pos).first.getTime() < (new Date().getTime() - sTimeout * 1000)) {
-                mTransactionEndListener.transactionEnded(mFileTransactions.get(pos).second, false);
+                try {
+                    mTransactionEndListener.transactionEnded(mFileTransactions.get(pos).second, false);
+                } catch (InvalidOperation e) {
+                    
+                } catch (TException e) {
+                    
+                }finally{
+                    if(mFileTransactions.get(pos).second.type == TransactionType.WRITE){
+                        rollBackChanges();
+                    }
+                }
                 mFileTransactions.remove(pos);
             } else {
                 pos++;
             }
         }
+    }
+
+    /**Deletes unstages changes bacause of error with MasterDataConnection
+     * 
+     */
+    private void rollBackChanges() {
+        mFileChanges.clear(); 
     }
 
     /**
@@ -98,8 +117,9 @@ public class File {
      * 
      * @param chunkInfo
      * @return
+     * @throws InvalidOperation 
      */
-    public ByteBuffer getFileChunk(Transaction transaction, ChunkInfo chunkInfo) {
+    public ByteBuffer getFileChunk(Transaction transaction, ChunkInfo chunkInfo) throws InvalidOperation {
         applyNewTimeoutToTranasaction(transaction);
         if (chunkInfo.number == -1) {
             chunkInfo.maxNumber = (int) Math.ceil((double) mFileData.length / (double) sMaxFileChunkSize);
@@ -108,7 +128,11 @@ public class File {
         chunkInfo.number++;
         
         if(chunkInfo.number == chunkInfo.maxNumber){
-            mTransactionEndListener.transactionEnded(transaction, true);
+            try {
+                mTransactionEndListener.transactionEnded(transaction, true);
+            } catch (TException e) {
+                throw new InvalidOperation(310, "Could not send info about transaction completion");
+            }
         }
         return ByteBuffer.wrap(mFileData, chunkInfo.number * chunkInfo.size, chunkInfo.size);
     }

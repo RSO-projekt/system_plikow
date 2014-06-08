@@ -3,6 +3,8 @@ package impl.server.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.thrift.TException;
+
 import rso.at.ChunkInfo;
 import rso.at.FileChunk;
 import rso.at.InvalidOperation;
@@ -105,7 +107,11 @@ public class FileData {
             if (f.getFileID() == transaction.fileID) {
                 ChunkInfo chunkInfo = fileChunk2.info;
                 if(f.addChange(transaction,fileChunk2)){
-                    mTransactionEndListener.transactionEnded(transaction,true);
+                    try {
+                        mTransactionEndListener.transactionEnded(transaction,true);
+                    } catch (TException e) {
+                        throw new InvalidOperation(310, "Could not send info about transaction completion");
+                    }
                 }
                 return chunkInfo;
             }

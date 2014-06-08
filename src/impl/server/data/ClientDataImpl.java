@@ -15,8 +15,11 @@ public class ClientDataImpl implements ClientDataService.Iface {
         FileData.getInstance().registerTransactionEndListener(new TransactionEndListener(){
 
             @Override
-            public void transactionEnded(Transaction transaction, boolean isEnded) {
-                DataMasterConnection conn = new DataMasterConnection(transaction.)
+            public void transactionEnded(Transaction transaction, boolean isEnded) throws InvalidOperation, TException {
+                DataMasterConnection conn = new DataMasterConnection(transaction.masterServerID);
+                if(conn.wasCreated()){
+                    conn.getService().transactionFinished(transaction, isEnded);
+                }
             }
             
         });
