@@ -169,12 +169,13 @@ public class File {
      */
     public synchronized void applyChanges() throws InvalidOperation {
         try {
+        	int offset = 0;
             for (FileChunk fileChunk : mFileChanges) {
                 ChunkInfo chunkInfo = fileChunk.info;
-                int offset = chunkInfo.number * chunkInfo.size;
                 for (int i = 0; i < chunkInfo.size; i++) {
                     mFileData[offset + i] = fileChunk.data.get(i);
                 }
+                offset += chunkInfo.size;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidOperation(303, "Invalid operation on file ! Change out of bounds.");
