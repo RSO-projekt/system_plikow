@@ -7,7 +7,7 @@ import rso.at.MasterDataService.Iface;
 public class MasterDataConnection extends Connection {
     public MasterDataConnection(int serverID) {
         super(Configuration.sDataServerIPs.get(serverID),
-              Configuration.sDataServerPorts.get(serverID) + Configuration.sMasterDataOffset, serverID, true);
+              Configuration.sDataServerPorts.get(serverID) + Configuration.sMasterDataOffset, serverID, false);
         service = new MasterDataService.Client(protocol);
     }
 
