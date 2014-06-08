@@ -15,10 +15,10 @@ public class MasterDataImpl implements MasterDataService.Iface {
     }
 
     @Override
-    public void createFileTransaction(Transaction transaction, long fileID, long offset, long size) 
+    public void createFileTransaction(Transaction transaction)
             throws InvalidOperation, TException {
-        System.out.println("createFileTransaction fileID" + fileID + " : " + offset);
-        FileData.getInstance().addTransaction(fileID, transaction);
+        System.out.println("createFileTransaction fileID" + transaction.fileID + " : " + transaction.offset);
+        FileData.getInstance().addTransaction(transaction);
     }
 
     @Override

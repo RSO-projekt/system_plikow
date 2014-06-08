@@ -41,11 +41,11 @@ public class FileData {
      * @return
      * @throws InvalidOperation
      */
-    public int addTransaction(long fileID, Transaction transaction) throws InvalidOperation {
+    public int addTransaction(Transaction transaction) throws InvalidOperation {
         // TODO check if ip in transaction if needed
         boolean file_found = false;
         for (File file : mFileList) {
-            if (file.getFileID() == fileID) {
+            if (file.getFileID() == transaction.fileID) {
                 file_found = true;
                 file.addTransaction(transaction);
             }

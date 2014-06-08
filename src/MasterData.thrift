@@ -19,10 +19,7 @@ service MasterDataService
     // and other constraints before accepting this message. Once function
     // is called without exceptions. Transaction should be saved in master
     // server memory.
-    void createFileTransaction(1: DataTypes.Transaction transaction,
-                               2: i64 fileID,
-                               3: i64 offset,
-                               4: i64 size)
+    void createFileTransaction(1: DataTypes.Transaction transaction)
         throws(1: DataTypes.InvalidOperation err1),
 
     // Apply all waiting changes on a file.

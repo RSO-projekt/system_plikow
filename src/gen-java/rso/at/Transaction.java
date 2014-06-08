@@ -39,7 +39,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
   private static final org.apache.thrift.protocol.TField TOKEN_FIELD_DESC = new org.apache.thrift.protocol.TField("token", org.apache.thrift.protocol.TType.I32, (short)2);
   private static final org.apache.thrift.protocol.TField DATA_SERVER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("dataServerID", org.apache.thrift.protocol.TType.I32, (short)3);
   private static final org.apache.thrift.protocol.TField MASTER_SERVER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("masterServerID", org.apache.thrift.protocol.TType.I32, (short)4);
-  private static final org.apache.thrift.protocol.TField FILE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("fileID", org.apache.thrift.protocol.TType.I64, (short)5);
+  private static final org.apache.thrift.protocol.TField OFFSET_FIELD_DESC = new org.apache.thrift.protocol.TField("offset", org.apache.thrift.protocol.TType.I64, (short)5);
+  private static final org.apache.thrift.protocol.TField SIZE_FIELD_DESC = new org.apache.thrift.protocol.TField("size", org.apache.thrift.protocol.TType.I64, (short)6);
+  private static final org.apache.thrift.protocol.TField FILE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("fileID", org.apache.thrift.protocol.TType.I64, (short)7);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -55,6 +57,8 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
   public int token; // required
   public int dataServerID; // required
   public int masterServerID; // required
+  public long offset; // required
+  public long size; // required
   public long fileID; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -67,7 +71,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     TOKEN((short)2, "token"),
     DATA_SERVER_ID((short)3, "dataServerID"),
     MASTER_SERVER_ID((short)4, "masterServerID"),
-    FILE_ID((short)5, "fileID");
+    OFFSET((short)5, "offset"),
+    SIZE((short)6, "size"),
+    FILE_ID((short)7, "fileID");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -90,7 +96,11 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
           return DATA_SERVER_ID;
         case 4: // MASTER_SERVER_ID
           return MASTER_SERVER_ID;
-        case 5: // FILE_ID
+        case 5: // OFFSET
+          return OFFSET;
+        case 6: // SIZE
+          return SIZE;
+        case 7: // FILE_ID
           return FILE_ID;
         default:
           return null;
@@ -135,7 +145,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
   private static final int __TOKEN_ISSET_ID = 0;
   private static final int __DATASERVERID_ISSET_ID = 1;
   private static final int __MASTERSERVERID_ISSET_ID = 2;
-  private static final int __FILEID_ISSET_ID = 3;
+  private static final int __OFFSET_ISSET_ID = 3;
+  private static final int __SIZE_ISSET_ID = 4;
+  private static final int __FILEID_ISSET_ID = 5;
   private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
@@ -148,6 +160,10 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
     tmpMap.put(_Fields.MASTER_SERVER_ID, new org.apache.thrift.meta_data.FieldMetaData("masterServerID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.OFFSET, new org.apache.thrift.meta_data.FieldMetaData("offset", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.SIZE, new org.apache.thrift.meta_data.FieldMetaData("size", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.FILE_ID, new org.apache.thrift.meta_data.FieldMetaData("fileID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
@@ -162,6 +178,8 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     int token,
     int dataServerID,
     int masterServerID,
+    long offset,
+    long size,
     long fileID)
   {
     this();
@@ -172,6 +190,10 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     setDataServerIDIsSet(true);
     this.masterServerID = masterServerID;
     setMasterServerIDIsSet(true);
+    this.offset = offset;
+    setOffsetIsSet(true);
+    this.size = size;
+    setSizeIsSet(true);
     this.fileID = fileID;
     setFileIDIsSet(true);
   }
@@ -187,6 +209,8 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     this.token = other.token;
     this.dataServerID = other.dataServerID;
     this.masterServerID = other.masterServerID;
+    this.offset = other.offset;
+    this.size = other.size;
     this.fileID = other.fileID;
   }
 
@@ -203,6 +227,10 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     this.dataServerID = 0;
     setMasterServerIDIsSet(false);
     this.masterServerID = 0;
+    setOffsetIsSet(false);
+    this.offset = 0;
+    setSizeIsSet(false);
+    this.size = 0;
     setFileIDIsSet(false);
     this.fileID = 0;
   }
@@ -308,6 +336,52 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __MASTERSERVERID_ISSET_ID, value);
   }
 
+  public long getOffset() {
+    return this.offset;
+  }
+
+  public Transaction setOffset(long offset) {
+    this.offset = offset;
+    setOffsetIsSet(true);
+    return this;
+  }
+
+  public void unsetOffset() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __OFFSET_ISSET_ID);
+  }
+
+  /** Returns true if field offset is set (has been assigned a value) and false otherwise */
+  public boolean isSetOffset() {
+    return EncodingUtils.testBit(__isset_bitfield, __OFFSET_ISSET_ID);
+  }
+
+  public void setOffsetIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __OFFSET_ISSET_ID, value);
+  }
+
+  public long getSize() {
+    return this.size;
+  }
+
+  public Transaction setSize(long size) {
+    this.size = size;
+    setSizeIsSet(true);
+    return this;
+  }
+
+  public void unsetSize() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SIZE_ISSET_ID);
+  }
+
+  /** Returns true if field size is set (has been assigned a value) and false otherwise */
+  public boolean isSetSize() {
+    return EncodingUtils.testBit(__isset_bitfield, __SIZE_ISSET_ID);
+  }
+
+  public void setSizeIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SIZE_ISSET_ID, value);
+  }
+
   public long getFileID() {
     return this.fileID;
   }
@@ -365,6 +439,22 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       }
       break;
 
+    case OFFSET:
+      if (value == null) {
+        unsetOffset();
+      } else {
+        setOffset((Long)value);
+      }
+      break;
+
+    case SIZE:
+      if (value == null) {
+        unsetSize();
+      } else {
+        setSize((Long)value);
+      }
+      break;
+
     case FILE_ID:
       if (value == null) {
         unsetFileID();
@@ -390,6 +480,12 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     case MASTER_SERVER_ID:
       return Integer.valueOf(getMasterServerID());
 
+    case OFFSET:
+      return Long.valueOf(getOffset());
+
+    case SIZE:
+      return Long.valueOf(getSize());
+
     case FILE_ID:
       return Long.valueOf(getFileID());
 
@@ -412,6 +508,10 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       return isSetDataServerID();
     case MASTER_SERVER_ID:
       return isSetMasterServerID();
+    case OFFSET:
+      return isSetOffset();
+    case SIZE:
+      return isSetSize();
     case FILE_ID:
       return isSetFileID();
     }
@@ -464,6 +564,24 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       if (!(this_present_masterServerID && that_present_masterServerID))
         return false;
       if (this.masterServerID != that.masterServerID)
+        return false;
+    }
+
+    boolean this_present_offset = true;
+    boolean that_present_offset = true;
+    if (this_present_offset || that_present_offset) {
+      if (!(this_present_offset && that_present_offset))
+        return false;
+      if (this.offset != that.offset)
+        return false;
+    }
+
+    boolean this_present_size = true;
+    boolean that_present_size = true;
+    if (this_present_size || that_present_size) {
+      if (!(this_present_size && that_present_size))
+        return false;
+      if (this.size != that.size)
         return false;
     }
 
@@ -532,6 +650,26 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         return lastComparison;
       }
     }
+    lastComparison = Boolean.valueOf(isSetOffset()).compareTo(other.isSetOffset());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetOffset()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.offset, other.offset);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetSize()).compareTo(other.isSetSize());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetSize()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.size, other.size);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     lastComparison = Boolean.valueOf(isSetFileID()).compareTo(other.isSetFileID());
     if (lastComparison != 0) {
       return lastComparison;
@@ -580,6 +718,14 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     if (!first) sb.append(", ");
     sb.append("masterServerID:");
     sb.append(this.masterServerID);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("offset:");
+    sb.append(this.offset);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("size:");
+    sb.append(this.size);
     first = false;
     if (!first) sb.append(", ");
     sb.append("fileID:");
@@ -662,7 +808,23 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 5: // FILE_ID
+          case 5: // OFFSET
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.offset = iprot.readI64();
+              struct.setOffsetIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 6: // SIZE
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.size = iprot.readI64();
+              struct.setSizeIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 7: // FILE_ID
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
               struct.fileID = iprot.readI64();
               struct.setFileIDIsSet(true);
@@ -699,6 +861,12 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       oprot.writeFieldBegin(MASTER_SERVER_ID_FIELD_DESC);
       oprot.writeI32(struct.masterServerID);
       oprot.writeFieldEnd();
+      oprot.writeFieldBegin(OFFSET_FIELD_DESC);
+      oprot.writeI64(struct.offset);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(SIZE_FIELD_DESC);
+      oprot.writeI64(struct.size);
+      oprot.writeFieldEnd();
       oprot.writeFieldBegin(FILE_ID_FIELD_DESC);
       oprot.writeI64(struct.fileID);
       oprot.writeFieldEnd();
@@ -732,10 +900,16 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       if (struct.isSetMasterServerID()) {
         optionals.set(3);
       }
-      if (struct.isSetFileID()) {
+      if (struct.isSetOffset()) {
         optionals.set(4);
       }
-      oprot.writeBitSet(optionals, 5);
+      if (struct.isSetSize()) {
+        optionals.set(5);
+      }
+      if (struct.isSetFileID()) {
+        optionals.set(6);
+      }
+      oprot.writeBitSet(optionals, 7);
       if (struct.isSetType()) {
         oprot.writeI32(struct.type.getValue());
       }
@@ -748,6 +922,12 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       if (struct.isSetMasterServerID()) {
         oprot.writeI32(struct.masterServerID);
       }
+      if (struct.isSetOffset()) {
+        oprot.writeI64(struct.offset);
+      }
+      if (struct.isSetSize()) {
+        oprot.writeI64(struct.size);
+      }
       if (struct.isSetFileID()) {
         oprot.writeI64(struct.fileID);
       }
@@ -756,7 +936,7 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, Transaction struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      BitSet incoming = iprot.readBitSet(5);
+      BitSet incoming = iprot.readBitSet(7);
       if (incoming.get(0)) {
         struct.type = TransactionType.findByValue(iprot.readI32());
         struct.setTypeIsSet(true);
@@ -774,6 +954,14 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         struct.setMasterServerIDIsSet(true);
       }
       if (incoming.get(4)) {
+        struct.offset = iprot.readI64();
+        struct.setOffsetIsSet(true);
+      }
+      if (incoming.get(5)) {
+        struct.size = iprot.readI64();
+        struct.setSizeIsSet(true);
+      }
+      if (incoming.get(6)) {
         struct.fileID = iprot.readI64();
         struct.setFileIDIsSet(true);
       }

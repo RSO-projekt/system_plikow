@@ -174,7 +174,9 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
             
             if (masterDataService != null) {
                 // TODO: wyscig
+                System.out.println("OK");
                 masterDataService.allocateFile(file.id, size);
+                System.out.println("OK2");
                 modified = true;
                 break;
             }

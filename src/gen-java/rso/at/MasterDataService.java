@@ -38,7 +38,7 @@ public class MasterDataService {
 
     public void allocateFile(long fileID, long newFileSize) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
-    public void createFileTransaction(rso.at.Transaction transaction, long fileID, long offset, long size) throws rso.at.InvalidOperation, org.apache.thrift.TException;
+    public void createFileTransaction(rso.at.Transaction transaction) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
     public void applyChanges(long fileID) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
@@ -48,7 +48,7 @@ public class MasterDataService {
 
     public void allocateFile(long fileID, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void createFileTransaction(rso.at.Transaction transaction, long fileID, long offset, long size, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void createFileTransaction(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void applyChanges(long fileID, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -98,19 +98,16 @@ public class MasterDataService {
       return;
     }
 
-    public void createFileTransaction(rso.at.Transaction transaction, long fileID, long offset, long size) throws rso.at.InvalidOperation, org.apache.thrift.TException
+    public void createFileTransaction(rso.at.Transaction transaction) throws rso.at.InvalidOperation, org.apache.thrift.TException
     {
-      send_createFileTransaction(transaction, fileID, offset, size);
+      send_createFileTransaction(transaction);
       recv_createFileTransaction();
     }
 
-    public void send_createFileTransaction(rso.at.Transaction transaction, long fileID, long offset, long size) throws org.apache.thrift.TException
+    public void send_createFileTransaction(rso.at.Transaction transaction) throws org.apache.thrift.TException
     {
       createFileTransaction_args args = new createFileTransaction_args();
       args.setTransaction(transaction);
-      args.setFileID(fileID);
-      args.setOffset(offset);
-      args.setSize(size);
       sendBase("createFileTransaction", args);
     }
 
@@ -200,33 +197,24 @@ public class MasterDataService {
       }
     }
 
-    public void createFileTransaction(rso.at.Transaction transaction, long fileID, long offset, long size, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void createFileTransaction(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      createFileTransaction_call method_call = new createFileTransaction_call(transaction, fileID, offset, size, resultHandler, this, ___protocolFactory, ___transport);
+      createFileTransaction_call method_call = new createFileTransaction_call(transaction, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createFileTransaction_call extends org.apache.thrift.async.TAsyncMethodCall {
       private rso.at.Transaction transaction;
-      private long fileID;
-      private long offset;
-      private long size;
-      public createFileTransaction_call(rso.at.Transaction transaction, long fileID, long offset, long size, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public createFileTransaction_call(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.transaction = transaction;
-        this.fileID = fileID;
-        this.offset = offset;
-        this.size = size;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("createFileTransaction", org.apache.thrift.protocol.TMessageType.CALL, 0));
         createFileTransaction_args args = new createFileTransaction_args();
         args.setTransaction(transaction);
-        args.setFileID(fileID);
-        args.setOffset(offset);
-        args.setSize(size);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -332,7 +320,7 @@ public class MasterDataService {
       public createFileTransaction_result getResult(I iface, createFileTransaction_args args) throws org.apache.thrift.TException {
         createFileTransaction_result result = new createFileTransaction_result();
         try {
-          iface.createFileTransaction(args.transaction, args.fileID, args.offset, args.size);
+          iface.createFileTransaction(args.transaction);
         } catch (rso.at.InvalidOperation err1) {
           result.err1 = err1;
         }
@@ -491,7 +479,7 @@ public class MasterDataService {
       }
 
       public void start(I iface, createFileTransaction_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
-        iface.createFileTransaction(args.transaction, args.fileID, args.offset, args.size,resultHandler);
+        iface.createFileTransaction(args.transaction,resultHandler);
       }
     }
 
@@ -1359,9 +1347,6 @@ public class MasterDataService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("createFileTransaction_args");
 
     private static final org.apache.thrift.protocol.TField TRANSACTION_FIELD_DESC = new org.apache.thrift.protocol.TField("transaction", org.apache.thrift.protocol.TType.STRUCT, (short)1);
-    private static final org.apache.thrift.protocol.TField FILE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("fileID", org.apache.thrift.protocol.TType.I64, (short)2);
-    private static final org.apache.thrift.protocol.TField OFFSET_FIELD_DESC = new org.apache.thrift.protocol.TField("offset", org.apache.thrift.protocol.TType.I64, (short)3);
-    private static final org.apache.thrift.protocol.TField SIZE_FIELD_DESC = new org.apache.thrift.protocol.TField("size", org.apache.thrift.protocol.TType.I64, (short)4);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1370,16 +1355,10 @@ public class MasterDataService {
     }
 
     public rso.at.Transaction transaction; // required
-    public long fileID; // required
-    public long offset; // required
-    public long size; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      TRANSACTION((short)1, "transaction"),
-      FILE_ID((short)2, "fileID"),
-      OFFSET((short)3, "offset"),
-      SIZE((short)4, "size");
+      TRANSACTION((short)1, "transaction");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1396,12 +1375,6 @@ public class MasterDataService {
         switch(fieldId) {
           case 1: // TRANSACTION
             return TRANSACTION;
-          case 2: // FILE_ID
-            return FILE_ID;
-          case 3: // OFFSET
-            return OFFSET;
-          case 4: // SIZE
-            return SIZE;
           default:
             return null;
         }
@@ -1442,21 +1415,11 @@ public class MasterDataService {
     }
 
     // isset id assignments
-    private static final int __FILEID_ISSET_ID = 0;
-    private static final int __OFFSET_ISSET_ID = 1;
-    private static final int __SIZE_ISSET_ID = 2;
-    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TRANSACTION, new org.apache.thrift.meta_data.FieldMetaData("transaction", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.Transaction.class)));
-      tmpMap.put(_Fields.FILE_ID, new org.apache.thrift.meta_data.FieldMetaData("fileID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields.OFFSET, new org.apache.thrift.meta_data.FieldMetaData("offset", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields.SIZE, new org.apache.thrift.meta_data.FieldMetaData("size", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(createFileTransaction_args.class, metaDataMap);
     }
@@ -1465,32 +1428,19 @@ public class MasterDataService {
     }
 
     public createFileTransaction_args(
-      rso.at.Transaction transaction,
-      long fileID,
-      long offset,
-      long size)
+      rso.at.Transaction transaction)
     {
       this();
       this.transaction = transaction;
-      this.fileID = fileID;
-      setFileIDIsSet(true);
-      this.offset = offset;
-      setOffsetIsSet(true);
-      this.size = size;
-      setSizeIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public createFileTransaction_args(createFileTransaction_args other) {
-      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetTransaction()) {
         this.transaction = new rso.at.Transaction(other.transaction);
       }
-      this.fileID = other.fileID;
-      this.offset = other.offset;
-      this.size = other.size;
     }
 
     public createFileTransaction_args deepCopy() {
@@ -1500,12 +1450,6 @@ public class MasterDataService {
     @Override
     public void clear() {
       this.transaction = null;
-      setFileIDIsSet(false);
-      this.fileID = 0;
-      setOffsetIsSet(false);
-      this.offset = 0;
-      setSizeIsSet(false);
-      this.size = 0;
     }
 
     public rso.at.Transaction getTransaction() {
@@ -1532,75 +1476,6 @@ public class MasterDataService {
       }
     }
 
-    public long getFileID() {
-      return this.fileID;
-    }
-
-    public createFileTransaction_args setFileID(long fileID) {
-      this.fileID = fileID;
-      setFileIDIsSet(true);
-      return this;
-    }
-
-    public void unsetFileID() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __FILEID_ISSET_ID);
-    }
-
-    /** Returns true if field fileID is set (has been assigned a value) and false otherwise */
-    public boolean isSetFileID() {
-      return EncodingUtils.testBit(__isset_bitfield, __FILEID_ISSET_ID);
-    }
-
-    public void setFileIDIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __FILEID_ISSET_ID, value);
-    }
-
-    public long getOffset() {
-      return this.offset;
-    }
-
-    public createFileTransaction_args setOffset(long offset) {
-      this.offset = offset;
-      setOffsetIsSet(true);
-      return this;
-    }
-
-    public void unsetOffset() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __OFFSET_ISSET_ID);
-    }
-
-    /** Returns true if field offset is set (has been assigned a value) and false otherwise */
-    public boolean isSetOffset() {
-      return EncodingUtils.testBit(__isset_bitfield, __OFFSET_ISSET_ID);
-    }
-
-    public void setOffsetIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __OFFSET_ISSET_ID, value);
-    }
-
-    public long getSize() {
-      return this.size;
-    }
-
-    public createFileTransaction_args setSize(long size) {
-      this.size = size;
-      setSizeIsSet(true);
-      return this;
-    }
-
-    public void unsetSize() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SIZE_ISSET_ID);
-    }
-
-    /** Returns true if field size is set (has been assigned a value) and false otherwise */
-    public boolean isSetSize() {
-      return EncodingUtils.testBit(__isset_bitfield, __SIZE_ISSET_ID);
-    }
-
-    public void setSizeIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SIZE_ISSET_ID, value);
-    }
-
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case TRANSACTION:
@@ -1611,30 +1486,6 @@ public class MasterDataService {
         }
         break;
 
-      case FILE_ID:
-        if (value == null) {
-          unsetFileID();
-        } else {
-          setFileID((Long)value);
-        }
-        break;
-
-      case OFFSET:
-        if (value == null) {
-          unsetOffset();
-        } else {
-          setOffset((Long)value);
-        }
-        break;
-
-      case SIZE:
-        if (value == null) {
-          unsetSize();
-        } else {
-          setSize((Long)value);
-        }
-        break;
-
       }
     }
 
@@ -1642,15 +1493,6 @@ public class MasterDataService {
       switch (field) {
       case TRANSACTION:
         return getTransaction();
-
-      case FILE_ID:
-        return Long.valueOf(getFileID());
-
-      case OFFSET:
-        return Long.valueOf(getOffset());
-
-      case SIZE:
-        return Long.valueOf(getSize());
 
       }
       throw new IllegalStateException();
@@ -1665,12 +1507,6 @@ public class MasterDataService {
       switch (field) {
       case TRANSACTION:
         return isSetTransaction();
-      case FILE_ID:
-        return isSetFileID();
-      case OFFSET:
-        return isSetOffset();
-      case SIZE:
-        return isSetSize();
       }
       throw new IllegalStateException();
     }
@@ -1697,33 +1533,6 @@ public class MasterDataService {
           return false;
       }
 
-      boolean this_present_fileID = true;
-      boolean that_present_fileID = true;
-      if (this_present_fileID || that_present_fileID) {
-        if (!(this_present_fileID && that_present_fileID))
-          return false;
-        if (this.fileID != that.fileID)
-          return false;
-      }
-
-      boolean this_present_offset = true;
-      boolean that_present_offset = true;
-      if (this_present_offset || that_present_offset) {
-        if (!(this_present_offset && that_present_offset))
-          return false;
-        if (this.offset != that.offset)
-          return false;
-      }
-
-      boolean this_present_size = true;
-      boolean that_present_size = true;
-      if (this_present_size || that_present_size) {
-        if (!(this_present_size && that_present_size))
-          return false;
-        if (this.size != that.size)
-          return false;
-      }
-
       return true;
     }
 
@@ -1746,36 +1555,6 @@ public class MasterDataService {
       }
       if (isSetTransaction()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.transaction, other.transaction);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = Boolean.valueOf(isSetFileID()).compareTo(other.isSetFileID());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetFileID()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.fileID, other.fileID);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = Boolean.valueOf(isSetOffset()).compareTo(other.isSetOffset());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetOffset()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.offset, other.offset);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = Boolean.valueOf(isSetSize()).compareTo(other.isSetSize());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetSize()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.size, other.size);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1807,18 +1586,6 @@ public class MasterDataService {
         sb.append(this.transaction);
       }
       first = false;
-      if (!first) sb.append(", ");
-      sb.append("fileID:");
-      sb.append(this.fileID);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("offset:");
-      sb.append(this.offset);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("size:");
-      sb.append(this.size);
-      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1841,8 +1608,6 @@ public class MasterDataService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -1876,30 +1641,6 @@ public class MasterDataService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 2: // FILE_ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.fileID = iprot.readI64();
-                struct.setFileIDIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 3: // OFFSET
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.offset = iprot.readI64();
-                struct.setOffsetIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 4: // SIZE
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.size = iprot.readI64();
-                struct.setSizeIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1920,15 +1661,6 @@ public class MasterDataService {
           struct.transaction.write(oprot);
           oprot.writeFieldEnd();
         }
-        oprot.writeFieldBegin(FILE_ID_FIELD_DESC);
-        oprot.writeI64(struct.fileID);
-        oprot.writeFieldEnd();
-        oprot.writeFieldBegin(OFFSET_FIELD_DESC);
-        oprot.writeI64(struct.offset);
-        oprot.writeFieldEnd();
-        oprot.writeFieldBegin(SIZE_FIELD_DESC);
-        oprot.writeI64(struct.size);
-        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1950,50 +1682,20 @@ public class MasterDataService {
         if (struct.isSetTransaction()) {
           optionals.set(0);
         }
-        if (struct.isSetFileID()) {
-          optionals.set(1);
-        }
-        if (struct.isSetOffset()) {
-          optionals.set(2);
-        }
-        if (struct.isSetSize()) {
-          optionals.set(3);
-        }
-        oprot.writeBitSet(optionals, 4);
+        oprot.writeBitSet(optionals, 1);
         if (struct.isSetTransaction()) {
           struct.transaction.write(oprot);
-        }
-        if (struct.isSetFileID()) {
-          oprot.writeI64(struct.fileID);
-        }
-        if (struct.isSetOffset()) {
-          oprot.writeI64(struct.offset);
-        }
-        if (struct.isSetSize()) {
-          oprot.writeI64(struct.size);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, createFileTransaction_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(4);
+        BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           struct.transaction = new rso.at.Transaction();
           struct.transaction.read(iprot);
           struct.setTransactionIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.fileID = iprot.readI64();
-          struct.setFileIDIsSet(true);
-        }
-        if (incoming.get(2)) {
-          struct.offset = iprot.readI64();
-          struct.setOffsetIsSet(true);
-        }
-        if (incoming.get(3)) {
-          struct.size = iprot.readI64();
-          struct.setSizeIsSet(true);
         }
       }
     }

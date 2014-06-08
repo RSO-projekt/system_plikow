@@ -772,7 +772,7 @@ public class FileSystemMonitor {
 
     public synchronized Transaction getNewTransaction(FileEntry file, int serverID,  TransactionType type, long offset, long num) throws EntryNotFound, InvalidOperation {
         FileEntryExtended extendedEntry = checkIfEntryIsWriteReadReady(file);
-        Transaction transaction = new Transaction(type, getNextTransactionToken(), serverID, this.serverID, extendedEntry.entry.id);
+        Transaction transaction = new Transaction(type, getNextTransactionToken(), serverID, this.serverID, offset, num, extendedEntry.entry.id);
         if (fileTransactions.get(extendedEntry.entry.id) == null) {
             fileTransactions.put(extendedEntry.entry.id, new ArrayList<Transaction>());
         }

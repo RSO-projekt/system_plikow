@@ -59,7 +59,9 @@ struct Transaction
     2: i32 token,
     3: i32 dataServerID,
     4: i32 masterServerID,
-    5: i64 fileID
+    5: i64 offset,
+    6: i64 size, 
+    7: i64 fileID
 }
 
 // Information about a file chunk.

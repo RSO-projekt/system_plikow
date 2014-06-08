@@ -190,12 +190,14 @@ public class FileSystemImpl implements FileSystem {
                                            conn.getHostPort());
         clientDataService = conn.getService();
         
+        System.out.println("Zaalokowalem: " + num);
         ByteBuffer byteList = ByteBuffer.allocate((int) num);
         FileChunk tmpFileChunk;
         ChunkInfo chunkInfo = new ChunkInfo(0, 0, 1000);
         do {
             tmpFileChunk = clientDataService.getNextFileChunk(transaction, chunkInfo);
-            byteList.put(tmpFileChunk.data);
+            System.out.println("Dostalem: " + tmpFileChunk.data.array().length);
+            byteList.put(tmpFileChunk.data.array());
             chunkInfo = tmpFileChunk.info;
             System.out.println("Read " + chunkInfo.number + "/" + chunkInfo.maxNumber + " packages");
         } while (tmpFileChunk.info.number < tmpFileChunk.info.maxNumber);
