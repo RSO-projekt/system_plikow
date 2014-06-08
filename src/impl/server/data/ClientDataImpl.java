@@ -14,12 +14,14 @@ public class ClientDataImpl implements ClientDataService.Iface {
     @Override
     public FileChunk getNextFileChunk(Transaction transaction,
             ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted, TException {
+    	System.out.println("getNectFileChunk fileID" + transaction.fileID + " : " + chunkInfo.number);
         return FileData.getInstance().getNextFileChunk(transaction, chunkInfo);
     }
 
     @Override
     public ChunkInfo sendNextFileChunk(Transaction transaction,
             FileChunk fileChunk) throws InvalidOperation, HostNotPermitted, TException {
+        System.out.println("sendNextFileChunk fileID" + transaction.fileID + " : " + fileChunk.info.number);
         return FileData.getInstance().sendNextFileChunk(transaction, fileChunk);
     }
 

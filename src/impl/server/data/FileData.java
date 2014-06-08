@@ -53,8 +53,16 @@ public class FileData {
     }
 
     public void createFile(long fileID, long newFileSize) {
-        mFileList.add(new File(fileID, newFileSize));
-
+        boolean found = false;
+        for(int i = 0 ; i< mFileList.size(); i++){
+            if(mFileList.get(i).getFileID() == fileID){
+                mFileList.get(i).rellocate(newFileSize);
+                found = true;
+            }
+        }
+        if(!found){
+            mFileList.add(new File(fileID, newFileSize));
+        }
     }
 
     /**

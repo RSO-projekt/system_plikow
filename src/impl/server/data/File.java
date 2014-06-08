@@ -114,8 +114,16 @@ public class File {
         return ByteBuffer.wrap(mFileData, chunkInfo.number * chunkInfo.size, chunkInfo.size);
     }
 
-    public synchronized void addChange(FileChunk fileChunk2) {
+    /**Return true if file change is finished
+     * @param fileChunk2
+     * @return
+     */
+    public synchronized boolean addChange(FileChunk fileChunk2) {
         mFileChanges.add(fileChunk2);
+        if(fileChunk2.info.maxNumber == fileChunk2.info.number){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -137,5 +145,17 @@ public class File {
         } finally {
             mFileChanges.clear();
         }
+    }
+
+    /**Reallocates file size
+     * @param newFileSize
+     */
+    public void rellocate(long newFileSize) {
+        byte[] old_data= mFileData;
+        mFileData = new byte[(int)newFileSize];
+        for(int i =0; i < Math.min(mFileData.length, old_data.length); i++){
+            mFileData[i] = old_data[i];
+        }
+        
     }
 }
