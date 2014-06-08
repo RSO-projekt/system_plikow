@@ -3,32 +3,76 @@
 check() {
 	if [ $1 -eq 1 ]
 	then
-		echo PASS
+		echo -e "\e[32mPASS"
 	else
-		echo FAIL
+		echo -e "\e[31mFAIL"
 	fi
+	echo -ne "\e[39m"
 }
 
-echo "1: Test connection"
+echo -n "1: Test connection                      "
 result=$(java -jar client.jar ls | grep "Connecting .* OK" | wc -l)
 check $result
 
-if [ $result -eq 1 ]
-then 
-	java -jar client.jar rm /testDir/testFile.txt > /dev/null
-	java -jar client.jar rm /testDir > /dev/null
-else
+if [ $result -ne 1 ]
+then
 	exit
 fi
 
-echo "2: Test make directory"
+echo -n "2: Test lookup (empty dir)              "
+result=$(java -jar client.jar ls / | grep "Chosen folder is empty" | wc -l)
+check $result
+
+echo -n "3: Test make directory                  "
 result1=$(java -jar client.jar mkdir /testDir | grep "Done." | wc -l)
 check $result
 
-echo "3: Test lookup"
-result=$(java -jar client.jar ls /testDir | grep "Chosen folder is empty" | wc -l)
+echo -n "4: Test upload file                     "
+echo "My test file" > myFile.txt
+result=$(java -jar client.jar writeAll /uploadFile.txt myFile.txt | grep "Done." | wc -l)
+rm myFile.txt
 check $result
 
-echo "4: Test make file"
-result=$(java -jar client.jar mkfile /testDir/testFile.txt 10 | grep "Done." | wc -l)
+echo -n "5: Test download file                   "
+result=$(java -jar client.jar readAll /uploadFile.txt downloadFile.txt | grep "Done." | wc -l)
+check $result
+
+echo -n "6: Test downloaded file have size       "
+if [ $result -eq 1 ]
+then
+	result=$(wc -c downloadFile.txt | grep "13 downloadFile.txt" | wc -l)
+	rm downloadFile.txt
+fi
+check $result
+
+echo -n "7: Test make file                       "
+result=$(java -jar client.jar mkfile /testFile.txt 10 | grep "Done." | wc -l)
+check $result
+
+echo -n "8: Test lookup (test file exists)       "
+result=$(java -jar client.jar ls / | grep "FILE.*testFile.txt" | wc -l)
+check $result
+
+echo -n "9: Test lookup (test file have size)    "
+result=$(java -jar client.jar ls / | grep "FILE.*10 testFile.txt" | wc -l)
+check $result
+
+echo -n "10: Test move                           "
+result=$(java -jar client.jar mv /testFile.txt /testDir/testFile.txt | grep "Done." | wc -l)
+check $result
+
+echo -n "11: Test remove not empty dir           "
+result=$(java -jar client.jar rm /testDir | grep "You cannot remove unempty directory" | wc -l)
+check $result
+
+echo -n "12: Test remove file                    "
+result=$(java -jar client.jar rm /testDir/testFile.txt | grep "Done." | wc -l)
+check $result
+
+echo -n "13: Test remove directory               "
+result=$(java -jar client.jar rm /testDir | grep "Done." | wc -l)
+check $result
+
+echo -n "14: Test lookup (empty dir)             "
+result=$(java -jar client.jar ls / | grep "Chosen folder is empty" | wc -l)
 check $result
