@@ -92,6 +92,7 @@ public class FileSystemMonitor {
         sb.append("[" + (entry.entry.type == FileType.DIRECTORY ? "DIR: \"" : "FILE: \"") + entry.entry.name + "\", ");
         sb.append("ID: " + entry.entry.id + ", ");
         sb.append("pID: " + entry.entry.parentID + ", ");
+        sb.append("size: " + entry.entry.size + ", ");
         sb.append("ver: " + entry.entry.version + ", ");
         sb.append("on:");
         for (int mirror : entry.mirrors) {
