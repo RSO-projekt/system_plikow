@@ -476,6 +476,7 @@ public class FileSystemMonitor {
         
         // Replace a file
         idMap.put(entry.entry.id, entry);
+        this.fsVersion = fsVersion;
         log("Got update " + showFileEntryExtended(entry) + " from server ID: " + serverID);
     }
     
