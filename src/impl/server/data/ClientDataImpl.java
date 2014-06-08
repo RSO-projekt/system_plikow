@@ -10,6 +10,17 @@ import rso.at.InvalidOperation;
 import rso.at.Transaction;
 
 public class ClientDataImpl implements ClientDataService.Iface {
+    
+    public ClientDataImpl(){
+        FileData.getInstance().registerTransactionEndListener(new TransactionEndListener(){
+
+            @Override
+            public void transactionEnded(boolean isEnded) {
+                
+            }
+            
+        });
+    }
 
     @Override
     public FileChunk getNextFileChunk(Transaction transaction,

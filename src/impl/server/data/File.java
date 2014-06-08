@@ -12,7 +12,6 @@ import rso.at.Transaction;
 import rso.at.TransactionType;
 
 public class File {
-
     /**
      * Move it to proper class
      * 
@@ -33,11 +32,14 @@ public class File {
      */
     private List<Pair<Date, Transaction>> mFileTransactions;
 
-    public File(long fileID) {
-        this(fileID, 0);
+    private TransactionEndListener mTransactionEndListener;
+
+    public File(long fileID,TransactionEndListener transactionEndListener) {
+        this(fileID, 0,transactionEndListener);
     }
 
-    public File(long fileID, long newFileSize) {
+    public File(long fileID, long newFileSize, TransactionEndListener transactionEndListener) {
+        mTransactionEndListener = transactionEndListener;
         mFileSize = newFileSize;
         mFileID = fileID;
         mFileTransactions = new ArrayList<Pair<Date, Transaction>>();
@@ -60,6 +62,7 @@ public class File {
         // check if transactions have its timeout breached
         while (pos < mFileTransactions.size()) {
             if (mFileTransactions.get(pos).first.getTime() < (new Date().getTime() - sTimeout * 1000)) {
+                mTransactionEndListener.transactionEnded(mFileTransactions.get(pos).second, false);
                 mFileTransactions.remove(pos);
             } else {
                 pos++;
@@ -76,20 +79,10 @@ public class File {
      */
     public boolean addTransaction(Transaction transaction) throws InvalidOperation {
         deleteOutdatedTransactions();
-        if (transaction.type == TransactionType.READ) {
+        if (transaction.type == TransactionType.WRITE) {
             for (Pair<Date, Transaction> tmp : mFileTransactions) {
                 if (tmp.second.type == TransactionType.WRITE) {
                     throw new InvalidOperation(300, "File is being modified");
-                }
-            }
-            // TODO check if this is current date
-            mFileTransactions.add(new Pair<Date, Transaction>(new Date(), transaction));
-        } else if (transaction.type == TransactionType.WRITE) {
-            for (Pair<Date, Transaction> tmp : mFileTransactions) {
-                if (tmp.second.type == TransactionType.WRITE) {
-                    throw new InvalidOperation(300, "File is being modified");
-                } else if (tmp.second.type == TransactionType.READ) {
-                    throw new InvalidOperation(302, "File is being read");
                 }
             }
 
@@ -101,24 +94,42 @@ public class File {
 
     /**
      * Returns ByteBuffer with piece of file - also modifies chunk info
+     * @param transaction 
      * 
      * @param chunkInfo
      * @return
      */
-    public ByteBuffer getFileChunk(ChunkInfo chunkInfo) {
+    public ByteBuffer getFileChunk(Transaction transaction, ChunkInfo chunkInfo) {
+        applyNewTimeoutToTranasaction(transaction);
         if (chunkInfo.number == -1) {
             chunkInfo.maxNumber = (int) Math.ceil((double) mFileData.length / (double) sMaxFileChunkSize);
         }
         chunkInfo.size = (chunkInfo.number * chunkInfo.size + sMaxFileChunkSize > mFileData.length ? mFileData.length - chunkInfo.number * chunkInfo.size : sMaxFileChunkSize);
         chunkInfo.number++;
+        
+        if(chunkInfo.number == chunkInfo.maxNumber){
+            mTransactionEndListener.transactionEnded(transaction, true);
+        }
         return ByteBuffer.wrap(mFileData, chunkInfo.number * chunkInfo.size, chunkInfo.size);
     }
 
+    private void applyNewTimeoutToTranasaction(Transaction transaction) {
+        for(Pair<Date, Transaction> tmp: mFileTransactions){
+            if(tmp.second.token == transaction.token){
+                tmp.first = new Date();
+                break;
+            }
+            
+        }
+    }
+
     /**Return true if file change is finished
+     * @param transaction 
      * @param fileChunk2
      * @return
      */
-    public synchronized boolean addChange(FileChunk fileChunk2) {
+    public synchronized boolean addChange(Transaction transaction, FileChunk fileChunk2) {
+        applyNewTimeoutToTranasaction(transaction);
         mFileChanges.add(fileChunk2);
         if(fileChunk2.info.maxNumber == fileChunk2.info.number){
             return true;

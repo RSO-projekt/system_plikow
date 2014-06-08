@@ -19,6 +19,8 @@ public class FileData {
 
     private List<File> mFileList;
 
+    private TransactionEndListener mTransactionEndListener;
+
     private FileData() {
         mFileList = new ArrayList<File>();
     }
@@ -61,7 +63,7 @@ public class FileData {
             }
         }
         if(!found){
-            mFileList.add(new File(fileID, newFileSize));
+            mFileList.add(new File(fileID, newFileSize, mTransactionEndListener));
         }
     }
 
@@ -80,7 +82,7 @@ public class FileData {
                 FileChunk fileChunk = new FileChunk();
 
                 // chunkInfo is beeing modified here
-                fileChunk.data = f.getFileChunk(chunkInfo);
+                fileChunk.data = f.getFileChunk(transaction,chunkInfo);
                 fileChunk.info = chunkInfo;
                 return fileChunk;
             }
@@ -102,7 +104,9 @@ public class FileData {
         for (File f : mFileList) {
             if (f.getFileID() == transaction.fileID) {
                 ChunkInfo chunkInfo = fileChunk2.info;
-                f.addChange(fileChunk2);
+                if(f.addChange(transaction,fileChunk2)){
+                    mTransactionEndListener.transactionEnded(transaction,true);
+                }
                 return chunkInfo;
             }
         }
@@ -116,5 +120,11 @@ public class FileData {
             }
         }
         throw new InvalidOperation(301, "File not found");
+    }
+
+    public void registerTransactionEndListener(
+            TransactionEndListener transactionEndListener) {
+        mTransactionEndListener = transactionEndListener;
+        
     }
 }
