@@ -8,15 +8,15 @@ javac -d bin -nowarn -Xlint:unchecked -cp "lib/*" src/impl/*.java src/impl/clien
 cd bin
 
 echo "Creating Client jar"
-jar cfm client.jar ../src/impl/client/MANIFEST.MF impl/Configuration.class rso/at/*.class impl/client/*.class
+jar cfm client.jar ../src/impl/client/MANIFEST.MF impl/*.class rso/at/*.class impl/client/*.class
 mv client.jar ..
 
 echo "Creating MasterServer jar"
-jar cfm master-server.jar ../src/impl/server/master/MANIFEST.MF impl/Configuration.class rso/at/*.class impl/server/master/*.class 
+jar cfm master-server.jar ../src/impl/server/master/MANIFEST.MF impl/*.class rso/at/*.class impl/server/master/*.class 
 mv master-server.jar ..
 
 echo "Creating DataServer jar"
-jar cfm data-server.jar ../src/impl/server/data/MANIFEST.MF impl/Configuration.class rso/at/*.class impl/server/data/*.class 
+jar cfm data-server.jar ../src/impl/server/data/MANIFEST.MF impl/*.class rso/at/*.class impl/server/data/*.class 
 mv data-server.jar ..
 
 cd ..

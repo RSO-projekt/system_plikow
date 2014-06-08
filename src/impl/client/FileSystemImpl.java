@@ -1,9 +1,11 @@
 package impl.client;
 
+import impl.ClientMasterConnection;
 import impl.Configuration;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -24,23 +26,20 @@ import rso.at.Transaction;
 public class FileSystemImpl implements FileSystem {
     private ClientMasterService.Iface clientMasterService;
     private ClientDataService.Iface clientDataService;
-    private TTransport masterServerTransport;
+    private ClientMasterConnection connection;
 
     @Override
     public void connect() throws TTransportException {
         int i = 0;
         while (clientMasterService == null && i < Configuration.sMasterServerIPs.size()) {
-            try {
-                System.out.print("Connecting with host: " + Configuration.sMasterServerIPs.get(i) + ":" +
-                                                            Configuration.sMasterServerPorts.get(i) + "...");
-                createTransport(Configuration.sMasterServerIPs.get(i),
-                                Configuration.sMasterServerPorts.get(i) + Configuration.sClientMasterOffset,
-                                Configuration.sClientTimeout);
-                TProtocol protocol = new TBinaryProtocol(masterServerTransport);
-                clientMasterService = new ClientMasterService.Client(protocol);
+            System.out.print("Connecting with host: " + Configuration.sMasterServerIPs.get(i) + ":" +
+                                                        Configuration.sMasterServerPorts.get(i) + "...");
+            connection = new ClientMasterConnection(i);
+            if (connection.wasCreated()) {
                 System.out.println(" OK.");
-            } catch (TTransportException e) {
-                System.out.println(" Failed to connection with Master Server.");
+                clientMasterService = connection.getService();
+            } else {
+                System.out.println(" Failed.");
                 ++i;
             }
         }
@@ -72,16 +71,10 @@ public class FileSystemImpl implements FileSystem {
         }
     }
 
-    private void createTransport(String host, int port, int timeout)
-            throws TTransportException {
-        masterServerTransport = new TSocket(host, port, timeout);
-        masterServerTransport.open();
-    }
-
     @Override
     public void disconnect() {
-        if (masterServerTransport != null && masterServerTransport.isOpen())
-            masterServerTransport.close();
+        if (connection != null)
+            connection.close();
     }
 
     @Override

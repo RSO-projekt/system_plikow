@@ -68,8 +68,7 @@ public class ServerMain {
         // Add other master servers
         for (int i = 0; i < Configuration.sMasterServerIPs.size(); ++i) {
             if (i != myServerID)
-                monitor.addMasterConnection(Configuration.sMasterServerIPs.get(i), 
-                                            Configuration.sMasterServerPorts.get(i), i);
+                monitor.addMasterConnection(i);
         }
         
         monitor.setServerID(myServerID);

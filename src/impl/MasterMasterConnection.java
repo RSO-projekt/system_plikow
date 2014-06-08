@@ -1,13 +1,13 @@
-package impl.server.master;
+package impl;
 
-import impl.Configuration;
 import rso.at.MasterMasterService;
 import rso.at.MasterMasterService.Iface;
 
-// Master server connection.
-class MasterConnection extends Connection {
-    public MasterConnection(String host, int port, int serverID) {
-        super(host, port + Configuration.sMasterMasterOffset, serverID);
+// Master - Master server connection.
+public class MasterMasterConnection extends Connection {
+    public MasterMasterConnection(int serverID) {
+        super(Configuration.sMasterServerIPs.get(serverID),
+              Configuration.sMasterServerPorts.get(serverID) + Configuration.sMasterMasterOffset, serverID, true);
         service = new MasterMasterService.Client(protocol);
     }
 

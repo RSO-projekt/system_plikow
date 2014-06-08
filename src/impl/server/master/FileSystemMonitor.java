@@ -1,5 +1,7 @@
 package impl.server.master;
 
+import impl.MasterMasterConnection;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class FileSystemMonitor {
     Mode mode;
 
     // List of all redundant master servers
-    private ArrayList<MasterConnection> masterList;
+    private ArrayList<MasterMasterConnection> masterList;
 
     // Function checks privileges of a server
     private synchronized void checkPriviliges(boolean external) throws HostNotPermitted {
@@ -82,8 +84,8 @@ public class FileSystemMonitor {
     }
 
     // Add master connection to the list
-    public synchronized void addMasterConnection(String host, int port, int serverID) {
-        MasterConnection conn = new MasterConnection(host, port, serverID);
+    public synchronized void addMasterConnection(int serverID) {
+        MasterMasterConnection conn = new MasterMasterConnection(serverID);
         masterList.add(conn);
     }
 
@@ -153,7 +155,7 @@ public class FileSystemMonitor {
         nextId = new Long(0);
         fsVersion = new Long(0);
 
-        masterList = new ArrayList<MasterConnection>();
+        masterList = new ArrayList<MasterMasterConnection>();
         idMap = new TreeMap<Long, FileEntryExtended>();
         parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
         FileEntryExtended root = createFileEntryExtended(FileType.DIRECTORY, System.currentTimeMillis() / 1000, 0, 0, "root");
@@ -247,7 +249,7 @@ public class FileSystemMonitor {
         log(msg);
 
         fsVersion++;
-        for (MasterConnection conn : masterList) {
+        for (MasterMasterConnection conn : masterList) {
             int retries = 0;
             while (retries < 2) {
                 try {
@@ -340,7 +342,7 @@ public class FileSystemMonitor {
         log(msg);
 
         fsVersion++;
-        for (MasterConnection conn : masterList) {
+        for (MasterMasterConnection conn : masterList) {
             int retries = 0;
             while (retries < 2) {
                 try {
@@ -412,7 +414,7 @@ public class FileSystemMonitor {
         log(msg);
 
         fsVersion++;
-        for (MasterConnection conn : masterList) {
+        for (MasterMasterConnection conn : masterList) {
             int retries = 0;
             while (retries < 2) {
                 try {
@@ -554,7 +556,7 @@ public class FileSystemMonitor {
 
         // Find copy server
         FileSystemSnapshot snap = null;
-        for (MasterConnection conn : masterList) {
+        for (MasterMasterConnection conn : masterList) {
             if (conn.getServerID() == copyServerID) {
                 int retries = 0;
                 while (retries < 2) {
@@ -613,7 +615,7 @@ public class FileSystemMonitor {
         // For each server with higher priority number.
         Long maxCopyFsVersion = new Long(0);
         int copyServerID = 0;
-        for (MasterConnection conn : masterList) {
+        for (MasterMasterConnection conn : masterList) {
             if (conn.getServerID() < serverID) {
                 int retries = 0;
                 while (retries < 2) {
@@ -630,6 +632,7 @@ public class FileSystemMonitor {
                              conn.getHostPort() + "(" + conn.getServerID() + ")");
                         break;
                     } catch (TException e) {
+                        e.printStackTrace();
                         conn.reopen();
                         retries++;
                     }
@@ -644,7 +647,7 @@ public class FileSystemMonitor {
         // Broadcast election to lower priority servers if master
         if (mode == Mode.MASTER) {
             log("Elected as a coordinator");
-            for (MasterConnection conn : masterList) {
+            for (MasterMasterConnection conn : masterList) {
                 if (conn.getServerID() > serverID) {
                     int retries = 0;
                     while (retries < 2) {
