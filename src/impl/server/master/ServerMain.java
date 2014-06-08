@@ -75,10 +75,10 @@ public class ServerMain {
         ClientMasterThread clientConn = new ClientMasterThread(clientServerTransport, monitor, myServerID);
         clientConn.start();
         
-        DataMasterThread dataConn = new DataMasterThread(masterServerTransport, monitor, myServerID);
+        DataMasterThread dataConn = new DataMasterThread(dataServerTransport, monitor, myServerID);
         dataConn.start();
         
-        MasterMasterThread masterConn = new MasterMasterThread(dataServerTransport, monitor, myServerID);
+        MasterMasterThread masterConn = new MasterMasterThread(masterServerTransport, monitor, myServerID);
         masterConn.start();
     }
 

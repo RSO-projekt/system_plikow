@@ -1,15 +1,11 @@
 package impl.server.master;
 
 import impl.Configuration;
+import impl.MasterDataConnection;
 
 import java.util.List;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 
+import org.apache.thrift.TException;
 import rso.at.ClientMasterService;
 import rso.at.EntryNotFound;
 import rso.at.FileEntry;
@@ -132,26 +128,19 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
 
     private MasterDataService.Iface connectMasterToData(int dataServerID) 
             throws InvalidOperation {
+        
         // Check if data server with specified ID exists
         if (dataServerID >= Configuration.sDataServerIPs.size()) {
             throw new InvalidOperation(500, "Wrong IP number of data server");
         }
         
-        MasterDataService.Iface masterDataService = null;
-        try {
-            System.out.print("Connecting with data host: " + Configuration.sDataServerIPs.get(dataServerID) + "...");
-            TTransport dataTransport = new TSocket(Configuration.sDataServerIPs.get(dataServerID),
-                                                   Configuration.sDataServerPorts.get(dataServerID) + 
-                                                   Configuration.sMasterDataOffset,
-                                                   Configuration.sClientTimeout);
-            dataTransport.open();
-            TProtocol dataProtocol = new TBinaryProtocol(dataTransport);
-            masterDataService = new MasterDataService.Client(dataProtocol);
-            System.out.println(" OK.");
-        } catch (TTransportException e) {
-            System.out.println(" Failed to connect with Data Server " + dataServerID);
+        // Connect
+        MasterDataConnection conn = new MasterDataConnection(dataServerID);
+        if (!conn.wasCreated()) {
+            return null;
         }
-        return masterDataService;
+        
+        return conn.getService();
     }
 
     @Override
@@ -170,6 +159,7 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
         for (Integer dataServerID : entryCopy.mirrors) {
             System.out.println("mirrors: " + dataServerID);
             masterDataService = connectMasterToData(dataServerID.intValue());
+            
             if (masterDataService != null) {
                 System.out.println("przed");
                 masterDataService.allocateFile(file.id, size);

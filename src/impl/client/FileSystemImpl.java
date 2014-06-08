@@ -1,5 +1,6 @@
 package impl.client;
 
+import impl.ClientDataConnection;
 import impl.ClientMasterConnection;
 import impl.Configuration;
 
@@ -7,10 +8,6 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
 import rso.at.ChunkInfo;
@@ -45,30 +42,6 @@ public class FileSystemImpl implements FileSystem {
         }
         if (clientMasterService == null)
             throw new TTransportException();
-    }
-
-    public void connectToDataServer(int dataServerID)
-            throws TTransportException, InvalidOperation {
-        
-        // Check if data server with specified ID exists
-        if (dataServerID >= Configuration.sDataServerIPs.size()) {
-            throw new InvalidOperation(500, "Wrong IP number of data server");
-        }
-    
-        try {
-            System.out.print("Connecting with data host: " + Configuration.sDataServerIPs.get(dataServerID) + ":" +
-                                                             Configuration.sDataServerPorts.get(dataServerID) + "...");
-            TTransport dataTransport = new TSocket(Configuration.sDataServerIPs.get(dataServerID),
-                                                   Configuration.sDataServerPorts.get(dataServerID) + 
-                                                   Configuration.sClientDataOffset,
-                                                   Configuration.sClientTimeout);
-            dataTransport.open();
-            TProtocol dataProtocol = new TBinaryProtocol(dataTransport);
-            clientDataService = new ClientDataService.Client(dataProtocol);
-            System.out.println(" OK.");
-        } catch (TTransportException e) {
-            System.out.println(" Failed to connect with Data Server " + dataServerID);
-        }
     }
 
     @Override
@@ -169,7 +142,14 @@ public class FileSystemImpl implements FileSystem {
     private void sendChunks(Transaction transaction, byte[] bytes)
             throws TTransportException, InvalidOperation, HostNotPermitted,
             TException {
-        connectToDataServer(transaction.serverID);
+        
+        ClientDataConnection conn = new ClientDataConnection(transaction.serverID);
+        if (!conn.wasCreated())
+            throw new InvalidOperation(99, "Cannot connect to data server at: " + 
+                                           conn.getHostAddress() + ":" +
+                                           conn.getHostPort());
+        clientDataService = conn.getService();
+        
         int chunkSize = 1000;
         int maxChunkCount = (int) Math.ceil((double) bytes.length / chunkSize);
         for (int i = 0; i < maxChunkCount; i++) {
@@ -203,6 +183,13 @@ public class FileSystemImpl implements FileSystem {
 
     private byte[] readChunks(Transaction transaction, long num)
             throws InvalidOperation, HostNotPermitted, TException {
+        ClientDataConnection conn = new ClientDataConnection(transaction.serverID);
+        if (!conn.wasCreated())
+            throw new InvalidOperation(99, "Cannot connect to data server at: " + 
+                                           conn.getHostAddress() + ":" +
+                                           conn.getHostPort());
+        clientDataService = conn.getService();
+        
         ByteBuffer byteList = ByteBuffer.allocate((int) num);
         FileChunk tmpFileChunk;
         ChunkInfo chunkInfo = new ChunkInfo(0, 0, 1000);

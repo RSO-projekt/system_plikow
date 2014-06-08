@@ -1,5 +1,6 @@
 package impl.server.master;
 
+import impl.Configuration;
 import impl.MasterMasterConnection;
 
 import java.text.DateFormat;
@@ -9,6 +10,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -36,6 +38,9 @@ public class FileSystemMonitor {
     // Internal strings for getParentPath() function.
     private String pathParent;
     private String pathName;
+    
+    // Random number generator
+    private Random rnd = new Random();
 
     // Current server ID
     int serverID;
@@ -79,7 +84,12 @@ public class FileSystemMonitor {
         sb.append("[" + (entry.entry.type == FileType.DIRECTORY ? "DIR: \"" : "FILE: \"") + entry.entry.name + "\", ");
         sb.append("ID: " + entry.entry.id + ", ");
         sb.append("pID: " + entry.entry.parentID + ", ");
-        sb.append("ver: " + entry.entry.version + "]");
+        sb.append("ver: " + entry.entry.version + ", ");
+        sb.append("on:");
+        for (int mirror : entry.mirrors) {
+            sb.append(" " + mirror);
+        }
+        sb.append("]");
         return sb.toString();
     }
 
@@ -93,8 +103,16 @@ public class FileSystemMonitor {
     private FileEntryExtended createFileEntryExtended(FileType fileType, long time, long parentId, long size, String name) {
         FileEntry fe = new FileEntry(fileType, time, nextId, parentId, 0, size, name);
         ++nextId;
+        
+        // Select random mirrors
         ArrayList<Integer> mirrors = new ArrayList<Integer>();
-        mirrors.add(0);
+        int start = rnd.nextInt(Configuration.sDataServerIPs.size());
+        for (int i = start; i < start + Configuration.sRedundancy; ++i) {
+            int newMirror = i % Configuration.sDataServerIPs.size();
+            if (!mirrors.contains(newMirror))
+                mirrors.add(newMirror);
+        }
+        
         return new FileEntryExtended(fe, mirrors, FileState.IDLE);
     }
 
@@ -632,7 +650,6 @@ public class FileSystemMonitor {
                              conn.getHostPort() + "(" + conn.getServerID() + ")");
                         break;
                     } catch (TException e) {
-                        e.printStackTrace();
                         conn.reopen();
                         retries++;
                     }
