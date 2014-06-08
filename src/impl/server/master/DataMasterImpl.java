@@ -17,14 +17,15 @@ public class DataMasterImpl implements Iface {
     }
 
     @Override
-    public void transactionFinished(Transaction transaction) throws InvalidOperation, TException {
-        monitor.removeFinishedTransaction(transaction);
-    }
-
-    @Override
     public List<FileEntryExtended> getMirroredFileList() throws InvalidOperation, TException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void transactionFinished(Transaction transaction,
+            boolean isSuccessful) throws InvalidOperation, TException {
+        monitor.removeFinishedTransaction(transaction, isSuccessful);
     }
 
 }

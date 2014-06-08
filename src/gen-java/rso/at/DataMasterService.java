@@ -36,7 +36,7 @@ public class DataMasterService {
 
   public interface Iface {
 
-    public void transactionFinished(rso.at.Transaction transaction) throws rso.at.InvalidOperation, org.apache.thrift.TException;
+    public void transactionFinished(rso.at.Transaction transaction, boolean isSuccessful) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
     public List<rso.at.FileEntryExtended> getMirroredFileList() throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
@@ -44,7 +44,7 @@ public class DataMasterService {
 
   public interface AsyncIface {
 
-    public void transactionFinished(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void transactionFinished(rso.at.Transaction transaction, boolean isSuccessful, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void getMirroredFileList(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -70,16 +70,17 @@ public class DataMasterService {
       super(iprot, oprot);
     }
 
-    public void transactionFinished(rso.at.Transaction transaction) throws rso.at.InvalidOperation, org.apache.thrift.TException
+    public void transactionFinished(rso.at.Transaction transaction, boolean isSuccessful) throws rso.at.InvalidOperation, org.apache.thrift.TException
     {
-      send_transactionFinished(transaction);
+      send_transactionFinished(transaction, isSuccessful);
       recv_transactionFinished();
     }
 
-    public void send_transactionFinished(rso.at.Transaction transaction) throws org.apache.thrift.TException
+    public void send_transactionFinished(rso.at.Transaction transaction, boolean isSuccessful) throws org.apache.thrift.TException
     {
       transactionFinished_args args = new transactionFinished_args();
       args.setTransaction(transaction);
+      args.setIsSuccessful(isSuccessful);
       sendBase("transactionFinished", args);
     }
 
@@ -136,24 +137,27 @@ public class DataMasterService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void transactionFinished(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void transactionFinished(rso.at.Transaction transaction, boolean isSuccessful, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      transactionFinished_call method_call = new transactionFinished_call(transaction, resultHandler, this, ___protocolFactory, ___transport);
+      transactionFinished_call method_call = new transactionFinished_call(transaction, isSuccessful, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class transactionFinished_call extends org.apache.thrift.async.TAsyncMethodCall {
       private rso.at.Transaction transaction;
-      public transactionFinished_call(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private boolean isSuccessful;
+      public transactionFinished_call(rso.at.Transaction transaction, boolean isSuccessful, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.transaction = transaction;
+        this.isSuccessful = isSuccessful;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("transactionFinished", org.apache.thrift.protocol.TMessageType.CALL, 0));
         transactionFinished_args args = new transactionFinished_args();
         args.setTransaction(transaction);
+        args.setIsSuccessful(isSuccessful);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -231,7 +235,7 @@ public class DataMasterService {
       public transactionFinished_result getResult(I iface, transactionFinished_args args) throws org.apache.thrift.TException {
         transactionFinished_result result = new transactionFinished_result();
         try {
-          iface.transactionFinished(args.transaction);
+          iface.transactionFinished(args.transaction, args.isSuccessful);
         } catch (rso.at.InvalidOperation err1) {
           result.err1 = err1;
         }
@@ -333,7 +337,7 @@ public class DataMasterService {
       }
 
       public void start(I iface, transactionFinished_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
-        iface.transactionFinished(args.transaction,resultHandler);
+        iface.transactionFinished(args.transaction, args.isSuccessful,resultHandler);
       }
     }
 
@@ -400,6 +404,7 @@ public class DataMasterService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("transactionFinished_args");
 
     private static final org.apache.thrift.protocol.TField TRANSACTION_FIELD_DESC = new org.apache.thrift.protocol.TField("transaction", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField IS_SUCCESSFUL_FIELD_DESC = new org.apache.thrift.protocol.TField("isSuccessful", org.apache.thrift.protocol.TType.BOOL, (short)2);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -408,10 +413,12 @@ public class DataMasterService {
     }
 
     public rso.at.Transaction transaction; // required
+    public boolean isSuccessful; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      TRANSACTION((short)1, "transaction");
+      TRANSACTION((short)1, "transaction"),
+      IS_SUCCESSFUL((short)2, "isSuccessful");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -428,6 +435,8 @@ public class DataMasterService {
         switch(fieldId) {
           case 1: // TRANSACTION
             return TRANSACTION;
+          case 2: // IS_SUCCESSFUL
+            return IS_SUCCESSFUL;
           default:
             return null;
         }
@@ -468,11 +477,15 @@ public class DataMasterService {
     }
 
     // isset id assignments
+    private static final int __ISSUCCESSFUL_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.TRANSACTION, new org.apache.thrift.meta_data.FieldMetaData("transaction", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.Transaction.class)));
+      tmpMap.put(_Fields.IS_SUCCESSFUL, new org.apache.thrift.meta_data.FieldMetaData("isSuccessful", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(transactionFinished_args.class, metaDataMap);
     }
@@ -481,19 +494,24 @@ public class DataMasterService {
     }
 
     public transactionFinished_args(
-      rso.at.Transaction transaction)
+      rso.at.Transaction transaction,
+      boolean isSuccessful)
     {
       this();
       this.transaction = transaction;
+      this.isSuccessful = isSuccessful;
+      setIsSuccessfulIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public transactionFinished_args(transactionFinished_args other) {
+      __isset_bitfield = other.__isset_bitfield;
       if (other.isSetTransaction()) {
         this.transaction = new rso.at.Transaction(other.transaction);
       }
+      this.isSuccessful = other.isSuccessful;
     }
 
     public transactionFinished_args deepCopy() {
@@ -503,6 +521,8 @@ public class DataMasterService {
     @Override
     public void clear() {
       this.transaction = null;
+      setIsSuccessfulIsSet(false);
+      this.isSuccessful = false;
     }
 
     public rso.at.Transaction getTransaction() {
@@ -529,6 +549,29 @@ public class DataMasterService {
       }
     }
 
+    public boolean isIsSuccessful() {
+      return this.isSuccessful;
+    }
+
+    public transactionFinished_args setIsSuccessful(boolean isSuccessful) {
+      this.isSuccessful = isSuccessful;
+      setIsSuccessfulIsSet(true);
+      return this;
+    }
+
+    public void unsetIsSuccessful() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __ISSUCCESSFUL_ISSET_ID);
+    }
+
+    /** Returns true if field isSuccessful is set (has been assigned a value) and false otherwise */
+    public boolean isSetIsSuccessful() {
+      return EncodingUtils.testBit(__isset_bitfield, __ISSUCCESSFUL_ISSET_ID);
+    }
+
+    public void setIsSuccessfulIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __ISSUCCESSFUL_ISSET_ID, value);
+    }
+
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
       case TRANSACTION:
@@ -539,6 +582,14 @@ public class DataMasterService {
         }
         break;
 
+      case IS_SUCCESSFUL:
+        if (value == null) {
+          unsetIsSuccessful();
+        } else {
+          setIsSuccessful((Boolean)value);
+        }
+        break;
+
       }
     }
 
@@ -546,6 +597,9 @@ public class DataMasterService {
       switch (field) {
       case TRANSACTION:
         return getTransaction();
+
+      case IS_SUCCESSFUL:
+        return Boolean.valueOf(isIsSuccessful());
 
       }
       throw new IllegalStateException();
@@ -560,6 +614,8 @@ public class DataMasterService {
       switch (field) {
       case TRANSACTION:
         return isSetTransaction();
+      case IS_SUCCESSFUL:
+        return isSetIsSuccessful();
       }
       throw new IllegalStateException();
     }
@@ -586,6 +642,15 @@ public class DataMasterService {
           return false;
       }
 
+      boolean this_present_isSuccessful = true;
+      boolean that_present_isSuccessful = true;
+      if (this_present_isSuccessful || that_present_isSuccessful) {
+        if (!(this_present_isSuccessful && that_present_isSuccessful))
+          return false;
+        if (this.isSuccessful != that.isSuccessful)
+          return false;
+      }
+
       return true;
     }
 
@@ -608,6 +673,16 @@ public class DataMasterService {
       }
       if (isSetTransaction()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.transaction, other.transaction);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetIsSuccessful()).compareTo(other.isSetIsSuccessful());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetIsSuccessful()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.isSuccessful, other.isSuccessful);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -639,6 +714,10 @@ public class DataMasterService {
         sb.append(this.transaction);
       }
       first = false;
+      if (!first) sb.append(", ");
+      sb.append("isSuccessful:");
+      sb.append(this.isSuccessful);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -661,6 +740,8 @@ public class DataMasterService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -694,6 +775,14 @@ public class DataMasterService {
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
+            case 2: // IS_SUCCESSFUL
+              if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+                struct.isSuccessful = iprot.readBool();
+                struct.setIsSuccessfulIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -714,6 +803,9 @@ public class DataMasterService {
           struct.transaction.write(oprot);
           oprot.writeFieldEnd();
         }
+        oprot.writeFieldBegin(IS_SUCCESSFUL_FIELD_DESC);
+        oprot.writeBool(struct.isSuccessful);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -735,20 +827,30 @@ public class DataMasterService {
         if (struct.isSetTransaction()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetIsSuccessful()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetTransaction()) {
           struct.transaction.write(oprot);
+        }
+        if (struct.isSetIsSuccessful()) {
+          oprot.writeBool(struct.isSuccessful);
         }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, transactionFinished_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(1);
+        BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           struct.transaction = new rso.at.Transaction();
           struct.transaction.read(iprot);
           struct.setTransactionIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.isSuccessful = iprot.readBool();
+          struct.setIsSuccessfulIsSet(true);
         }
       }
     }

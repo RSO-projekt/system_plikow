@@ -796,10 +796,15 @@ public class FileSystemMonitor {
         }
         fileTransactions.get(extended.entry.id).add(transaction);
         setFileStateToWrite(extended.entry);
+        log("Created transaction with token " + transaction.token + ", type: " + transaction.type +
+            ", from: " + transaction.masterServerID + ", to: " + transaction.dataServerID);
         return null;
     }
     
-    public synchronized void removeFinishedTransaction(Transaction transaction) throws InvalidOperation, TException {
+    public synchronized void removeFinishedTransaction(Transaction transaction, boolean isSuccessful) 
+            throws InvalidOperation, TException {
+        log("Transaction finished with token: " + transaction.token + " and status: " + isSuccessful);
+        
         //Find transaction
         ArrayList<Transaction> transactions = (ArrayList<Transaction>) fileTransactions.get(transaction.fileID);
         for (Transaction t : transactions) {
@@ -818,8 +823,11 @@ public class FileSystemMonitor {
         
         // If idle apply changes.
         if (file.state == FileState.IDLE &&
-            transaction.type == TransactionType.WRITE) {
+            transaction.type == TransactionType.WRITE &&
+            isSuccessful) {
             MasterDataConnection conn = new MasterDataConnection(transaction.dataServerID);
+            log("Updating file " + file.entry.id + " to data server " + conn.getHostAddress() + ":" +
+                conn.getHostPort());
             if (conn.wasCreated()) {
                 conn.getService().applyChanges(transaction.fileID);
                 file.entry.version++;
