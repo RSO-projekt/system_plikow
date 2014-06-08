@@ -199,6 +199,7 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
             throw new InvalidOperation(28, "Cannot connect to data server");
         }
         monitor.setFileSize(file, size);
-        return file;
+        file.size = size;
+        return file.deepCopy();
     }
 }

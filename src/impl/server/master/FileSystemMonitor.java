@@ -476,7 +476,7 @@ public class FileSystemMonitor {
         }
         
         // Replace a file
-        idMap.put(entry.entry.id, entry);
+        idMap.put(entry.entry.id, entry.deepCopy());
         this.fsVersion = fsVersion;
         log("Got update " + showFileEntryExtended(entry) + " from server ID: " + serverID);
     }
