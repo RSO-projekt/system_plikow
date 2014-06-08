@@ -25,6 +25,7 @@ public class File {
     private byte[] mFileData;
 
     private List<FileChunk> mFileChanges;
+    int lastChangeOffset;
 
     private long mFileSize;
     /**
@@ -154,6 +155,7 @@ public class File {
      */
     public synchronized boolean addChange(Transaction transaction, FileChunk fileChunk2) {
         applyNewTimeoutToTranasaction(transaction);
+        lastChangeOffset = (int) transaction.offset;
         mFileChanges.add(fileChunk2);
         System.out.println( fileChunk2.info.number + " " + fileChunk2.info.maxNumber);
         if(fileChunk2.info.maxNumber-1 == fileChunk2.info.number){
@@ -169,7 +171,7 @@ public class File {
      */
     public synchronized void applyChanges() throws InvalidOperation {
         try {
-        	int offset = 0;
+        	int offset = lastChangeOffset;
             for (FileChunk fileChunk : mFileChanges) {
                 ChunkInfo chunkInfo = fileChunk.info;
                 for (int i = 0; i < chunkInfo.size; i++) {
