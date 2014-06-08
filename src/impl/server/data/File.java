@@ -20,8 +20,6 @@ public class File {
      */
     private final static int sTimeout = 10;
 
-    private final static int sMaxFileChunkSize = 1000;
-
     private long mFileID;
 
     private byte[] mFileData;
@@ -67,9 +65,9 @@ public class File {
                 try {
                     mTransactionEndListener.transactionEnded(mFileTransactions.get(pos).second, false);
                 } catch (InvalidOperation e) {
-                    
+
                 } catch (TException e) {
-                    
+
                 }finally{
                     if(mFileTransactions.get(pos).second.type == TransactionType.WRITE){
                         rollBackChanges();
@@ -121,10 +119,10 @@ public class File {
      */
     public ByteBuffer getFileChunk(Transaction transaction, ChunkInfo chunkInfo) throws InvalidOperation {
         applyNewTimeoutToTranasaction(transaction);
-        if (chunkInfo.number == -1) {
-            chunkInfo.maxNumber = (int) Math.ceil((double) mFileData.length / (double) sMaxFileChunkSize);
-        }
-        chunkInfo.size = (chunkInfo.number * chunkInfo.size + sMaxFileChunkSize > mFileData.length ? mFileData.length - chunkInfo.number * chunkInfo.size : sMaxFileChunkSize);
+
+        chunkInfo.maxNumber = (int) Math.ceil((double) transaction.size / chunkInfo.size);
+
+        int length = (int)Math.min(transaction.size - chunkInfo.number*chunkInfo.size,chunkInfo.size);
         chunkInfo.number++;
         
         if(chunkInfo.number == chunkInfo.maxNumber){
@@ -134,7 +132,8 @@ public class File {
                 throw new InvalidOperation(310, "Could not send info about transaction completion");
             }
         }
-        return ByteBuffer.wrap(mFileData, chunkInfo.number * chunkInfo.size, chunkInfo.size);
+       
+        return ByteBuffer.wrap(mFileData, (int)transaction.offset, length);
     }
 
     private void applyNewTimeoutToTranasaction(Transaction transaction) {
@@ -143,7 +142,7 @@ public class File {
                 tmp.first = new Date();
                 break;
             }
-            
+
         }
     }
 
@@ -192,6 +191,6 @@ public class File {
         for(int i =0; i < Math.min(mFileData.length, old_data.length); i++){
             mFileData[i] = old_data[i];
         }
-        
+
     }
 }
