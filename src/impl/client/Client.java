@@ -212,6 +212,8 @@ public class Client {
             else
                 sb.append(" FILE ");
             sb.append(entry.getSize());
+            if (entry.getSize() < 10)
+                sb.append(" ");
             sb.append("\t");
             sb.append(entry.getName());
             sb.append("\n");

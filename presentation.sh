@@ -151,7 +151,7 @@ rm myFile.txt downloadedFile*.txt
 java -jar client.jar rm /uploadedFile.txt
 java -jar client.jar rm /uploadedFile2.txt
 java -jar client.jar rm /uploadedFile3.txt
-java -jar client.jar rm /uploadedFile4.txt
+#java -jar client.jar rm /uploadedFile4.txt
 java -jar client.jar rm /uploadedFile5.txt
 echo "End presentation"
 

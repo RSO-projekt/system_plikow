@@ -58,11 +58,11 @@ result=$(java -jar client.jar readPart /uploadFile.txt 0 13 | grep "My new bigge
 check $result
 
 echo -n "10: Test lookup (test directory exists) "
-result=$(java -jar client.jar ls / | grep "DIR  0\stestDir" | wc -l)
+result=$(java -jar client.jar ls / | grep "DIR  0 \stestDir" | wc -l)
 check $result
 
 echo -n "11: Test lookup (test file exists)      "
-result=$(java -jar client.jar ls / | grep "FILE 0\stestFile.txt" | wc -l)
+result=$(java -jar client.jar ls / | grep "FILE 0 \stestFile.txt" | wc -l)
 check $result
 
 echo -n "12: Test move                           "
