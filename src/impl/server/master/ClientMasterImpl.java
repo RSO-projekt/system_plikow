@@ -101,8 +101,8 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
         for (Integer dataServerID : entryCopy.mirrors) {
             masterDataService = connectMasterToData(dataServerID.intValue());
             if (masterDataService != null) {
-                int token = monitor.getNextTransactionToken();
-                transaction = new Transaction(TransactionType.WRITE, token, dataServerID.intValue(), file.id);
+                transaction = monitor.getNewTransaction(file, dataServerID.intValue(), 
+                                                        TransactionType.WRITE, offset, num);
                 break;
             }
         }
@@ -160,6 +160,7 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
             masterDataService = connectMasterToData(dataServerID.intValue());
             
             if (masterDataService != null) {
+                // TODO: wyscig
                 masterDataService.allocateFile(file.id, size);
                 modified = true;
                 break;

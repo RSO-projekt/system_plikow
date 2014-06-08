@@ -143,7 +143,7 @@ public class FileSystemImpl implements FileSystem {
             throws TTransportException, InvalidOperation, HostNotPermitted,
             TException {
         
-        ClientDataConnection conn = new ClientDataConnection(transaction.serverID);
+        ClientDataConnection conn = new ClientDataConnection(transaction.dataServerID);
         if (!conn.wasCreated())
             throw new InvalidOperation(99, "Cannot connect to data server at: " + 
                                            conn.getHostAddress() + ":" +
@@ -183,7 +183,7 @@ public class FileSystemImpl implements FileSystem {
 
     private byte[] readChunks(Transaction transaction, long num)
             throws InvalidOperation, HostNotPermitted, TException {
-        ClientDataConnection conn = new ClientDataConnection(transaction.serverID);
+        ClientDataConnection conn = new ClientDataConnection(transaction.dataServerID);
         if (!conn.wasCreated())
             throw new InvalidOperation(99, "Cannot connect to data server at: " + 
                                            conn.getHostAddress() + ":" +

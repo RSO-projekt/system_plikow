@@ -18,8 +18,7 @@ public class DataMasterImpl implements Iface {
 
     @Override
     public void transactionFinished(Transaction transaction) throws InvalidOperation, TException {
-        // TODO Auto-generated method stub
-        
+        monitor.removeFinishedTransaction(transaction);
     }
 
     @Override

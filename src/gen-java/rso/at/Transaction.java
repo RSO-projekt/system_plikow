@@ -37,8 +37,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
 
   private static final org.apache.thrift.protocol.TField TYPE_FIELD_DESC = new org.apache.thrift.protocol.TField("type", org.apache.thrift.protocol.TType.I32, (short)1);
   private static final org.apache.thrift.protocol.TField TOKEN_FIELD_DESC = new org.apache.thrift.protocol.TField("token", org.apache.thrift.protocol.TType.I32, (short)2);
-  private static final org.apache.thrift.protocol.TField SERVER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("serverID", org.apache.thrift.protocol.TType.I32, (short)3);
-  private static final org.apache.thrift.protocol.TField FILE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("fileID", org.apache.thrift.protocol.TType.I64, (short)4);
+  private static final org.apache.thrift.protocol.TField DATA_SERVER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("dataServerID", org.apache.thrift.protocol.TType.I32, (short)3);
+  private static final org.apache.thrift.protocol.TField MASTER_SERVER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("masterServerID", org.apache.thrift.protocol.TType.I32, (short)4);
+  private static final org.apache.thrift.protocol.TField FILE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("fileID", org.apache.thrift.protocol.TType.I64, (short)5);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -52,7 +53,8 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
    */
   public TransactionType type; // required
   public int token; // required
-  public int serverID; // required
+  public int dataServerID; // required
+  public int masterServerID; // required
   public long fileID; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -63,8 +65,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
      */
     TYPE((short)1, "type"),
     TOKEN((short)2, "token"),
-    SERVER_ID((short)3, "serverID"),
-    FILE_ID((short)4, "fileID");
+    DATA_SERVER_ID((short)3, "dataServerID"),
+    MASTER_SERVER_ID((short)4, "masterServerID"),
+    FILE_ID((short)5, "fileID");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -83,9 +86,11 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
           return TYPE;
         case 2: // TOKEN
           return TOKEN;
-        case 3: // SERVER_ID
-          return SERVER_ID;
-        case 4: // FILE_ID
+        case 3: // DATA_SERVER_ID
+          return DATA_SERVER_ID;
+        case 4: // MASTER_SERVER_ID
+          return MASTER_SERVER_ID;
+        case 5: // FILE_ID
           return FILE_ID;
         default:
           return null;
@@ -128,8 +133,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
 
   // isset id assignments
   private static final int __TOKEN_ISSET_ID = 0;
-  private static final int __SERVERID_ISSET_ID = 1;
-  private static final int __FILEID_ISSET_ID = 2;
+  private static final int __DATASERVERID_ISSET_ID = 1;
+  private static final int __MASTERSERVERID_ISSET_ID = 2;
+  private static final int __FILEID_ISSET_ID = 3;
   private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
@@ -138,7 +144,9 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         new org.apache.thrift.meta_data.EnumMetaData(org.apache.thrift.protocol.TType.ENUM, TransactionType.class)));
     tmpMap.put(_Fields.TOKEN, new org.apache.thrift.meta_data.FieldMetaData("token", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
-    tmpMap.put(_Fields.SERVER_ID, new org.apache.thrift.meta_data.FieldMetaData("serverID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+    tmpMap.put(_Fields.DATA_SERVER_ID, new org.apache.thrift.meta_data.FieldMetaData("dataServerID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.MASTER_SERVER_ID, new org.apache.thrift.meta_data.FieldMetaData("masterServerID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
     tmpMap.put(_Fields.FILE_ID, new org.apache.thrift.meta_data.FieldMetaData("fileID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
@@ -152,15 +160,18 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
   public Transaction(
     TransactionType type,
     int token,
-    int serverID,
+    int dataServerID,
+    int masterServerID,
     long fileID)
   {
     this();
     this.type = type;
     this.token = token;
     setTokenIsSet(true);
-    this.serverID = serverID;
-    setServerIDIsSet(true);
+    this.dataServerID = dataServerID;
+    setDataServerIDIsSet(true);
+    this.masterServerID = masterServerID;
+    setMasterServerIDIsSet(true);
     this.fileID = fileID;
     setFileIDIsSet(true);
   }
@@ -174,7 +185,8 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       this.type = other.type;
     }
     this.token = other.token;
-    this.serverID = other.serverID;
+    this.dataServerID = other.dataServerID;
+    this.masterServerID = other.masterServerID;
     this.fileID = other.fileID;
   }
 
@@ -187,8 +199,10 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     this.type = null;
     setTokenIsSet(false);
     this.token = 0;
-    setServerIDIsSet(false);
-    this.serverID = 0;
+    setDataServerIDIsSet(false);
+    this.dataServerID = 0;
+    setMasterServerIDIsSet(false);
+    this.masterServerID = 0;
     setFileIDIsSet(false);
     this.fileID = 0;
   }
@@ -248,27 +262,50 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __TOKEN_ISSET_ID, value);
   }
 
-  public int getServerID() {
-    return this.serverID;
+  public int getDataServerID() {
+    return this.dataServerID;
   }
 
-  public Transaction setServerID(int serverID) {
-    this.serverID = serverID;
-    setServerIDIsSet(true);
+  public Transaction setDataServerID(int dataServerID) {
+    this.dataServerID = dataServerID;
+    setDataServerIDIsSet(true);
     return this;
   }
 
-  public void unsetServerID() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SERVERID_ISSET_ID);
+  public void unsetDataServerID() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __DATASERVERID_ISSET_ID);
   }
 
-  /** Returns true if field serverID is set (has been assigned a value) and false otherwise */
-  public boolean isSetServerID() {
-    return EncodingUtils.testBit(__isset_bitfield, __SERVERID_ISSET_ID);
+  /** Returns true if field dataServerID is set (has been assigned a value) and false otherwise */
+  public boolean isSetDataServerID() {
+    return EncodingUtils.testBit(__isset_bitfield, __DATASERVERID_ISSET_ID);
   }
 
-  public void setServerIDIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SERVERID_ISSET_ID, value);
+  public void setDataServerIDIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __DATASERVERID_ISSET_ID, value);
+  }
+
+  public int getMasterServerID() {
+    return this.masterServerID;
+  }
+
+  public Transaction setMasterServerID(int masterServerID) {
+    this.masterServerID = masterServerID;
+    setMasterServerIDIsSet(true);
+    return this;
+  }
+
+  public void unsetMasterServerID() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __MASTERSERVERID_ISSET_ID);
+  }
+
+  /** Returns true if field masterServerID is set (has been assigned a value) and false otherwise */
+  public boolean isSetMasterServerID() {
+    return EncodingUtils.testBit(__isset_bitfield, __MASTERSERVERID_ISSET_ID);
+  }
+
+  public void setMasterServerIDIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __MASTERSERVERID_ISSET_ID, value);
   }
 
   public long getFileID() {
@@ -312,11 +349,19 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       }
       break;
 
-    case SERVER_ID:
+    case DATA_SERVER_ID:
       if (value == null) {
-        unsetServerID();
+        unsetDataServerID();
       } else {
-        setServerID((Integer)value);
+        setDataServerID((Integer)value);
+      }
+      break;
+
+    case MASTER_SERVER_ID:
+      if (value == null) {
+        unsetMasterServerID();
+      } else {
+        setMasterServerID((Integer)value);
       }
       break;
 
@@ -339,8 +384,11 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     case TOKEN:
       return Integer.valueOf(getToken());
 
-    case SERVER_ID:
-      return Integer.valueOf(getServerID());
+    case DATA_SERVER_ID:
+      return Integer.valueOf(getDataServerID());
+
+    case MASTER_SERVER_ID:
+      return Integer.valueOf(getMasterServerID());
 
     case FILE_ID:
       return Long.valueOf(getFileID());
@@ -360,8 +408,10 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       return isSetType();
     case TOKEN:
       return isSetToken();
-    case SERVER_ID:
-      return isSetServerID();
+    case DATA_SERVER_ID:
+      return isSetDataServerID();
+    case MASTER_SERVER_ID:
+      return isSetMasterServerID();
     case FILE_ID:
       return isSetFileID();
     }
@@ -399,12 +449,21 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         return false;
     }
 
-    boolean this_present_serverID = true;
-    boolean that_present_serverID = true;
-    if (this_present_serverID || that_present_serverID) {
-      if (!(this_present_serverID && that_present_serverID))
+    boolean this_present_dataServerID = true;
+    boolean that_present_dataServerID = true;
+    if (this_present_dataServerID || that_present_dataServerID) {
+      if (!(this_present_dataServerID && that_present_dataServerID))
         return false;
-      if (this.serverID != that.serverID)
+      if (this.dataServerID != that.dataServerID)
+        return false;
+    }
+
+    boolean this_present_masterServerID = true;
+    boolean that_present_masterServerID = true;
+    if (this_present_masterServerID || that_present_masterServerID) {
+      if (!(this_present_masterServerID && that_present_masterServerID))
+        return false;
+      if (this.masterServerID != that.masterServerID)
         return false;
     }
 
@@ -453,12 +512,22 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetServerID()).compareTo(other.isSetServerID());
+    lastComparison = Boolean.valueOf(isSetDataServerID()).compareTo(other.isSetDataServerID());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetServerID()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.serverID, other.serverID);
+    if (isSetDataServerID()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.dataServerID, other.dataServerID);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetMasterServerID()).compareTo(other.isSetMasterServerID());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetMasterServerID()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.masterServerID, other.masterServerID);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -505,8 +574,12 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     sb.append(this.token);
     first = false;
     if (!first) sb.append(", ");
-    sb.append("serverID:");
-    sb.append(this.serverID);
+    sb.append("dataServerID:");
+    sb.append(this.dataServerID);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("masterServerID:");
+    sb.append(this.masterServerID);
     first = false;
     if (!first) sb.append(", ");
     sb.append("fileID:");
@@ -573,15 +646,23 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 3: // SERVER_ID
+          case 3: // DATA_SERVER_ID
             if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-              struct.serverID = iprot.readI32();
-              struct.setServerIDIsSet(true);
+              struct.dataServerID = iprot.readI32();
+              struct.setDataServerIDIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 4: // FILE_ID
+          case 4: // MASTER_SERVER_ID
+            if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+              struct.masterServerID = iprot.readI32();
+              struct.setMasterServerIDIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 5: // FILE_ID
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
               struct.fileID = iprot.readI64();
               struct.setFileIDIsSet(true);
@@ -612,8 +693,11 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       oprot.writeFieldBegin(TOKEN_FIELD_DESC);
       oprot.writeI32(struct.token);
       oprot.writeFieldEnd();
-      oprot.writeFieldBegin(SERVER_ID_FIELD_DESC);
-      oprot.writeI32(struct.serverID);
+      oprot.writeFieldBegin(DATA_SERVER_ID_FIELD_DESC);
+      oprot.writeI32(struct.dataServerID);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(MASTER_SERVER_ID_FIELD_DESC);
+      oprot.writeI32(struct.masterServerID);
       oprot.writeFieldEnd();
       oprot.writeFieldBegin(FILE_ID_FIELD_DESC);
       oprot.writeI64(struct.fileID);
@@ -642,21 +726,27 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
       if (struct.isSetToken()) {
         optionals.set(1);
       }
-      if (struct.isSetServerID()) {
+      if (struct.isSetDataServerID()) {
         optionals.set(2);
       }
-      if (struct.isSetFileID()) {
+      if (struct.isSetMasterServerID()) {
         optionals.set(3);
       }
-      oprot.writeBitSet(optionals, 4);
+      if (struct.isSetFileID()) {
+        optionals.set(4);
+      }
+      oprot.writeBitSet(optionals, 5);
       if (struct.isSetType()) {
         oprot.writeI32(struct.type.getValue());
       }
       if (struct.isSetToken()) {
         oprot.writeI32(struct.token);
       }
-      if (struct.isSetServerID()) {
-        oprot.writeI32(struct.serverID);
+      if (struct.isSetDataServerID()) {
+        oprot.writeI32(struct.dataServerID);
+      }
+      if (struct.isSetMasterServerID()) {
+        oprot.writeI32(struct.masterServerID);
       }
       if (struct.isSetFileID()) {
         oprot.writeI64(struct.fileID);
@@ -666,7 +756,7 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, Transaction struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      BitSet incoming = iprot.readBitSet(4);
+      BitSet incoming = iprot.readBitSet(5);
       if (incoming.get(0)) {
         struct.type = TransactionType.findByValue(iprot.readI32());
         struct.setTypeIsSet(true);
@@ -676,10 +766,14 @@ public class Transaction implements org.apache.thrift.TBase<Transaction, Transac
         struct.setTokenIsSet(true);
       }
       if (incoming.get(2)) {
-        struct.serverID = iprot.readI32();
-        struct.setServerIDIsSet(true);
+        struct.dataServerID = iprot.readI32();
+        struct.setDataServerIDIsSet(true);
       }
       if (incoming.get(3)) {
+        struct.masterServerID = iprot.readI32();
+        struct.setMasterServerIDIsSet(true);
+      }
+      if (incoming.get(4)) {
         struct.fileID = iprot.readI64();
         struct.setFileIDIsSet(true);
       }

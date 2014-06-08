@@ -1,6 +1,7 @@
 package impl.server.master;
 
 import impl.Configuration;
+import impl.MasterDataConnection;
 import impl.MasterMasterConnection;
 
 import java.text.DateFormat;
@@ -14,6 +15,8 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.management.monitor.Monitor;
+
 import org.apache.thrift.TException;
 
 import rso.at.FileEntry;
@@ -24,12 +27,17 @@ import rso.at.FileSystemSnapshot;
 import rso.at.FileType;
 import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
+import rso.at.Transaction;
+import rso.at.TransactionType;
 
 public class FileSystemMonitor {
     // Map containing all IDs of file system's entries.
     private TreeMap<Long, FileEntryExtended> idMap;
     // Map containing all children of parent with specified ID.
     private TreeMap<Long, TreeSet<FileEntryExtended>> parentIdMap;
+    // Map containing information about current transaction
+    private TreeMap<Long, List<Transaction>> fileTransactions;
+    
     // Next available ID.
     private Long nextId;
     // Version of a file system. Every change increment this value by 1.
@@ -174,6 +182,8 @@ public class FileSystemMonitor {
         fsVersion = new Long(0);
 
         masterList = new ArrayList<MasterMasterConnection>();
+        fileTransactions = new TreeMap<Long, List<Transaction>>();
+        
         idMap = new TreeMap<Long, FileEntryExtended>();
         parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
         FileEntryExtended root = createFileEntryExtended(FileType.DIRECTORY, System.currentTimeMillis() / 1000, 0, 0, "root");
@@ -776,5 +786,73 @@ public class FileSystemMonitor {
         FileEntryExtended extendedEntry = idMap.get(file.id);
         extendedEntry.entry.size = size;
         broadcastMoveEntry(extendedEntry, extendedEntry);
+    }
+
+    public synchronized Transaction getNewTransaction(FileEntry file, int serverID,  TransactionType type, long offset, long num) throws EntryNotFound, InvalidOperation {
+        FileEntryExtended extended = checkIfEntryIsWriteReady(file);
+        Transaction transaction = new Transaction(type, getNextTransactionToken(), serverID, this.serverID, extended.entry.id);
+        if (fileTransactions.get(extended.entry.id) == null) {
+            fileTransactions.put(extended.entry.id, new ArrayList<Transaction>());
+        }
+        fileTransactions.get(extended.entry.id).add(transaction);
+        setFileStateToWrite(extended.entry);
+        return null;
+    }
+    
+    public synchronized void removeFinishedTransaction(Transaction transaction) throws InvalidOperation, TException {
+        //Find transaction
+        ArrayList<Transaction> transactions = (ArrayList<Transaction>) fileTransactions.get(transaction.fileID);
+        for (Transaction t : transactions) {
+            if (t.token == transaction.token) {
+                transactions.remove(t);
+                break;
+            }
+        }
+        
+        // Update file state
+        updateFileState(transaction.fileID);
+        FileEntryExtended file = idMap.get(transaction.fileID);
+        if (file == null) {
+            throw new InvalidOperation(697, "Possible error in removeFinishedTransaction impl!");
+        }
+        
+        // If idle apply changes.
+        if (file.state == FileState.IDLE &&
+            transaction.type == TransactionType.WRITE) {
+            MasterDataConnection conn = new MasterDataConnection(transaction.dataServerID);
+            if (conn.wasCreated()) {
+                conn.getService().applyChanges(transaction.fileID);
+                file.entry.version++;
+                broadcastMoveEntry(file, file);
+            }
+        }
+        
+    }
+    
+    public synchronized void updateFileState(long fileID) {
+        ArrayList<Transaction> transactions = (ArrayList<Transaction>) fileTransactions.get(fileID);
+        if (transactions == null) {
+            idMap.get(fileID).state = FileState.IDLE;
+            return;
+        }
+        
+        // Check if we got writers/readers
+        boolean isReader = false;
+        boolean isWriter = false;
+        for (Transaction t : transactions) {
+            if (t.type == TransactionType.WRITE) isWriter = true;
+            if (t.type == TransactionType.READ) isReader = true;
+        }
+        
+        if (!isReader && !isWriter) {
+            idMap.get(fileID).state = FileState.IDLE;
+        }
+        
+        if (isReader && !isWriter) {
+            if (idMap.get(fileID).state == FileState.PREMODIFIED)
+                idMap.get(fileID).state = FileState.PREMODIFIED;
+            else
+                idMap.get(fileID).state = FileState.READ;
+        }
     }
 }
