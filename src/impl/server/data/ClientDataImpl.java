@@ -33,7 +33,7 @@ public class ClientDataImpl implements ClientDataService.Iface {
     @Override
     public FileChunk getNextFileChunk(Transaction transaction,
             ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted, TException {
-    	System.out.println("getNectFileChunk fileID" + transaction.fileID + " : " + chunkInfo.number);
+    	System.out.println("getNextFileChunk fileID" + transaction.fileID + " : " + chunkInfo.number);
         return FileData.getInstance().getNextFileChunk(transaction, chunkInfo);
     }
 

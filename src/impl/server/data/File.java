@@ -198,8 +198,6 @@ public class File {
 
         lastChangeOffset = (int) transaction.offset;
         mFileChanges.add(fileChunk2);
-        //TODO skasowaC
-        System.out.println( fileChunk2.info.number + " " + fileChunk2.info.maxNumber);
         if(!checkIfTransactionExists){
             return false;
         }

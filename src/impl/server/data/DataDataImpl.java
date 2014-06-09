@@ -20,7 +20,7 @@ public class DataDataImpl implements DataDataService.Iface {
     @Override
     public void sendFileChunk(Transaction transaction, FileChunk fileChunk)
             throws InvalidOperation, TException {
-        System.out.println("sendFIleChunk DataDataImpl fileID: " + transaction.fileID);
+        System.out.println("sendFileChunk DataDataImpl fileID: " + transaction.fileID + " : " + fileChunk.info.number);
         FileData.getInstance().sendNextFileChunk(transaction, fileChunk,false); 
     }
 
