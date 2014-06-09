@@ -14,6 +14,6 @@ service DataMasterService
         throws(1: DataTypes.InvalidOperation err1),
 
     // Get all mirrored file list that this server should store.
-    list<DataTypes.FileEntryExtended> getMirroredFileList()
+    list<DataTypes.FileEntryExtended> getMirroredFileList(1: i32 serverDataID)
         throws(1: DataTypes.InvalidOperation err1),
 }

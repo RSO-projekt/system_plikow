@@ -904,4 +904,16 @@ public class FileSystemMonitor {
     public void allocateFile(FileEntry file, long size, Iface masterDataService) throws InvalidOperation, TException {
         masterDataService.allocateFile(idMap.get(file.id), size);
     }
+
+    public List<FileEntryExtended> getMirroredFileList(int serverDataID) {
+        List<FileEntryExtended> to_return = new ArrayList<FileEntryExtended>();
+        for(Entry<Long, FileEntryExtended> entry : idMap.entrySet()){
+            if(entry.getValue().mirrors.contains(serverDataID)){
+                System.out.println("getMirroredFileList added file fileID :" + entry.getValue().entry.id);
+                to_return.add(entry.getValue().deepCopy());
+            }
+        }
+        
+        return to_return;
+    }
 }

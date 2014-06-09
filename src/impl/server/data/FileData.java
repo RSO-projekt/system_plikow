@@ -2,6 +2,7 @@ package impl.server.data;
 
 import impl.DataDataConnection;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,5 +150,20 @@ public class FileData {
             }
         }
         throw new InvalidOperation(302, "File not found");
+    }
+
+    public ByteBuffer getFile(long id) throws InvalidOperation {
+        for (File f : mFileList) {
+            if (f.getFileID() == id) {
+                return f.getFile();
+            }
+        }
+        throw new InvalidOperation(303, "File not found");
+    }
+
+    public void createFile(FileEntryExtended file, byte[] array) {
+        File tmp = new File(file, file.entry.size, mTransactionEndListener);
+        mFileList.add(tmp);
+        tmp.setData(array);
     }
 }

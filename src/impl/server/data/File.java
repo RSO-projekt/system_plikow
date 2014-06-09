@@ -212,4 +212,12 @@ public class File {
     public List<Integer> getMirrors() {
         return mMirrors;
     }
+
+    public ByteBuffer getFile() {
+        return ByteBuffer.wrap(mFileData);
+    }
+
+    public void setData(byte[] array) {
+        mFileData = array;
+    }
 }

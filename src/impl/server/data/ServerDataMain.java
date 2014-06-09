@@ -1,6 +1,8 @@
 package impl.server.data;
 
 import impl.Configuration;
+import impl.DataDataConnection;
+import impl.DataMasterConnection;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -9,13 +11,18 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.thrift.TException;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
+import com.sun.corba.se.impl.ior.ByteBuffer;
+
 import rso.at.EntryNotFound;
+import rso.at.FileEntryExtended;
 import rso.at.InvalidOperation;
 
 public class ServerDataMain {
@@ -70,6 +77,44 @@ public class ServerDataMain {
         System.out.println("Starting data server on " + 
                             Configuration.sDataServerIPs.get(myServerID) + ":" +
                             Configuration.sDataServerPorts.get(myServerID));
+        
+        System.out.println("Getting files from other Data Servers");
+        DataMasterConnection conn = null;
+        for(int i =0 ; i < Configuration.sMasterServerIPs.size(); ++i){
+            conn = new DataMasterConnection(i);
+            if(conn.wasCreated()){
+                break;
+            }
+        }
+        if(!conn.wasCreated()){
+            System.out.println("No master server is active");
+            return;
+        }
+        List<FileEntryExtended> entries;
+        try {
+            entries =  conn.getService().getMirroredFileList(myServerID);
+        } catch (TException e) {
+            System.out.println("Connection to master server was aborted");
+            return;
+        }
+        for(FileEntryExtended entry: entries){
+            DataDataConnection dataConn = null;
+            for(Integer mirror: entry.mirrors){
+                if(mirror == myServerID)continue;
+                
+                dataConn = new DataDataConnection(mirror);
+                if(dataConn.wasCreated()){
+                    try {
+                        java.nio.ByteBuffer file = dataConn.getService().getFile(entry);
+                        FileData.getInstance().createFile(entry, file.array());
+                        System.out.println("File downloaded fileID : " + entry.entry.id);
+                        break;
+                    } catch (TException e) {
+                       
+                    }
+                }
+            }
+        }
         
         MasterDataThread masterDataConn = new MasterDataThread(masterServerTransport, myServerID);
         masterDataConn.start();

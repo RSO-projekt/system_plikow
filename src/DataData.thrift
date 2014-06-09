@@ -19,4 +19,7 @@ service DataDataService
         
     void applyChanges(1: i64 fileID)
         throws(1: DataTypes.InvalidOperation err1),
+        
+    binary getFile(1: DataTypes.FileEntryExtended file)
+        throws(1: DataTypes.InvalidOperation err1),
 }

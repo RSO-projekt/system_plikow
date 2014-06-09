@@ -38,7 +38,7 @@ public class DataMasterService {
 
     public void transactionFinished(rso.at.Transaction transaction, boolean isSuccessful) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
-    public List<rso.at.FileEntryExtended> getMirroredFileList() throws rso.at.InvalidOperation, org.apache.thrift.TException;
+    public List<rso.at.FileEntryExtended> getMirroredFileList(int serverDataID) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
   }
 
@@ -46,7 +46,7 @@ public class DataMasterService {
 
     public void transactionFinished(rso.at.Transaction transaction, boolean isSuccessful, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
-    public void getMirroredFileList(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void getMirroredFileList(int serverDataID, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -94,15 +94,16 @@ public class DataMasterService {
       return;
     }
 
-    public List<rso.at.FileEntryExtended> getMirroredFileList() throws rso.at.InvalidOperation, org.apache.thrift.TException
+    public List<rso.at.FileEntryExtended> getMirroredFileList(int serverDataID) throws rso.at.InvalidOperation, org.apache.thrift.TException
     {
-      send_getMirroredFileList();
+      send_getMirroredFileList(serverDataID);
       return recv_getMirroredFileList();
     }
 
-    public void send_getMirroredFileList() throws org.apache.thrift.TException
+    public void send_getMirroredFileList(int serverDataID) throws org.apache.thrift.TException
     {
       getMirroredFileList_args args = new getMirroredFileList_args();
+      args.setServerDataID(serverDataID);
       sendBase("getMirroredFileList", args);
     }
 
@@ -172,21 +173,24 @@ public class DataMasterService {
       }
     }
 
-    public void getMirroredFileList(org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void getMirroredFileList(int serverDataID, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      getMirroredFileList_call method_call = new getMirroredFileList_call(resultHandler, this, ___protocolFactory, ___transport);
+      getMirroredFileList_call method_call = new getMirroredFileList_call(serverDataID, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getMirroredFileList_call extends org.apache.thrift.async.TAsyncMethodCall {
-      public getMirroredFileList_call(org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private int serverDataID;
+      public getMirroredFileList_call(int serverDataID, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.serverDataID = serverDataID;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("getMirroredFileList", org.apache.thrift.protocol.TMessageType.CALL, 0));
         getMirroredFileList_args args = new getMirroredFileList_args();
+        args.setServerDataID(serverDataID);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -259,7 +263,7 @@ public class DataMasterService {
       public getMirroredFileList_result getResult(I iface, getMirroredFileList_args args) throws org.apache.thrift.TException {
         getMirroredFileList_result result = new getMirroredFileList_result();
         try {
-          result.success = iface.getMirroredFileList();
+          result.success = iface.getMirroredFileList(args.serverDataID);
         } catch (rso.at.InvalidOperation err1) {
           result.err1 = err1;
         }
@@ -394,7 +398,7 @@ public class DataMasterService {
       }
 
       public void start(I iface, getMirroredFileList_args args, org.apache.thrift.async.AsyncMethodCallback<List<rso.at.FileEntryExtended>> resultHandler) throws TException {
-        iface.getMirroredFileList(resultHandler);
+        iface.getMirroredFileList(args.serverDataID,resultHandler);
       }
     }
 
@@ -1216,6 +1220,7 @@ public class DataMasterService {
   public static class getMirroredFileList_args implements org.apache.thrift.TBase<getMirroredFileList_args, getMirroredFileList_args._Fields>, java.io.Serializable, Cloneable, Comparable<getMirroredFileList_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("getMirroredFileList_args");
 
+    private static final org.apache.thrift.protocol.TField SERVER_DATA_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("serverDataID", org.apache.thrift.protocol.TType.I32, (short)1);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1223,10 +1228,11 @@ public class DataMasterService {
       schemes.put(TupleScheme.class, new getMirroredFileList_argsTupleSchemeFactory());
     }
 
+    public int serverDataID; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SERVER_DATA_ID((short)1, "serverDataID");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1241,6 +1247,8 @@ public class DataMasterService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // SERVER_DATA_ID
+            return SERVER_DATA_ID;
           default:
             return null;
         }
@@ -1279,9 +1287,15 @@ public class DataMasterService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __SERVERDATAID_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SERVER_DATA_ID, new org.apache.thrift.meta_data.FieldMetaData("serverDataID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getMirroredFileList_args.class, metaDataMap);
     }
@@ -1289,10 +1303,20 @@ public class DataMasterService {
     public getMirroredFileList_args() {
     }
 
+    public getMirroredFileList_args(
+      int serverDataID)
+    {
+      this();
+      this.serverDataID = serverDataID;
+      setServerDataIDIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public getMirroredFileList_args(getMirroredFileList_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      this.serverDataID = other.serverDataID;
     }
 
     public getMirroredFileList_args deepCopy() {
@@ -1301,15 +1325,51 @@ public class DataMasterService {
 
     @Override
     public void clear() {
+      setServerDataIDIsSet(false);
+      this.serverDataID = 0;
+    }
+
+    public int getServerDataID() {
+      return this.serverDataID;
+    }
+
+    public getMirroredFileList_args setServerDataID(int serverDataID) {
+      this.serverDataID = serverDataID;
+      setServerDataIDIsSet(true);
+      return this;
+    }
+
+    public void unsetServerDataID() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SERVERDATAID_ISSET_ID);
+    }
+
+    /** Returns true if field serverDataID is set (has been assigned a value) and false otherwise */
+    public boolean isSetServerDataID() {
+      return EncodingUtils.testBit(__isset_bitfield, __SERVERDATAID_ISSET_ID);
+    }
+
+    public void setServerDataIDIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SERVERDATAID_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case SERVER_DATA_ID:
+        if (value == null) {
+          unsetServerDataID();
+        } else {
+          setServerDataID((Integer)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case SERVER_DATA_ID:
+        return Integer.valueOf(getServerDataID());
+
       }
       throw new IllegalStateException();
     }
@@ -1321,6 +1381,8 @@ public class DataMasterService {
       }
 
       switch (field) {
+      case SERVER_DATA_ID:
+        return isSetServerDataID();
       }
       throw new IllegalStateException();
     }
@@ -1338,6 +1400,15 @@ public class DataMasterService {
       if (that == null)
         return false;
 
+      boolean this_present_serverDataID = true;
+      boolean that_present_serverDataID = true;
+      if (this_present_serverDataID || that_present_serverDataID) {
+        if (!(this_present_serverDataID && that_present_serverDataID))
+          return false;
+        if (this.serverDataID != that.serverDataID)
+          return false;
+      }
+
       return true;
     }
 
@@ -1354,6 +1425,16 @@ public class DataMasterService {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetServerDataID()).compareTo(other.isSetServerDataID());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetServerDataID()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.serverDataID, other.serverDataID);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -1374,6 +1455,9 @@ public class DataMasterService {
       StringBuilder sb = new StringBuilder("getMirroredFileList_args(");
       boolean first = true;
 
+      sb.append("serverDataID:");
+      sb.append(this.serverDataID);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1393,6 +1477,8 @@ public class DataMasterService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -1417,6 +1503,14 @@ public class DataMasterService {
             break;
           }
           switch (schemeField.id) {
+            case 1: // SERVER_DATA_ID
+              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+                struct.serverDataID = iprot.readI32();
+                struct.setServerDataIDIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1432,6 +1526,9 @@ public class DataMasterService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        oprot.writeFieldBegin(SERVER_DATA_ID_FIELD_DESC);
+        oprot.writeI32(struct.serverDataID);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1449,11 +1546,24 @@ public class DataMasterService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, getMirroredFileList_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetServerDataID()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetServerDataID()) {
+          oprot.writeI32(struct.serverDataID);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, getMirroredFileList_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.serverDataID = iprot.readI32();
+          struct.setServerDataIDIsSet(true);
+        }
       }
     }
 

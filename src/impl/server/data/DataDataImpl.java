@@ -1,4 +1,6 @@
 package impl.server.data;
+import java.nio.ByteBuffer;
+
 import org.apache.thrift.TException;
 
 import rso.at.DataDataService;
@@ -27,6 +29,12 @@ public class DataDataImpl implements DataDataService.Iface {
             throws InvalidOperation, TException {
         System.out.println("allocateFile fileID: " + file.entry.id + ", size: " + newFileSize);
         FileData.getInstance().createFile(file, newFileSize);
+    }
+
+    @Override
+    public ByteBuffer getFile(FileEntryExtended file) throws InvalidOperation,
+            TException {
+        return FileData.getInstance().getFile(file.entry.id);
     }
 
 }
