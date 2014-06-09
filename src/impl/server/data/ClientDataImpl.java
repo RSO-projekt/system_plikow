@@ -53,7 +53,7 @@ public class ClientDataImpl implements ClientDataService.Iface {
             System.out.println("Sending sendNextChunk(" + transaction.fileID + ") to data server " + dataID);
             DataDataConnection conn = new DataDataConnection(dataID);
             if (conn.wasCreated()) {
-                conn.getService().applyChanges(transaction.fileID);
+                conn.getService().sendFileChunk(transaction, fileChunk);
             }
         }
         
