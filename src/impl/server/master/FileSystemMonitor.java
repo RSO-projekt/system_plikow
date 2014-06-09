@@ -38,7 +38,7 @@ public class FileSystemMonitor {
     private TreeMap<Long, TreeSet<FileEntryExtended>> parentIdMap;
     // Map containing information about current transaction
     private TreeMap<Long, List<Transaction>> fileTransactions;
-    
+
     // Next available ID.
     private Long nextId;
     // Version of a file system. Every change increment this value by 1.
@@ -47,7 +47,7 @@ public class FileSystemMonitor {
     // Internal strings for getParentPath() function.
     private String pathParent;
     private String pathName;
-    
+
     // Random number generator
     private Random rnd = new Random();
 
@@ -113,7 +113,7 @@ public class FileSystemMonitor {
     private FileEntryExtended createFileEntryExtended(FileType fileType, long time, long parentId, long size, String name) {
         FileEntry fe = new FileEntry(fileType, time, nextId, parentId, 0, size, name);
         ++nextId;
-        
+
         // Select random mirrors
         ArrayList<Integer> mirrors = new ArrayList<Integer>();
         int start = rnd.nextInt(Configuration.sDataServerIPs.size());
@@ -122,7 +122,7 @@ public class FileSystemMonitor {
             if (!mirrors.contains(newMirror))
                 mirrors.add(newMirror);
         }
-        
+
         return new FileEntryExtended(fe, mirrors, FileState.IDLE);
     }
 
@@ -185,7 +185,7 @@ public class FileSystemMonitor {
 
         masterList = new ArrayList<MasterMasterConnection>();
         fileTransactions = new TreeMap<Long, List<Transaction>>();
-        
+
         idMap = new TreeMap<Long, FileEntryExtended>();
         parentIdMap = new TreeMap<Long, TreeSet<FileEntryExtended>>();
         FileEntryExtended root = createFileEntryExtended(FileType.DIRECTORY, System.currentTimeMillis() / 1000, 0, 0, "root");
@@ -389,7 +389,7 @@ public class FileSystemMonitor {
 
     // Move entry in file system by using descriptor
     public synchronized FileEntry moveEntry2(boolean external, FileEntry entry, FileEntry parent, String name) throws EntryNotFound, InvalidOperation,
-            HostNotPermitted {
+    HostNotPermitted {
         checkPriviliges(external);
         checkParentAndName(parent, name);
         FileEntryExtended entryExtended = idMap.get(entry.id);
@@ -456,14 +456,14 @@ public class FileSystemMonitor {
             startElection();
             return;
         }
-        
+
         // If file system version is incorrect, we need to download whole
         // snapshot
         if (fsVersion != this.fsVersion + 1) {
             recreateFileSystem(coordServerID);
             return;
         }
-        
+
         // Replace a file
         idMap.put(entry.entry.id, entry);
         TreeSet<FileEntryExtended> children = parentIdMap.get(entry.entry.parentID);
@@ -474,11 +474,11 @@ public class FileSystemMonitor {
             }
         }
         children.add(entry);
-        
+
         this.fsVersion = fsVersion;
         log("Got update " + showFileEntryExtended(entry) + " from server ID: " + serverID);
     }
-    
+
     // Broadcast all updated entries to other servers.
     public synchronized void broadcastUpdateEntry(FileEntryExtended entry) {
         if (mode == Mode.SLAVE)
@@ -504,7 +504,7 @@ public class FileSystemMonitor {
             }
         }
     }
-    
+
     public synchronized void updateCreateEntry(int serverID, long fsVersion, FileEntryExtended entry) {
         // If got message from lower priority server, start election.
         if (serverID > this.serverID) {
@@ -643,7 +643,7 @@ public class FileSystemMonitor {
                 }
                 if (retries == 2) {
                     log("Can't recreate file system snapshot: connection lost from " + conn.getHostAddress() + ":" + 
-                         conn.getHostPort() + "(" + conn.getServerID() + ")");
+                            conn.getHostPort() + "(" + conn.getServerID() + ")");
                 }
                 break;
             }
@@ -702,7 +702,7 @@ public class FileSystemMonitor {
                         // We should be a slave.
                         mode = Mode.SLAVE;
                         log("Election handled from  " + conn.getHostAddress() + ":" + 
-                             conn.getHostPort() + "(" + conn.getServerID() + ")");
+                                conn.getHostPort() + "(" + conn.getServerID() + ")");
                         break;
                     } catch (TException e) {
                         conn.reopen();
@@ -790,7 +790,7 @@ public class FileSystemMonitor {
         }
         return extendedEntry.deepCopy();
     }
-    
+
     public synchronized FileEntryExtended checkIfEntryIsAllocateReady(FileEntry entry) throws EntryNotFound, InvalidOperation {
         FileEntryExtended extendedEntry = idMap.get(entry.id);
         if (extendedEntry == null || extendedEntry.entry.type != FileType.FILE) {
@@ -834,14 +834,14 @@ public class FileSystemMonitor {
             }
         }
         log("Created transaction with token " + transaction.token + ", type: " + transaction.type +
-            ", from: " + transaction.masterServerID + ", to: " + transaction.dataServerID);
+                ", from: " + transaction.masterServerID + ", to: " + transaction.dataServerID);
         return transaction;
     }
-    
+
     public synchronized void removeFinishedTransaction(Transaction transaction, boolean isSuccessful) 
             throws InvalidOperation, TException {
         log("Transaction finished with token: " + transaction.token + " and status: " + isSuccessful);
-        
+
         //Find transaction
         ArrayList<Transaction> transactions = (ArrayList<Transaction>) fileTransactions.get(transaction.fileID);
         for (Transaction t : transactions) {
@@ -850,37 +850,37 @@ public class FileSystemMonitor {
                 break;
             }
         }
-        
+
         // Update file state
         updateFileState(transaction.fileID);
         FileEntryExtended file = idMap.get(transaction.fileID);
         if (file == null) {
             throw new InvalidOperation(697, "Possible error in removeFinishedTransaction impl!");
         }
-        
+
         // If idle apply changes.
         if (file.state == FileState.IDLE &&
-            transaction.type == TransactionType.WRITE &&
-            isSuccessful) {
+                transaction.type == TransactionType.WRITE &&
+                isSuccessful) {
             MasterDataConnection conn = new MasterDataConnection(transaction.dataServerID);
             log("Updating file " + file.entry.id + " to data server " + conn.getHostAddress() + ":" +
-                conn.getHostPort());
+                    conn.getHostPort());
             if (conn.wasCreated()) {
                 conn.getService().applyChanges(transaction.fileID);
                 file.entry.version++;
                 broadcastUpdateEntry(file);
             }
         }
-        
+
     }
-    
+
     public synchronized void updateFileState(long fileID) {
         ArrayList<Transaction> transactions = (ArrayList<Transaction>) fileTransactions.get(fileID);
         if (transactions == null) {
             idMap.get(fileID).state = FileState.IDLE;
             return;
         }
-        
+
         // Check if we got writers/readers
         boolean isReader = false;
         boolean isWriter = false;
@@ -888,11 +888,11 @@ public class FileSystemMonitor {
             if (t.type == TransactionType.WRITE) isWriter = true;
             if (t.type == TransactionType.READ) isReader = true;
         }
-        
+
         if (!isReader && !isWriter) {
             idMap.get(fileID).state = FileState.IDLE;
         }
-        
+
         if (isReader && !isWriter) {
             if (idMap.get(fileID).state == FileState.PREMODIFIED)
                 idMap.get(fileID).state = FileState.PREMODIFIED;
@@ -908,12 +908,14 @@ public class FileSystemMonitor {
     public List<FileEntryExtended> getMirroredFileList(int serverDataID) {
         List<FileEntryExtended> to_return = new ArrayList<FileEntryExtended>();
         for(Entry<Long, FileEntryExtended> entry : idMap.entrySet()){
-            if(entry.getValue().mirrors.contains(serverDataID)){
-                System.out.println("getMirroredFileList added file fileID :" + entry.getValue().entry.id);
-                to_return.add(entry.getValue().deepCopy());
+            if(entry.getValue().entry.type == FileType.FILE){
+                if(entry.getValue().mirrors.contains(serverDataID)){
+                    System.out.println("getMirroredFileList added file fileID :" + entry.getValue().entry.id);
+                    to_return.add(entry.getValue().deepCopy());
+                }
             }
         }
-        
+
         return to_return;
     }
 }
