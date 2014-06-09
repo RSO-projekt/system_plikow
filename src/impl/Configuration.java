@@ -14,8 +14,8 @@ public class Configuration {
     public static ArrayList<Integer> sMasterServerPorts;
     public static ArrayList<String> sDataServerIPs;
     public static ArrayList<Integer> sDataServerPorts;
-    public static int sClientTimeout = 5000;
-    public static int sServerTimeout = 1000;
+    public static int sReadTimeout = 5000;
+    public static int sConnTimeout = 1000;
     public static String sConfigPath = "properties.conf";
     final public static int sClientMasterOffset = 0;
     final public static int sClientDataOffset = 1;
@@ -48,17 +48,17 @@ public class Configuration {
         }
         Configuration.sMinRedundancy = Integer.parseInt(minRedundancy);
         
-        String clientTimeout = prop.getProperty("client-timeout");
-        if (clientTimeout == null) {
-                throw new InvalidOperation(202, "\"client-timeout\" (int) key expected in configuration file");
+        String readTimeout = prop.getProperty("read-timeout");
+        if (readTimeout == null) {
+                throw new InvalidOperation(202, "\"read-timeout\" (int) key expected in configuration file");
         }
-        Configuration.sClientTimeout = Integer.parseInt(clientTimeout);
+        Configuration.sReadTimeout = Integer.parseInt(readTimeout);
         
-        String serverTimeout = prop.getProperty("server-timeout");
-        if (serverTimeout == null) {
-                throw new InvalidOperation(202, "\"server-timeout\" (int) key expected in configuration file");
+        String connTimeout = prop.getProperty("conn-timeout");
+        if (connTimeout == null) {
+                throw new InvalidOperation(202, "\"conn-timeout\" (int) key expected in configuration file");
         }
-        Configuration.sServerTimeout = Integer.parseInt(serverTimeout);
+        Configuration.sConnTimeout = Integer.parseInt(connTimeout);
         
         String masterServerNum = prop.getProperty("master-server-num");
         if (masterServerNum == null) {

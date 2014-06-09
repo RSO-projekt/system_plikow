@@ -7,7 +7,7 @@ import rso.at.DataMasterService.Iface;
 public class DataMasterConnection extends Connection {
     public DataMasterConnection(int serverID) {
         super(Configuration.sMasterServerIPs.get(serverID),
-              Configuration.sMasterServerPorts.get(serverID) + Configuration.sDataMasterOffset, serverID, false);
+              Configuration.sMasterServerPorts.get(serverID) + Configuration.sDataMasterOffset, serverID);
         service = new DataMasterService.Client(protocol);
     }
 

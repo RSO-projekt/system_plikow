@@ -7,7 +7,7 @@ import rso.at.ClientMasterService.Iface;
 public class ClientMasterConnection extends Connection {
     public ClientMasterConnection(int serverID) {
         super(Configuration.sMasterServerIPs.get(serverID),
-              Configuration.sMasterServerPorts.get(serverID) + Configuration.sClientMasterOffset, serverID, false);
+              Configuration.sMasterServerPorts.get(serverID) + Configuration.sClientMasterOffset, serverID);
         service = new ClientMasterService.Client(protocol);
     }
 

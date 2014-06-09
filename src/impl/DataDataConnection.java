@@ -7,7 +7,7 @@ import rso.at.DataDataService.Iface;
 public class DataDataConnection extends Connection {
     public DataDataConnection(int serverID) {
         super(Configuration.sDataServerIPs.get(serverID),
-              Configuration.sDataServerPorts.get(serverID) + Configuration.sDataDataOffset, serverID, false);
+              Configuration.sDataServerPorts.get(serverID) + Configuration.sDataDataOffset, serverID);
         service = new DataDataService.Client(protocol);
     }
 
