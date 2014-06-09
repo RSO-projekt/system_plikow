@@ -78,6 +78,10 @@ public class ServerDataMain {
                             Configuration.sDataServerIPs.get(myServerID) + ":" +
                             Configuration.sDataServerPorts.get(myServerID));
         
+        MasterDataThread masterDataConn = new MasterDataThread(masterServerTransport, myServerID);
+        ClientDataThread clientDataConn = new ClientDataThread(clientServerTransport, myServerID);     
+        DataDataThread dataDataConn = new DataDataThread(dataServerTransport, myServerID);
+        
         System.out.println("Getting files from other Data Servers");
         DataMasterConnection conn = null;
         for(int i =0 ; i < Configuration.sMasterServerIPs.size(); ++i){
@@ -116,13 +120,8 @@ public class ServerDataMain {
             }
         }
         
-        MasterDataThread masterDataConn = new MasterDataThread(masterServerTransport, myServerID);
         masterDataConn.start();
-
-        ClientDataThread clientDataConn = new ClientDataThread(clientServerTransport, myServerID);
         clientDataConn.start();
-        
-        DataDataThread dataDataConn = new DataDataThread(dataServerTransport, myServerID);
         dataDataConn.start();
     }
 

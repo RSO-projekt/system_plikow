@@ -14,12 +14,9 @@ import rso.at.Transaction;
 
 public class ClientDataImpl implements ClientDataService.Iface {
     int myServerID;
-    ClientDataImpl(int serverID) {
-        this();
-        myServerID = serverID;
-    }
     
-    public ClientDataImpl(){
+    ClientDataImpl(int serverID) {
+        myServerID = serverID;
         FileData.getInstance().registerTransactionEndListener(new TransactionEndListener(){
 
             @Override
