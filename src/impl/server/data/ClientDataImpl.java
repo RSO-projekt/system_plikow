@@ -15,6 +15,7 @@ import rso.at.Transaction;
 public class ClientDataImpl implements ClientDataService.Iface {
     int myServerID;
     ClientDataImpl(int serverID) {
+        this();
         myServerID = serverID;
     }
     

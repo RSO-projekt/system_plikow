@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.TreeSet;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
@@ -81,6 +82,7 @@ public class ServerDataMain {
     }
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         ServerDataMain srv = new ServerDataMain();
         try {
             Configuration.load();

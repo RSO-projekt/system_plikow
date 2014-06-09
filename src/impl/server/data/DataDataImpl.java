@@ -17,8 +17,7 @@ public class DataDataImpl implements DataDataService.Iface {
     @Override
     public void sendFileChunk(Transaction transaction, FileChunk fileChunk)
             throws InvalidOperation, TException {
-        FileData.getInstance().sendNextFileChunk(transaction, fileChunk,false);
-        
+        FileData.getInstance().sendNextFileChunk(transaction, fileChunk,false); 
     }
 
     @Override
