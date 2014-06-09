@@ -44,7 +44,6 @@ public class ClientDataImpl implements ClientDataService.Iface {
     public ChunkInfo sendNextFileChunk(Transaction transaction,
             FileChunk fileChunk) throws InvalidOperation, HostNotPermitted, TException {
         System.out.println("sendNextFileChunk fileID" + transaction.fileID + " : " + fileChunk.info.number);
-        ChunkInfo info = FileData.getInstance().sendNextFileChunk(transaction, fileChunk, true);
         
         List<Integer> mirrors = FileData.getInstance().getFileMirrors(transaction.fileID);
         for (Integer dataID : mirrors) {
@@ -56,7 +55,7 @@ public class ClientDataImpl implements ClientDataService.Iface {
                 conn.getService().sendFileChunk(transaction, fileChunk);
             }
         }
-        
+        ChunkInfo info = FileData.getInstance().sendNextFileChunk(transaction, fileChunk, true);
         return info;
     }
 

@@ -11,12 +11,14 @@ public class DataDataImpl implements DataDataService.Iface {
 
     @Override
     public void applyChanges(long fileID) throws InvalidOperation, TException {
+        System.out.println("applyChanges DataDataImpl fileID: " + fileID);
         FileData.getInstance().applyChanges(fileID);
     }
 
     @Override
     public void sendFileChunk(Transaction transaction, FileChunk fileChunk)
             throws InvalidOperation, TException {
+        System.out.println("sendFIleChunk DataDataImpl fileID: " + transaction.fileID);
         FileData.getInstance().sendNextFileChunk(transaction, fileChunk,false); 
     }
 
