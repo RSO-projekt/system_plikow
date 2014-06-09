@@ -95,16 +95,13 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
     @Override
     public Transaction writeToFile2(FileEntry file, long offset, long num) 
             throws EntryNotFound, InvalidOperation, TException {
-        monitor.log("Writing to file");
         FileEntryExtended entryCopy = monitor.checkIfEntryIsWriteReadReady(file);
         if (offset + num > entryCopy.entry.size) {
             throw new InvalidOperation(88, "Write operation not inside a file");
         }
         MasterDataService.Iface masterDataService;
         Transaction transaction = null;
-        monitor.log("Writing to file2");
         for (Integer dataServerID : entryCopy.mirrors) {
-            monitor.log("Yeah...");
             masterDataService = connectMasterToData(dataServerID.intValue());
             if (masterDataService != null) {
                 transaction = monitor.getNewTransaction(file, dataServerID.intValue(), 
@@ -168,7 +165,6 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
     @Override
     public FileEntry allocateFile(String path, long size) 
             throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-        System.out.println("Aloc");
         FileEntry file = monitor.getEntry(true, path).entry;
         return allocateFile2(file, size);
     }
@@ -176,21 +172,15 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
     @Override
     public FileEntry allocateFile2(FileEntry file, long size) 
             throws EntryNotFound, InvalidOperation, HostNotPermitted, TException {
-        System.out.println("Aloc2");
         FileEntryExtended entryCopy = monitor.checkIfEntryIsAllocateReady(file);
         MasterDataService.Iface masterDataService;
         boolean modified = false;
-        System.out.println("Aloc3");
         for (Integer dataServerID : entryCopy.mirrors) {
-            System.out.println("Aloc4");
             masterDataService = connectMasterToData(dataServerID.intValue());
-            System.out.println("Aloc5");
             
             if (masterDataService != null) {
                 // TODO: wyscig
-                System.out.println("OK");
                 masterDataService.allocateFile(file.id, size);
-                System.out.println("OK2");
                 modified = true;
                 break;
             }

@@ -58,8 +58,7 @@ public class Client {
                 System.exit(returnCode);
             }
         } catch (TTransportException e) {
-            System.out
-                    .println("Error: Could not establish connection to any server!");
+            System.out.println("Error: Could not establish connection to any server!");
             System.exit(14);
         } finally {
             fs.disconnect();
