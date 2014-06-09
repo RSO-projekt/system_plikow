@@ -19,8 +19,6 @@ import org.apache.thrift.TException;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
-import com.sun.corba.se.impl.ior.ByteBuffer;
-
 import rso.at.EntryNotFound;
 import rso.at.FileEntryExtended;
 import rso.at.InvalidOperation;
@@ -111,7 +109,7 @@ public class ServerDataMain {
                     try {
                         java.nio.ByteBuffer file = dataConn.getService().getFile(entry);
                         FileData.getInstance().createFile(entry, file.array());
-                        System.out.println("File downloaded fileID : " + entry.entry.id);
+                        System.out.println("Downloaded file with id: " + entry.entry.id);
                         break;
                     } catch (TException e) {
                        

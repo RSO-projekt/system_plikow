@@ -24,6 +24,7 @@ public class ClientDataImpl implements ClientDataService.Iface {
                 DataMasterConnection conn = new DataMasterConnection(transaction.masterServerID);
                 if(conn.wasCreated()){
                     conn.getService().transactionFinished(transaction, isEnded);
+                    System.out.println("Transaction finished with status: " + isEnded);
                 }
             }
             
@@ -33,20 +34,20 @@ public class ClientDataImpl implements ClientDataService.Iface {
     @Override
     public FileChunk getNextFileChunk(Transaction transaction,
             ChunkInfo chunkInfo) throws InvalidOperation, HostNotPermitted, TException {
-    	System.out.println("getNextFileChunk fileID" + transaction.fileID + " : " + chunkInfo.number);
+    	System.out.println("GetNextFileChunk [file: " + transaction.fileID + ", num: " + chunkInfo.number + "]");
         return FileData.getInstance().getNextFileChunk(transaction, chunkInfo);
     }
 
     @Override
     public ChunkInfo sendNextFileChunk(Transaction transaction,
             FileChunk fileChunk) throws InvalidOperation, HostNotPermitted, TException {
-        System.out.println("sendNextFileChunk fileID" + transaction.fileID + " : " + fileChunk.info.number);
+        System.out.println("SendNextFileChunk [file: " + transaction.fileID + ", num: " + fileChunk.info.number + "]");
         
         List<Integer> mirrors = FileData.getInstance().getFileMirrors(transaction.fileID);
         for (Integer dataID : mirrors) {
             if (dataID == myServerID) continue;
             
-            System.out.println("Sending sendNextChunk(" + transaction.fileID + ") to data server " + dataID);
+            System.out.println("Sending sendNextChunk [file: " + transaction.fileID + ", dataServerID: " + dataID + "]");
             DataDataConnection conn = new DataDataConnection(dataID);
             if (conn.wasCreated()) {
                 conn.getService().sendFileChunk(transaction, fileChunk);

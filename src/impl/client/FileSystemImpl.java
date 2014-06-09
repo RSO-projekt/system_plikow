@@ -125,8 +125,10 @@ public class FileSystemImpl implements FileSystem {
             throws EntryNotFound, InvalidOperation, HostNotPermitted,
             TException {
         FileEntry entry = clientMasterService.getFileEntry(filePath);
-        if (entry.size < offset + bytes.length)
+        if (entry.size < offset + bytes.length) {
+            System.out.println("Extending file to new size: " + offset + bytes.length);
             clientMasterService.allocateFile2(entry, offset + bytes.length);
+        }
         Transaction transaction = clientMasterService.writeToFile2(entry, offset, bytes.length);
         sendChunks(transaction, bytes);
 
@@ -136,8 +138,10 @@ public class FileSystemImpl implements FileSystem {
     public void writeToFile(FileEntry file, long offset, byte[] bytes)
             throws EntryNotFound, InvalidOperation, HostNotPermitted,
             TException {
-        if (file.size < offset + bytes.length)
+        if (file.size < offset + bytes.length) {
+            System.out.println("Extending file to new size: " + offset + bytes.length);
             clientMasterService.allocateFile2(file, offset + bytes.length);
+        }
         Transaction transaction = clientMasterService.writeToFile2(file, offset, bytes.length);
         sendChunks(transaction, bytes);
 
@@ -153,8 +157,9 @@ public class FileSystemImpl implements FileSystem {
                                            conn.getHostAddress() + ":" +
                                            conn.getHostPort());
         clientDataService = conn.getService();
+        System.out.println("Preparing to send file chunks to data server with id: " + transaction.dataServerID);
         
-        int chunkSize = 1000;
+        int chunkSize = Configuration.sChunkSize;
         int maxChunkCount = (int) Math.ceil((double) bytes.length / chunkSize);
         for (int i = 0; i < maxChunkCount; i++) {
             int actualSize = Math.min(bytes.length - (i * chunkSize), chunkSize);
@@ -193,10 +198,11 @@ public class FileSystemImpl implements FileSystem {
                                            conn.getHostAddress() + ":" +
                                            conn.getHostPort());
         clientDataService = conn.getService();
+        System.out.println("Preparing to read file chunks from data server with id: " + transaction.dataServerID);
         
         ByteBuffer byteList = ByteBuffer.allocate((int) num);
         FileChunk tmpFileChunk;
-        ChunkInfo chunkInfo = new ChunkInfo(0, 0, 1000);
+        ChunkInfo chunkInfo = new ChunkInfo(0, 0, Configuration.sChunkSize);
         do {
             tmpFileChunk = clientDataService.getNextFileChunk(transaction, chunkInfo);
             byteList.put(tmpFileChunk.data.array());

@@ -19,21 +19,21 @@ public class MasterDataImpl implements MasterDataService.Iface {
     @Override
     public void createFileTransaction(Transaction transaction)
             throws InvalidOperation, TException {
-        System.out.println("createFileTransaction fileID" + transaction.fileID + " : " + transaction.offset);
+        System.out.println("CreateFileTransaction [file: " + transaction.fileID + ", offset: " + transaction.offset + "]");
         FileData.getInstance().addTransaction(transaction);
     }
 
     @Override
     public void applyChanges(long fileID) 
             throws InvalidOperation, TException {
-        System.out.println("applyChanges fileID" + fileID);
+        System.out.println("ApplyChanges [file: " + fileID + "]");
         FileData.getInstance().applyChanges(fileID);
         
         List<Integer> mirrors = FileData.getInstance().getFileMirrors(fileID);
         for (Integer dataID : mirrors) {
             if (dataID == myServerID) continue;
             
-            System.out.println("Sending applyChanges(" + fileID + ") to data server " + dataID);
+            System.out.println("Sending applyChanges [file: " + fileID + ", dataServerID: " + dataID + "]");
             DataDataConnection conn = new DataDataConnection(dataID);
             if (conn.wasCreated()) {
                 conn.getService().applyChanges(fileID);
@@ -45,13 +45,13 @@ public class MasterDataImpl implements MasterDataService.Iface {
     @Override
     public void allocateFile(FileEntryExtended file, long newFileSize)
             throws InvalidOperation, TException {
-        System.out.println("allocateFile fileID: " + file.entry.id + ", size: " + newFileSize);
+        System.out.println("Allocate file [file: " + file.entry.id + ", size: " + newFileSize + "]");
         FileData.getInstance().createFile(file, newFileSize);
         
         for (Integer dataID : file.mirrors) {
             if (dataID == myServerID) continue;
             
-            System.out.println("Sending allocateFile(" + file.entry.id + ") to data server " + dataID);
+            System.out.println("Sending allocateFile [file :" + file.entry.id + ", dataServerID: "+ dataID + "]");
             DataDataConnection conn = new DataDataConnection(dataID);
             if (conn.wasCreated()) {
                 conn.getService().allocateFile(file, newFileSize);

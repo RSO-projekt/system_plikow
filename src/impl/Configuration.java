@@ -9,7 +9,7 @@ import rso.at.InvalidOperation;
 
 public class Configuration {
     public static int sRedundancy = 3;
-    public static int sMinRedundancy = 2;
+    public static int sChunkSize = 1000;
     public static ArrayList<String> sMasterServerIPs;
     public static ArrayList<Integer> sMasterServerPorts;
     public static ArrayList<String> sDataServerIPs;
@@ -42,11 +42,11 @@ public class Configuration {
         }
         Configuration.sRedundancy = Integer.parseInt(redundancy);
         
-        String minRedundancy = prop.getProperty("min-redundancy");
-        if (minRedundancy == null) {
-                throw new InvalidOperation(201, "\"min-redundancy\" (int) key expected in configuration file");
+        String chunkSize = prop.getProperty("chunk-size");
+        if (chunkSize == null) {
+                throw new InvalidOperation(201, "\"chunk-size\" (int) key expected in configuration file");
         }
-        Configuration.sMinRedundancy = Integer.parseInt(minRedundancy);
+        Configuration.sChunkSize = Integer.parseInt(chunkSize);
         
         String readTimeout = prop.getProperty("read-timeout");
         if (readTimeout == null) {
