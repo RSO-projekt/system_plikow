@@ -1,5 +1,7 @@
 package impl.server.data;
 
+import impl.DataDataConnection;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.apache.thrift.TException;
 
 import rso.at.ChunkInfo;
 import rso.at.FileChunk;
+import rso.at.FileEntryExtended;
 import rso.at.InvalidOperation;
 import rso.at.Transaction;
 
@@ -56,16 +59,16 @@ public class FileData {
         return 0;
     }
 
-    public void createFile(long fileID, long newFileSize) {
+    public void createFile(FileEntryExtended file, long newFileSize) {
         boolean found = false;
         for(int i = 0 ; i< mFileList.size(); i++){
-            if(mFileList.get(i).getFileID() == fileID){
+            if(mFileList.get(i).getFileID() == file.entry.id){
                 mFileList.get(i).rellocate(newFileSize);
                 found = true;
             }
         }
         if(!found){
-            mFileList.add(new File(fileID, newFileSize, mTransactionEndListener));
+            mFileList.add(new File(file, newFileSize, mTransactionEndListener));
         }
     }
 
@@ -92,35 +95,6 @@ public class FileData {
         throw new InvalidOperation(301, "File not found");
     }
 
-    /**
-     * Receives changes for files - filechunk is not modified here it must be
-     * modified by client
-     * 
-     * @param transaction
-     * @param fileChunk2
-     * @return
-     * @throws InvalidOperation
-     */
-    public ChunkInfo sendNextFileChunk(Transaction transaction, FileChunk fileChunk2) throws InvalidOperation {
-
-        for (File f : mFileList) {
-            if (f.getFileID() == transaction.fileID) {
-                ChunkInfo chunkInfo = fileChunk2.info;
-                
-                if(f.addChange(transaction,fileChunk2)){
-                    try {
-                        mTransactionEndListener.transactionEnded(transaction,true);
-                    } catch (TException e) {
-                        e.printStackTrace();
-                        throw new InvalidOperation(310, "Could not send info about transaction completion");
-                    }
-                }
-                return chunkInfo;
-            }
-        }
-        throw new InvalidOperation(301, "File not found");
-    }
-
     public void applyChanges(long fileID) throws InvalidOperation {
         for (File f : mFileList) {
             if (f.getFileID() == fileID) {
@@ -135,5 +109,45 @@ public class FileData {
             TransactionEndListener transactionEndListener) {
         mTransactionEndListener = transactionEndListener;
         
+    }
+
+    /**
+     * Receives changes for files - filechunk is not modified here it must be
+     * modified by client
+     * 
+     * @param transaction
+     * @param fileChunk2
+     * @param checkIfTransactionExists 
+     * @return
+     * @throws InvalidOperation
+     */
+    public ChunkInfo sendNextFileChunk(Transaction transaction, FileChunk fileChunk2, boolean checkIfTransactionExists) throws InvalidOperation {
+
+        for (File f : mFileList) {
+            if (f.getFileID() == transaction.fileID) {
+                ChunkInfo chunkInfo = fileChunk2.info;
+                
+                if(f.addChange(transaction,fileChunk2,checkIfTransactionExists)){
+                    try {
+                        mTransactionEndListener.transactionEnded(transaction,true);
+                    } catch (TException e) {
+                        e.printStackTrace();
+                        throw new InvalidOperation(310, "Could not send info about transaction completion");
+                    }
+                }
+                
+                return chunkInfo;
+            }
+        }
+        throw new InvalidOperation(301, "File not found");
+    }
+
+    public List<Integer> getFileMirrors(long fileID) throws InvalidOperation {
+        for (File f : mFileList) {
+            if (f.getFileID() == fileID) {
+                return f.getMirrors();
+            }
+        }
+        throw new InvalidOperation(302, "File not found");
     }
 }

@@ -27,6 +27,7 @@ import rso.at.FileSystemSnapshot;
 import rso.at.FileType;
 import rso.at.HostNotPermitted;
 import rso.at.InvalidOperation;
+import rso.at.MasterDataService.Iface;
 import rso.at.Transaction;
 import rso.at.TransactionType;
 
@@ -314,18 +315,6 @@ public class FileSystemMonitor {
         parentIdMap.get(parent.id).add(file);
         broadcastCreateEntry(file);
         return file.entry.deepCopy();
-    }
-
-    public synchronized FileEntry allocateFile(boolean external, String path, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
-        checkPriviliges(external);
-
-        return null;
-    }
-
-    // Create new file in the server by using descriptor.
-    public synchronized FileEntry allocateFile2(boolean external, FileEntry entry, long size) throws EntryNotFound, InvalidOperation, HostNotPermitted {
-        checkPriviliges(external);
-        return null;
     }
 
     // Remove entry from file system
@@ -910,5 +899,9 @@ public class FileSystemMonitor {
             else
                 idMap.get(fileID).state = FileState.READ;
         }
+    }
+
+    public void allocateFile(FileEntry file, long size, Iface masterDataService) throws InvalidOperation, TException {
+        masterDataService.allocateFile(idMap.get(file.id), size);
     }
 }

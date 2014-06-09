@@ -10,7 +10,7 @@ service MasterDataService
 {
     // If file doesn't exist create a new empty file, otherwise change it's
     // size.
-    void allocateFile(1: i64 fileID, 2: i64 newFileSize)
+    void allocateFile(1: DataTypes.FileEntryExtended file, 2: i64 newFileSize)
         throws(1: DataTypes.InvalidOperation err1),
 
     // Prepare file transaction.

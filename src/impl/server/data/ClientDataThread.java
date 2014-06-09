@@ -13,7 +13,7 @@ public class ClientDataThread extends Thread {
 
     public ClientDataThread(TServerSocket serverTransport, int serverID) throws TTransportException {
         ClientDataService.Processor<ClientDataImpl> processor = 
-                new ClientDataService.Processor<ClientDataImpl>(new ClientDataImpl());
+                new ClientDataService.Processor<ClientDataImpl>(new ClientDataImpl(serverID));
 
         TThreadPoolServer.Args args = new Args(serverTransport);
         args.processor(processor);

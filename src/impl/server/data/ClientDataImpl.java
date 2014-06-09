@@ -1,6 +1,9 @@
 package impl.server.data;
 
+import java.util.List;
+
 import org.apache.thrift.TException;
+
 import impl.*;
 import rso.at.ChunkInfo;
 import rso.at.ClientDataService;
@@ -10,6 +13,10 @@ import rso.at.InvalidOperation;
 import rso.at.Transaction;
 
 public class ClientDataImpl implements ClientDataService.Iface {
+    int myServerID;
+    ClientDataImpl(int serverID) {
+        myServerID = serverID;
+    }
     
     public ClientDataImpl(){
         FileData.getInstance().registerTransactionEndListener(new TransactionEndListener(){
@@ -36,7 +43,20 @@ public class ClientDataImpl implements ClientDataService.Iface {
     public ChunkInfo sendNextFileChunk(Transaction transaction,
             FileChunk fileChunk) throws InvalidOperation, HostNotPermitted, TException {
         System.out.println("sendNextFileChunk fileID" + transaction.fileID + " : " + fileChunk.info.number);
-        return FileData.getInstance().sendNextFileChunk(transaction, fileChunk);
+        ChunkInfo info = FileData.getInstance().sendNextFileChunk(transaction, fileChunk, true);
+        
+        List<Integer> mirrors = FileData.getInstance().getFileMirrors(transaction.fileID);
+        for (Integer dataID : mirrors) {
+            if (dataID == myServerID) continue;
+            
+            System.out.println("Sending sendNextChunk(" + transaction.fileID + ") to data server " + dataID);
+            DataDataConnection conn = new DataDataConnection(dataID);
+            if (conn.wasCreated()) {
+                conn.getService().applyChanges(transaction.fileID);
+            }
+        }
+        
+        return info;
     }
 
 }

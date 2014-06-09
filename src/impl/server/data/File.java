@@ -9,6 +9,7 @@ import org.apache.thrift.TException;
 
 import rso.at.ChunkInfo;
 import rso.at.FileChunk;
+import rso.at.FileEntryExtended;
 import rso.at.InvalidOperation;
 import rso.at.Transaction;
 import rso.at.TransactionType;
@@ -21,6 +22,7 @@ public class File {
     private final static int sTimeout = 10;
 
     private long mFileID;
+    private List<Integer> mMirrors;
 
     private byte[] mFileData;
 
@@ -35,14 +37,15 @@ public class File {
 
     private TransactionEndListener mTransactionEndListener;
 
-    public File(long fileID,TransactionEndListener transactionEndListener) {
-        this(fileID, 0,transactionEndListener);
+    public File(FileEntryExtended file,TransactionEndListener transactionEndListener) {
+        this(file, 0,transactionEndListener);
     }
 
-    public File(long fileID, long newFileSize, TransactionEndListener transactionEndListener) {
+    public File(FileEntryExtended file, long newFileSize, TransactionEndListener transactionEndListener) {
         mTransactionEndListener = transactionEndListener;
         mFileSize = newFileSize;
-        mFileID = fileID;
+        mFileID = file.entry.id;
+        mMirrors = file.mirrors;
         mFileTransactions = new ArrayList<Pair<Date, Transaction>>();
         mFileChanges = new ArrayList<FileChunk>();
         if (mFileSize != 0) {
@@ -126,7 +129,7 @@ public class File {
         long currentOffset = transaction.offset + chunkInfo.number * chunkInfo.size;
         int length = (int)Math.min(transaction.size - chunkInfo.number*chunkInfo.size,chunkInfo.size);
         chunkInfo.number++;
-        
+
         if(chunkInfo.number == chunkInfo.maxNumber){
             try {
                 mTransactionEndListener.transactionEnded(transaction, true);
@@ -134,7 +137,7 @@ public class File {
                 throw new InvalidOperation(310, "Could not send info about transaction completion");
             }
         }
-       
+
         return ByteBuffer.wrap(mFileData, (int)currentOffset, length);
     }
 
@@ -148,22 +151,6 @@ public class File {
         }
     }
 
-    /**Return true if file change is finished
-     * @param transaction 
-     * @param fileChunk2
-     * @return
-     */
-    public synchronized boolean addChange(Transaction transaction, FileChunk fileChunk2) {
-        applyNewTimeoutToTranasaction(transaction);
-        lastChangeOffset = (int) transaction.offset;
-        mFileChanges.add(fileChunk2);
-        System.out.println( fileChunk2.info.number + " " + fileChunk2.info.maxNumber);
-        if(fileChunk2.info.maxNumber-1 == fileChunk2.info.number){
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Apply changes added by addChange function
      * 
@@ -171,7 +158,7 @@ public class File {
      */
     public synchronized void applyChanges() throws InvalidOperation {
         try {
-        	int offset = lastChangeOffset;
+            int offset = lastChangeOffset;
             for (FileChunk fileChunk : mFileChanges) {
                 ChunkInfo chunkInfo = fileChunk.info;
                 for (int i = 0; i < chunkInfo.size; i++) {
@@ -196,5 +183,33 @@ public class File {
             mFileData[i] = old_data[i];
         }
 
+    }
+
+    /**Return true if file change is finished
+     * @param transaction 
+     * @param fileChunk2
+     * @param checkIfTransactionExists 
+     * @return
+     */
+    public synchronized boolean addChange(Transaction transaction, FileChunk fileChunk2, boolean checkIfTransactionExists) {
+        if(checkIfTransactionExists){
+            applyNewTimeoutToTranasaction(transaction);
+        }
+
+        lastChangeOffset = (int) transaction.offset;
+        mFileChanges.add(fileChunk2);
+        //TODO skasowaC
+        System.out.println( fileChunk2.info.number + " " + fileChunk2.info.maxNumber);
+        if(!checkIfTransactionExists){
+            return false;
+        }
+        if(fileChunk2.info.maxNumber-1 == fileChunk2.info.number){
+            return true;
+        }
+        return false;
+    }
+
+    public List<Integer> getMirrors() {
+        return mMirrors;
     }
 }

@@ -180,7 +180,7 @@ public class ClientMasterImpl implements ClientMasterService.Iface {
             
             if (masterDataService != null) {
                 // TODO: wyscig
-                masterDataService.allocateFile(file.id, size);
+                monitor.allocateFile(file, size, masterDataService);
                 modified = true;
                 break;
             }

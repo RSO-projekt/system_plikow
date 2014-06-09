@@ -13,7 +13,7 @@ public class MasterDataThread extends Thread {
 
     public MasterDataThread(TServerSocket serverTransport, int serverID) throws TTransportException {
         MasterDataService.Processor<MasterDataImpl> processor = 
-                new MasterDataService.Processor<MasterDataImpl>(new MasterDataImpl());
+                new MasterDataService.Processor<MasterDataImpl>(new MasterDataImpl(serverID));
         
         TThreadPoolServer.Args args = new Args(serverTransport);
         args.processor(processor);

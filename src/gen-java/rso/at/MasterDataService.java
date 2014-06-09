@@ -36,7 +36,7 @@ public class MasterDataService {
 
   public interface Iface {
 
-    public void allocateFile(long fileID, long newFileSize) throws rso.at.InvalidOperation, org.apache.thrift.TException;
+    public void allocateFile(rso.at.FileEntryExtended file, long newFileSize) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
     public void createFileTransaction(rso.at.Transaction transaction) throws rso.at.InvalidOperation, org.apache.thrift.TException;
 
@@ -46,7 +46,7 @@ public class MasterDataService {
 
   public interface AsyncIface {
 
-    public void allocateFile(long fileID, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public void allocateFile(rso.at.FileEntryExtended file, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
     public void createFileTransaction(rso.at.Transaction transaction, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
@@ -74,16 +74,16 @@ public class MasterDataService {
       super(iprot, oprot);
     }
 
-    public void allocateFile(long fileID, long newFileSize) throws rso.at.InvalidOperation, org.apache.thrift.TException
+    public void allocateFile(rso.at.FileEntryExtended file, long newFileSize) throws rso.at.InvalidOperation, org.apache.thrift.TException
     {
-      send_allocateFile(fileID, newFileSize);
+      send_allocateFile(file, newFileSize);
       recv_allocateFile();
     }
 
-    public void send_allocateFile(long fileID, long newFileSize) throws org.apache.thrift.TException
+    public void send_allocateFile(rso.at.FileEntryExtended file, long newFileSize) throws org.apache.thrift.TException
     {
       allocateFile_args args = new allocateFile_args();
-      args.setFileID(fileID);
+      args.setFile(file);
       args.setNewFileSize(newFileSize);
       sendBase("allocateFile", args);
     }
@@ -162,26 +162,26 @@ public class MasterDataService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void allocateFile(long fileID, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public void allocateFile(rso.at.FileEntryExtended file, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      allocateFile_call method_call = new allocateFile_call(fileID, newFileSize, resultHandler, this, ___protocolFactory, ___transport);
+      allocateFile_call method_call = new allocateFile_call(file, newFileSize, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class allocateFile_call extends org.apache.thrift.async.TAsyncMethodCall {
-      private long fileID;
+      private rso.at.FileEntryExtended file;
       private long newFileSize;
-      public allocateFile_call(long fileID, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public allocateFile_call(rso.at.FileEntryExtended file, long newFileSize, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.fileID = fileID;
+        this.file = file;
         this.newFileSize = newFileSize;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("allocateFile", org.apache.thrift.protocol.TMessageType.CALL, 0));
         allocateFile_args args = new allocateFile_args();
-        args.setFileID(fileID);
+        args.setFile(file);
         args.setNewFileSize(newFileSize);
         args.write(prot);
         prot.writeMessageEnd();
@@ -296,7 +296,7 @@ public class MasterDataService {
       public allocateFile_result getResult(I iface, allocateFile_args args) throws org.apache.thrift.TException {
         allocateFile_result result = new allocateFile_result();
         try {
-          iface.allocateFile(args.fileID, args.newFileSize);
+          iface.allocateFile(args.file, args.newFileSize);
         } catch (rso.at.InvalidOperation err1) {
           result.err1 = err1;
         }
@@ -423,7 +423,7 @@ public class MasterDataService {
       }
 
       public void start(I iface, allocateFile_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
-        iface.allocateFile(args.fileID, args.newFileSize,resultHandler);
+        iface.allocateFile(args.file, args.newFileSize,resultHandler);
       }
     }
 
@@ -544,7 +544,7 @@ public class MasterDataService {
   public static class allocateFile_args implements org.apache.thrift.TBase<allocateFile_args, allocateFile_args._Fields>, java.io.Serializable, Cloneable, Comparable<allocateFile_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("allocateFile_args");
 
-    private static final org.apache.thrift.protocol.TField FILE_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("fileID", org.apache.thrift.protocol.TType.I64, (short)1);
+    private static final org.apache.thrift.protocol.TField FILE_FIELD_DESC = new org.apache.thrift.protocol.TField("file", org.apache.thrift.protocol.TType.STRUCT, (short)1);
     private static final org.apache.thrift.protocol.TField NEW_FILE_SIZE_FIELD_DESC = new org.apache.thrift.protocol.TField("newFileSize", org.apache.thrift.protocol.TType.I64, (short)2);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
@@ -553,12 +553,12 @@ public class MasterDataService {
       schemes.put(TupleScheme.class, new allocateFile_argsTupleSchemeFactory());
     }
 
-    public long fileID; // required
+    public rso.at.FileEntryExtended file; // required
     public long newFileSize; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      FILE_ID((short)1, "fileID"),
+      FILE((short)1, "file"),
       NEW_FILE_SIZE((short)2, "newFileSize");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
@@ -574,8 +574,8 @@ public class MasterDataService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // FILE_ID
-            return FILE_ID;
+          case 1: // FILE
+            return FILE;
           case 2: // NEW_FILE_SIZE
             return NEW_FILE_SIZE;
           default:
@@ -618,14 +618,13 @@ public class MasterDataService {
     }
 
     // isset id assignments
-    private static final int __FILEID_ISSET_ID = 0;
-    private static final int __NEWFILESIZE_ISSET_ID = 1;
+    private static final int __NEWFILESIZE_ISSET_ID = 0;
     private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.FILE_ID, new org.apache.thrift.meta_data.FieldMetaData("fileID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      tmpMap.put(_Fields.FILE, new org.apache.thrift.meta_data.FieldMetaData("file", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, rso.at.FileEntryExtended.class)));
       tmpMap.put(_Fields.NEW_FILE_SIZE, new org.apache.thrift.meta_data.FieldMetaData("newFileSize", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
@@ -636,12 +635,11 @@ public class MasterDataService {
     }
 
     public allocateFile_args(
-      long fileID,
+      rso.at.FileEntryExtended file,
       long newFileSize)
     {
       this();
-      this.fileID = fileID;
-      setFileIDIsSet(true);
+      this.file = file;
       this.newFileSize = newFileSize;
       setNewFileSizeIsSet(true);
     }
@@ -651,7 +649,9 @@ public class MasterDataService {
      */
     public allocateFile_args(allocateFile_args other) {
       __isset_bitfield = other.__isset_bitfield;
-      this.fileID = other.fileID;
+      if (other.isSetFile()) {
+        this.file = new rso.at.FileEntryExtended(other.file);
+      }
       this.newFileSize = other.newFileSize;
     }
 
@@ -661,33 +661,33 @@ public class MasterDataService {
 
     @Override
     public void clear() {
-      setFileIDIsSet(false);
-      this.fileID = 0;
+      this.file = null;
       setNewFileSizeIsSet(false);
       this.newFileSize = 0;
     }
 
-    public long getFileID() {
-      return this.fileID;
+    public rso.at.FileEntryExtended getFile() {
+      return this.file;
     }
 
-    public allocateFile_args setFileID(long fileID) {
-      this.fileID = fileID;
-      setFileIDIsSet(true);
+    public allocateFile_args setFile(rso.at.FileEntryExtended file) {
+      this.file = file;
       return this;
     }
 
-    public void unsetFileID() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __FILEID_ISSET_ID);
+    public void unsetFile() {
+      this.file = null;
     }
 
-    /** Returns true if field fileID is set (has been assigned a value) and false otherwise */
-    public boolean isSetFileID() {
-      return EncodingUtils.testBit(__isset_bitfield, __FILEID_ISSET_ID);
+    /** Returns true if field file is set (has been assigned a value) and false otherwise */
+    public boolean isSetFile() {
+      return this.file != null;
     }
 
-    public void setFileIDIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __FILEID_ISSET_ID, value);
+    public void setFileIsSet(boolean value) {
+      if (!value) {
+        this.file = null;
+      }
     }
 
     public long getNewFileSize() {
@@ -715,11 +715,11 @@ public class MasterDataService {
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
-      case FILE_ID:
+      case FILE:
         if (value == null) {
-          unsetFileID();
+          unsetFile();
         } else {
-          setFileID((Long)value);
+          setFile((rso.at.FileEntryExtended)value);
         }
         break;
 
@@ -736,8 +736,8 @@ public class MasterDataService {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
-      case FILE_ID:
-        return Long.valueOf(getFileID());
+      case FILE:
+        return getFile();
 
       case NEW_FILE_SIZE:
         return Long.valueOf(getNewFileSize());
@@ -753,8 +753,8 @@ public class MasterDataService {
       }
 
       switch (field) {
-      case FILE_ID:
-        return isSetFileID();
+      case FILE:
+        return isSetFile();
       case NEW_FILE_SIZE:
         return isSetNewFileSize();
       }
@@ -774,12 +774,12 @@ public class MasterDataService {
       if (that == null)
         return false;
 
-      boolean this_present_fileID = true;
-      boolean that_present_fileID = true;
-      if (this_present_fileID || that_present_fileID) {
-        if (!(this_present_fileID && that_present_fileID))
+      boolean this_present_file = true && this.isSetFile();
+      boolean that_present_file = true && that.isSetFile();
+      if (this_present_file || that_present_file) {
+        if (!(this_present_file && that_present_file))
           return false;
-        if (this.fileID != that.fileID)
+        if (!this.file.equals(that.file))
           return false;
       }
 
@@ -808,12 +808,12 @@ public class MasterDataService {
 
       int lastComparison = 0;
 
-      lastComparison = Boolean.valueOf(isSetFileID()).compareTo(other.isSetFileID());
+      lastComparison = Boolean.valueOf(isSetFile()).compareTo(other.isSetFile());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetFileID()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.fileID, other.fileID);
+      if (isSetFile()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.file, other.file);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -848,8 +848,12 @@ public class MasterDataService {
       StringBuilder sb = new StringBuilder("allocateFile_args(");
       boolean first = true;
 
-      sb.append("fileID:");
-      sb.append(this.fileID);
+      sb.append("file:");
+      if (this.file == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.file);
+      }
       first = false;
       if (!first) sb.append(", ");
       sb.append("newFileSize:");
@@ -862,6 +866,9 @@ public class MasterDataService {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
+      if (file != null) {
+        file.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -900,10 +907,11 @@ public class MasterDataService {
             break;
           }
           switch (schemeField.id) {
-            case 1: // FILE_ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.fileID = iprot.readI64();
-                struct.setFileIDIsSet(true);
+            case 1: // FILE
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.file = new rso.at.FileEntryExtended();
+                struct.file.read(iprot);
+                struct.setFileIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -931,9 +939,11 @@ public class MasterDataService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(FILE_ID_FIELD_DESC);
-        oprot.writeI64(struct.fileID);
-        oprot.writeFieldEnd();
+        if (struct.file != null) {
+          oprot.writeFieldBegin(FILE_FIELD_DESC);
+          struct.file.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldBegin(NEW_FILE_SIZE_FIELD_DESC);
         oprot.writeI64(struct.newFileSize);
         oprot.writeFieldEnd();
@@ -955,15 +965,15 @@ public class MasterDataService {
       public void write(org.apache.thrift.protocol.TProtocol prot, allocateFile_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
-        if (struct.isSetFileID()) {
+        if (struct.isSetFile()) {
           optionals.set(0);
         }
         if (struct.isSetNewFileSize()) {
           optionals.set(1);
         }
         oprot.writeBitSet(optionals, 2);
-        if (struct.isSetFileID()) {
-          oprot.writeI64(struct.fileID);
+        if (struct.isSetFile()) {
+          struct.file.write(oprot);
         }
         if (struct.isSetNewFileSize()) {
           oprot.writeI64(struct.newFileSize);
@@ -975,8 +985,9 @@ public class MasterDataService {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.fileID = iprot.readI64();
-          struct.setFileIDIsSet(true);
+          struct.file = new rso.at.FileEntryExtended();
+          struct.file.read(iprot);
+          struct.setFileIsSet(true);
         }
         if (incoming.get(1)) {
           struct.newFileSize = iprot.readI64();
