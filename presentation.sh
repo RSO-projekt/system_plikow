@@ -152,7 +152,7 @@ echo
 read -p "Press [Enter] key to continue..."
 echo
 echo "Cleaning"
-rm myFile.txt downloaded*.txt 
+rm myFile.txt downloaded*
 java -jar client.jar rm /uploadedFile.txt
 java -jar client.jar rm /uploadedFile2.txt
 java -jar client.jar rm /uploadedFile3.txt
