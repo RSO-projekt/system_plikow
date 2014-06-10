@@ -128,29 +128,34 @@ read -p "Press [Enter] key to continue..."
 echo
 echo "Part 4: Simultaneous file modification"
 echo
-echo "Other client starting modification file: /uploadedFile.txt"
+echo "java -jar client.jar mkfile /bigFile"
+java -jar client.jar mkfile /bigFile
 echo
 read -p "Press [Enter] key to continue..."
 echo
-echo "java -jar client.jar writeAll /uploadedFile.txt myFile.txt"
-java -jar client.jar writeAll /uploadedFile.txt myFile.txt
+echo "Other client starting modification file: /bigFile"
 echo
 read -p "Press [Enter] key to continue..."
 echo
-echo "Other client starting read file: /uploadedFile.txt"
+echo "java -jar client.jar writeAll /bigFile myFile.txt"
+java -jar client.jar writeAll /bigFile myFile.txt
 echo
 read -p "Press [Enter] key to continue..."
 echo
-echo "java -jar client.jar readAll /uploadedFile.txt downloadedFile4.txt"
-java -jar client.jar readAll /uploadedFile.txt downloadedFile4.txt
+echo "Other client starting read file: /bigFile"
+echo
+read -p "Press [Enter] key to continue..."
+echo
+echo "java -jar client.jar readAll /bigFile downloadedBigFile"
+java -jar client.jar readAll /bigFile downloadedBigFile
 echo
 read -p "Press [Enter] key to continue..."
 echo
 echo "Cleaning"
-rm myFile.txt downloadedFile*.txt 
+rm myFile.txt downloaded*.txt 
 java -jar client.jar rm /uploadedFile.txt
 java -jar client.jar rm /uploadedFile2.txt
 java -jar client.jar rm /uploadedFile3.txt
-java -jar client.jar rm /uploadedFile4.txt
+java -jar client.jar rm /bigFile
 echo "End presentation"
 
