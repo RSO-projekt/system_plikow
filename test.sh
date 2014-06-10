@@ -29,12 +29,12 @@ check $result
 
 echo -n "4: Test upload file                     "
 echo "My test file" > myFile.txt
-result=$(java -jar client.jar writeAll /uploadFile.txt myFile.txt | grep "Done." | wc -l)
+result=$(java -jar client.jar writeAll /uploadFile.txt myFile.txt | grep "Done" | wc -l)
 rm myFile.txt
 check $result
 
 echo -n "5: Test download file                   "
-result=$(java -jar client.jar readAll /uploadFile.txt downloadFile.txt | grep "Done." | wc -l)
+result=$(java -jar client.jar readAll /uploadFile.txt downloadFile.txt | grep "Done" | wc -l)
 check $result
 
 echo -n "6: Test downloaded file have size       "
@@ -50,7 +50,7 @@ result=$(java -jar client.jar mkfile /testFile.txt | grep "Done." | wc -l)
 check $result
 
 echo -n "8: Test modification                    "
-result=$(java -jar client.jar writePart /uploadFile.txt 3 "new bigger file" | grep "Done." | wc -l)
+result=$(java -jar client.jar writePart /uploadFile.txt 3 "new bigger file" | grep "Done" | wc -l)
 check $result
 
 echo -n "9: Test read                            "

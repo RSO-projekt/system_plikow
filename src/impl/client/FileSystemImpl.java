@@ -166,7 +166,7 @@ public class FileSystemImpl implements FileSystem {
             ByteBuffer buffer = ByteBuffer.wrap(bytes, i * chunkSize, actualSize);
             FileChunk fileChunk = new FileChunk(buffer, new ChunkInfo(i,maxChunkCount, actualSize));
             ChunkInfo chunkInfo = clientDataService.sendNextFileChunk(transaction, fileChunk);
-            System.out.println("Sent: " + (i + 1) + "/" + maxChunkCount + " packages");
+            System.out.print("Sent: " + (i + 1) + "/" + maxChunkCount + " package\r");
             // SPRAWDZIC CZY TAM ADI DOBRZE OGARNAL NADAWANIE TEGO NUMBER
             if (chunkInfo.number != i) {
                 throw new InvalidOperation(501, "Bad part sent");
@@ -207,7 +207,7 @@ public class FileSystemImpl implements FileSystem {
             tmpFileChunk = clientDataService.getNextFileChunk(transaction, chunkInfo);
             byteList.put(tmpFileChunk.data.array());
             chunkInfo = tmpFileChunk.info;
-            System.out.println("Read " + chunkInfo.number + "/" + chunkInfo.maxNumber + " packages");
+            System.out.print("Read: " + chunkInfo.number + "/" + chunkInfo.maxNumber + " package\r");
         } while (tmpFileChunk.info.number < tmpFileChunk.info.maxNumber);
         return byteList.array();
     }

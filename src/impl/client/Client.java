@@ -131,6 +131,7 @@ public class Client {
                     long offset = new Long(args[2]);
                     long num = new Long(args[3]);
                     byte[] bytes = fs.readFromFile(args[1], offset, num);
+                    System.out.println("");
                     System.out.println(new String(bytes, "UTF-8"));
                 } else {
                     throw new InvalidOperation(16,
@@ -144,7 +145,7 @@ public class Client {
                     throw new InvalidOperation(16,
                             "Wrong number of arguments in \"readAll\" call");
                 }
-                System.out.println("Done.");
+                System.out.println("Done");
                 break;
             case "writePart":
                 if (args.length == 4) {
@@ -154,7 +155,7 @@ public class Client {
                     throw new InvalidOperation(16,
                             "Wrong number of arguments in \"writePart\" call");
                 }
-                System.out.println("Done.");
+                System.out.println("Done");
                 break;
             case "writeAll":
                 if (args.length == 3) {
@@ -168,7 +169,7 @@ public class Client {
                     throw new InvalidOperation(16,
                             "Wrong number of arguments in \"writeAll\" call");
                 }
-                System.out.println("Done.");
+                System.out.println("Done");
                 break;
             case "help":
                 System.out.println(help());
