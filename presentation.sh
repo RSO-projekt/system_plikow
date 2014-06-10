@@ -104,6 +104,10 @@ echo "Data server 0 is shutting down. Please wait..."
 echo
 read -p "Press [Enter] key to continue..."
 echo
+echo "Data server 1 is shutting down. Please wait..."
+echo
+read -p "Press [Enter] key to continue..."
+echo
 echo "java -jar client.jar writeAll /uploadedFile3.txt myFile.txt"
 java -jar client.jar writeAll /uploadedFile3.txt myFile.txt
 echo
@@ -114,12 +118,26 @@ java -jar client.jar readAll /uploadedFile3.txt downloadedFile3.txt
 echo
 read -p "Press [Enter] key to continue..."
 echo
-echo "Data server 1 is shutting down. Please wait..."
+echo "Data server 1 is starting up. Please wait..."
 echo
 read -p "Press [Enter] key to continue..."
 echo
-echo "java -jar client.jar writeAll /uploadedFile4.txt myFile.txt"
-java -jar client.jar writeAll /uploadedFile4.txt myFile.txt
+echo "Data server 0 is starting up. Please wait..."
+echo
+read -p "Press [Enter] key to continue..."
+echo
+echo "Part 4: Simultaneous file modification"
+echo
+echo "Other client starting modification file: /uploadedFile.txt"
+echo
+read -p "Press [Enter] key to continue..."
+echo
+echo "java -jar client.jar writeAll /uploadedFile.txt myFile.txt"
+java -jar client.jar writeAll /uploadedFile.txt myFile.txt
+echo
+read -p "Press [Enter] key to continue..."
+echo
+echo "Other client starting read file: /uploadedFile.txt"
 echo
 read -p "Press [Enter] key to continue..."
 echo
@@ -128,30 +146,11 @@ java -jar client.jar readAll /uploadedFile.txt downloadedFile4.txt
 echo
 read -p "Press [Enter] key to continue..."
 echo
-echo "Data server 0 is starting up. Please wait..."
-echo
-read -p "Press [Enter] key to continue..."
-echo
-echo "java -jar client.jar writeAll /uploadedFile5.txt myFile.txt"
-java -jar client.jar writeAll /uploadedFile5.txt myFile.txt
-echo
-read -p "Press [Enter] key to continue..."
-echo
-echo "java -jar client.jar readAll /uploadedFile5.txt downloadedFile5.txt"
-java -jar client.jar readAll /uploadedFile5.txt downloadedFile5.txt
-echo
-read -p "Press [Enter] key to continue..."
-echo
-echo "Data server 1 is starting up. Please wait..."
-echo
-read -p "Press [Enter] key to continue..."
-echo
 echo "Cleaning"
 rm myFile.txt downloadedFile*.txt 
 java -jar client.jar rm /uploadedFile.txt
 java -jar client.jar rm /uploadedFile2.txt
 java -jar client.jar rm /uploadedFile3.txt
-#java -jar client.jar rm /uploadedFile4.txt
-java -jar client.jar rm /uploadedFile5.txt
+java -jar client.jar rm /uploadedFile4.txt
 echo "End presentation"
 
