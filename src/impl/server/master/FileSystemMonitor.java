@@ -786,7 +786,7 @@ public class FileSystemMonitor {
         if (extendedEntry.state == FileState.MODIFIED || extendedEntry.state == FileState.PREMODIFIED) {
             throw new InvalidOperation(15, "Cannot modify file - someone else is modyfing actually");
         }
-        return extendedEntry.deepCopy();
+        return extendedEntry;
     }
 
     public synchronized FileEntryExtended checkIfEntryIsAllocateReady(FileEntry entry) throws EntryNotFound, InvalidOperation {
@@ -800,7 +800,7 @@ public class FileSystemMonitor {
         if (extendedEntry.state != FileState.IDLE) {
             throw new InvalidOperation(15, "Someone is using a file");
         }
-        return extendedEntry.deepCopy();
+        return extendedEntry;
     }
 
     public synchronized int getNextTransactionToken() {
@@ -831,6 +831,7 @@ public class FileSystemMonitor {
                 extendedEntry.state = FileState.READ;
             }
         }
+        log("File state id:" + extendedEntry.entry.id + ", state: " + extendedEntry.state);
         log("Created transaction with token " + transaction.token + ", type: " + transaction.type +
                 ", from: " + transaction.masterServerID + ", to: " + transaction.dataServerID);
         return transaction;
