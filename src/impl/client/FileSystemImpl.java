@@ -126,7 +126,7 @@ public class FileSystemImpl implements FileSystem {
             TException {
         FileEntry entry = clientMasterService.getFileEntry(filePath);
         if (entry.size < offset + bytes.length) {
-            System.out.println("Extending file to new size: " + offset + bytes.length);
+            System.out.println("Extending file to new size: " + (offset + bytes.length));
             clientMasterService.allocateFile2(entry, offset + bytes.length);
         }
         Transaction transaction = clientMasterService.writeToFile2(entry, offset, bytes.length);
@@ -139,7 +139,7 @@ public class FileSystemImpl implements FileSystem {
             throws EntryNotFound, InvalidOperation, HostNotPermitted,
             TException {
         if (file.size < offset + bytes.length) {
-            System.out.println("Extending file to new size: " + offset + bytes.length);
+            System.out.println("Extending file to new size: " + (offset + bytes.length));
             clientMasterService.allocateFile2(file, offset + bytes.length);
         }
         Transaction transaction = clientMasterService.writeToFile2(file, offset, bytes.length);
